@@ -64,8 +64,6 @@ export function CyberCursor() {
     window.addEventListener('resize', resize);
 
     let lastTime = performance.now();
-    const trailPoints = useRef<Array<{ x: number; y: number; age: number }>>([]);
-    // We use a local var to avoid stale closure
     let trail: Array<{ x: number; y: number; age: number }> = [];
 
     const animate = (time: number) => {
