@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import {
   CommandDialog,
   CommandInput,
@@ -14,8 +14,9 @@ import { useUIStore } from '@/stores/ui-store';
 import {
   LayoutDashboard, AlertTriangle, Globe, Server, Settings,
   Shield, Search, Download, Bell, LogOut, Maximize2,
-  Zap, Terminal, Activity,
+  Zap, Terminal, Activity, Crosshair, Eye, RotateCcw,
 } from 'lucide-react';
+import { useGlobeStore } from '@/stores/globe-store';
 
 interface CommandAction {
   id: string;
@@ -31,6 +32,12 @@ export function CommandPalette() {
     commandPaletteOpen, setCommandPaletteOpen, toggleCommandPalette,
     setActiveView, toggleNotificationDrawer, toggleSidebar, logout,
   } = useUIStore();
+  const deselectThreat = useGlobeStore(s => s.deselectThreat);
+  const setSeverityFilter = useGlobeStore(s => s.setSeverityFilter);
+  const setTypeFilter = useGlobeStore(s => s.setTypeFilter);
+
+  // Track if we've registered the global listener to prevent duplicates
+  const registeredRef = useRef(false);
 
   const commands: CommandAction[] = [
     // Navigation
@@ -39,6 +46,12 @@ export function CommandPalette() {
     { id: 'nav-intel', label: 'Go to Intel Map', icon: Globe, shortcut: '3', action: () => setActiveView('intel-map'), group: 'Navigation' },
     { id: 'nav-assets', label: 'Go to Assets', icon: Server, shortcut: '4', action: () => setActiveView('assets'), group: 'Navigation' },
     { id: 'nav-settings', label: 'Go to Settings', icon: Settings, shortcut: '5', action: () => setActiveView('settings'), group: 'Navigation' },
+
+    // Intel Map Actions
+    { id: 'intel-critical', label: 'Filter: Critical Threats', icon: Crosshair, action: () => { setActiveView('intel-map'); setSeverityFilter('critical'); }, group: 'Intel Map' },
+    { id: 'intel-high', label: 'Filter: High Severity', icon: AlertTriangle, action: () => { setActiveView('intel-map'); setSeverityFilter('high'); }, group: 'Intel Map' },
+    { id: 'intel-clear', label: 'Clear All Filters', icon: RotateCcw, action: () => { setSeverityFilter(''); setTypeFilter(''); }, group: 'Intel Map' },
+    { id: 'intel-deselect', label: 'Deselect Threat', icon: Eye, action: () => deselectThreat(), group: 'Intel Map' },
 
     // Actions
     { id: 'action-notifications', label: 'Toggle Notifications', icon: Bell, shortcut: 'N', action: () => toggleNotificationDrawer(), group: 'Actions' },
@@ -53,22 +66,46 @@ export function CommandPalette() {
     { id: 'sys-logout', label: 'Sign Out', icon: LogOut, action: () => logout(), group: 'System' },
   ];
 
-  // Global keyboard shortcut: CMD+K (Mac) or CTRL+K (Windows/Linux)
+  // ──── FIX: Global keyboard shortcut with capture phase ────
+  // Uses capture phase + stopPropagation to ensure CMD/CTRL+K
+  // works globally regardless of focus or other handlers.
   useEffect(() => {
+    if (registeredRef.current) return;
+    registeredRef.current = true;
+
     const handler = (e: KeyboardEvent) => {
-      // Check for CMD+K or CTRL+K
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      // CMD+K on Mac, CTRL+K on Windows/Linux
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
         e.stopPropagation();
+        e.stopImmediatePropagation();
         toggleCommandPalette();
         return;
       }
     };
 
-    // Use capture phase to intercept before any other handlers (including browser defaults)
-    window.addEventListener('keydown', handler, true);
-    return () => window.removeEventListener('keydown', handler, true);
+    // Use capture: true to intercept before any other handler
+    // This ensures the shortcut works even when Canvas or other elements have focus
+    window.addEventListener('keydown', handler, { capture: true });
+
+    return () => {
+      window.removeEventListener('keydown', handler, { capture: true });
+      registeredRef.current = false;
+    };
   }, [toggleCommandPalette]);
+
+  // Also close on ESC when open
+  useEffect(() => {
+    if (!commandPaletteOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setCommandPaletteOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handler, { capture: true });
+    return () => window.removeEventListener('keydown', handler, { capture: true });
+  }, [commandPaletteOpen, setCommandPaletteOpen]);
 
   const runCommand = useCallback((command: CommandAction) => {
     setCommandPaletteOpen(false);
@@ -87,7 +124,7 @@ export function CommandPalette() {
         <CommandEmpty>No results found.</CommandEmpty>
 
         {/* Group commands */}
-        {['Navigation', 'Actions', 'System'].map(groupName => {
+        {['Navigation', 'Intel Map', 'Actions', 'System'].map(groupName => {
           const groupCommands = commands.filter(c => c.group === groupName);
           if (groupCommands.length === 0) return null;
           return (

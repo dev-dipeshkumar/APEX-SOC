@@ -1,0 +1,925 @@
+     1→     1→'use client';
+     2→     2→
+     3→     3→import { useRef, useMemo, memo } from 'react';
+     4→     4→import { Canvas, useFrame } from '@react-three/fiber';
+     5→     5→import { OrbitControls, Stars, Html } from '@react-three/drei';
+     6→     6→import { EffectComposer, Bloom, Vignette } from '@react-three/postprocessing';
+     7→     7→import { BlendFunction } from 'postprocessing';
+     8→     8→import * as THREE from 'three';
+     9→     9→import { SEVERITY_COLORS, ATTACK_TYPE_LABELS, type AttackConnection, type Severity } from '@/lib/constants';
+    10→    10→import { formatTime } from '@/lib/formatters';
+    11→    11→
+    12→    12→// ─────────────────────────────────────────────────────────────
+    13→    13→// Constants
+    14→    14→// ─────────────────────────────────────────────────────────────
+    15→    15→const EARTH_RADIUS = 2;
+    16→    16→const ATMOSPHERE_RADIUS = 2.12;
+    17→    17→const CLOUD_RADIUS = 2.03;
+    18→    18→const GLOW_RADIUS = 2.25;
+    19→    19→
+    20→    20→// ─────────────────────────────────────────────────────────────
+    21→    21→// Procedural Earth Texture - High resolution with detailed continents
+    22→    22→// ─────────────────────────────────────────────────────────────
+    23→    23→function createEarthTexture(): HTMLCanvasElement {
+    24→    24→  const W = 4096;
+    25→    25→  const H = 2048;
+    26→    26→  const canvas = document.createElement('canvas');
+    27→    27→  canvas.width = W;
+    28→    28→  canvas.height = H;
+    29→    29→  const ctx = canvas.getContext('2d')!;
+    30→    30→
+    31→    31→  // Deep ocean gradient
+    32→    32→  const oceanGrad = ctx.createRadialGradient(W * 0.5, H * 0.5, 0, W * 0.5, H * 0.5, W * 0.6);
+    33→    33→  oceanGrad.addColorStop(0, '#0a1a2e');
+    34→    34→  oceanGrad.addColorStop(0.5, '#071428');
+    35→    35→  oceanGrad.addColorStop(1, '#050e1c');
+    36→    36→  ctx.fillStyle = oceanGrad;
+    37→    37→  ctx.fillRect(0, 0, W, H);
+    38→    38→
+    39→    39→  // Add ocean depth variation
+    40→    40→  for (let i = 0; i < 200; i++) {
+    41→    41→    const x = Math.random() * W;
+    42→    42→    const y = Math.random() * H;
+    43→    43→    const r = 30 + Math.random() * 80;
+    44→    44→    const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+    45→    45→    grad.addColorStop(0, `rgba(8, 24, 48, ${0.1 + Math.random() * 0.1})`);
+    46→    46→    grad.addColorStop(1, 'transparent');
+    47→    47→    ctx.fillStyle = grad;
+    48→    48→    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    49→    49→  }
+    50→    50→
+    51→    51→  // Detailed continent polygons [lng%, lat%] - lng: 0→1 maps to -180→180, lat: 0→1 maps to 90→-90
+    52→    52→  const continents: { points: [number, number][]; fillColor: string; strokeColor: string; terrain?: [number, number, string][] }[] = [
+    53→    53→    {
+    54→    54→      // North America
+    55→    55→      points: [
+    56→    56→        [0.04, 0.12], [0.06, 0.1], [0.08, 0.08], [0.1, 0.09], [0.12, 0.08],
+    57→    57→        [0.14, 0.1], [0.16, 0.12], [0.17, 0.14], [0.19, 0.16], [0.2, 0.18],
+    58→    58→        [0.21, 0.2], [0.22, 0.22], [0.23, 0.25], [0.22, 0.28], [0.21, 0.3],
+    59→    59→        [0.2, 0.32], [0.19, 0.34], [0.17, 0.36], [0.16, 0.38], [0.15, 0.4],
+    60→    60→        [0.14, 0.42], [0.12, 0.4], [0.1, 0.36], [0.09, 0.33], [0.08, 0.3],
+    61→    61→        [0.07, 0.26], [0.06, 0.22], [0.05, 0.18], [0.04, 0.15]
+    62→    62→      ],
+    63→    63→      fillColor: '#0a2e1a',
+    64→    64→      strokeColor: 'rgba(0, 200, 160, 0.06)',
+    65→    65→      terrain: [
+    66→    66→        [0.12, 0.2, '#0d3820'], [0.15, 0.25, '#0c3420'], [0.18, 0.22, '#0e3a22'],
+    67→    67→        [0.13, 0.3, '#0b3020'], [0.1, 0.25, '#0c3620']
+    68→    68→      ]
+    69→    69→    },
+    70→    70→    {
+    71→    71→      // South America
+    72→    72→      points: [
+    73→    73→        [0.2, 0.44], [0.22, 0.42], [0.24, 0.43], [0.25, 0.46],
+    74→    74→        [0.26, 0.5], [0.265, 0.55], [0.26, 0.6], [0.25, 0.65],
+    75→    75→        [0.24, 0.7], [0.23, 0.75], [0.22, 0.78], [0.21, 0.74],
+    76→    76→        [0.2, 0.68], [0.19, 0.6], [0.19, 0.52], [0.2, 0.48]
+    77→    77→      ],
+    78→    78→      fillColor: '#0a2e1a',
+    79→    79→      strokeColor: 'rgba(0, 200, 160, 0.06)',
+    80→    80→      terrain: [
+    81→    81→        [0.23, 0.55, '#0d3820'], [0.22, 0.5, '#0c3420'], [0.24, 0.6, '#0e3a22']
+    82→    82→      ]
+    83→    83→    },
+    84→    84→    {
+    85→    85→      // Europe
+    86→    86→      points: [
+    87→    87→        [0.47, 0.14], [0.48, 0.12], [0.5, 0.11], [0.52, 0.12],
+    88→    88→        [0.53, 0.14], [0.54, 0.16], [0.535, 0.18], [0.52, 0.2],
+    89→    89→        [0.51, 0.22], [0.5, 0.24], [0.49, 0.26], [0.48, 0.24],
+    90→    90→        [0.47, 0.22], [0.46, 0.2], [0.465, 0.17]
+    91→    91→      ],
+    92→    92→      fillColor: '#0a2e1a',
+    93→    93→      strokeColor: 'rgba(0, 200, 160, 0.06)',
+    94→    94→      terrain: [
+    95→    95→        [0.5, 0.16, '#0d3820'], [0.49, 0.2, '#0c3420']
+    96→    96→      ]
+    97→    97→    },
+    98→    98→    {
+    99→    99→      // Africa
+   100→   100→      points: [
+   101→   101→        [0.47, 0.28], [0.49, 0.26], [0.51, 0.27], [0.53, 0.29],
+   102→   102→        [0.55, 0.32], [0.56, 0.36], [0.57, 0.4], [0.565, 0.46],
+   103→   103→        [0.55, 0.52], [0.53, 0.58], [0.51, 0.62], [0.49, 0.64],
+   104→   104→        [0.48, 0.6], [0.47, 0.54], [0.46, 0.46], [0.455, 0.38],
+   105→   105→        [0.46, 0.32]
+   106→   106→      ],
+   107→   107→      fillColor: '#0a2e1a',
+   108→   108→      strokeColor: 'rgba(0, 200, 160, 0.06)',
+   109→   109→      terrain: [
+   110→   110→        [0.51, 0.4, '#0d3820'], [0.53, 0.35, '#0c3420'], [0.5, 0.5, '#0e3a22']
+   111→   111→      ]
+   112→   112→    },
+   113→   113→    {
+   114→   114→      // Asia
+   115→   115→      points: [
+   116→   116→        [0.54, 0.1], [0.58, 0.08], [0.62, 0.07], [0.66, 0.08],
+   117→   117→        [0.7, 0.1], [0.74, 0.12], [0.78, 0.14], [0.8, 0.16],
+   118→   118→        [0.82, 0.2], [0.83, 0.24], [0.82, 0.28], [0.8, 0.32],
+   119→   119→        [0.76, 0.34], [0.72, 0.36], [0.68, 0.38], [0.64, 0.4],
+   120→   120→        [0.6, 0.38], [0.57, 0.34], [0.55, 0.3], [0.54, 0.24],
+   121→   121→        [0.535, 0.18], [0.54, 0.14]
+   122→   122→      ],
+   123→   123→      fillColor: '#0a2e1a',
+   124→   124→      strokeColor: 'rgba(0, 200, 160, 0.06)',
+   125→   125→      terrain: [
+   126→   126→        [0.65, 0.2, '#0d3820'], [0.7, 0.25, '#0c3420'], [0.6, 0.3, '#0e3a22'],
+   127→   127→        [0.75, 0.2, '#0c3620'], [0.68, 0.15, '#0b3020']
+   128→   128→      ]
+   129→   129→    },
+   130→   130→    {
+   131→   131→      // Australia
+   132→   132→      points: [
+   133→   133→        [0.8, 0.56], [0.83, 0.54], [0.86, 0.55], [0.88, 0.58],
+   134→   134→        [0.885, 0.62], [0.87, 0.66], [0.85, 0.68], [0.82, 0.67],
+   135→   135→        [0.8, 0.64], [0.79, 0.6]
+   136→   136→      ],
+   137→   137→      fillColor: '#0a2e1a',
+   138→   138→      strokeColor: 'rgba(0, 200, 160, 0.06)',
+   139→   139→      terrain: [
+   140→   140→        [0.84, 0.6, '#0d3820']
+   141→   141→      ]
+   142→   142→    },
+   143→   143→    {
+   144→   144→      // Greenland
+   145→   145→      points: [
+   146→   146→        [0.3, 0.08], [0.33, 0.06], [0.35, 0.07], [0.36, 0.1],
+   147→   147→        [0.35, 0.14], [0.33, 0.16], [0.31, 0.14], [0.3, 0.1]
+   148→   148→      ],
+   149→   149→      fillColor: '#0c3020',
+   150→   150→      strokeColor: 'rgba(0, 200, 160, 0.06)',
+   151→   151→    },
+   152→   152→    {
+   153→   153→      // Japan
+   154→   154→      points: [
+   155→   155→        [0.82, 0.22], [0.83, 0.2], [0.835, 0.22], [0.83, 0.26],
+   156→   156→        [0.825, 0.28], [0.82, 0.26]
+   157→   157→      ],
+   158→   158→      fillColor: '#0a2e1a',
+   159→   159→      strokeColor: 'rgba(0, 200, 160, 0.06)',
+   160→   160→    },
+   161→   161→    {
+   162→   162→      // UK
+   163→   163→      points: [
+   164→   164→        [0.475, 0.16], [0.48, 0.14], [0.483, 0.16], [0.48, 0.19],
+   165→   165→        [0.476, 0.18]
+   166→   166→      ],
+   167→   167→      fillColor: '#0a2e1a',
+   168→   168→      strokeColor: 'rgba(0, 200, 160, 0.06)',
+   169→   169→    }
+   170→   170→  ];
+   171→   171→
+   172→   172→  // Draw continents with terrain detail
+   173→   173→  continents.forEach(cont => {
+   174→   174→    ctx.beginPath();
+   175→   175→    cont.points.forEach(([x, y], i) => {
+   176→   176→      const px = x * W;
+   177→   177→      const py = y * H;
+   178→   178→      if (i === 0) ctx.moveTo(px, py);
+   179→   179→      else ctx.lineTo(px, py);
+   180→   180→    });
+   181→   181→    ctx.closePath();
+   182→   182→
+   183→   183→    // Fill with gradient
+   184→   184→    const bounds = cont.points.reduce((acc, [x, y]) => ({
+   185→   185→      minX: Math.min(acc.minX, x), maxX: Math.max(acc.maxX, x),
+   186→   186→      minY: Math.min(acc.minY, y), maxY: Math.max(acc.maxY, y),
+   187→   187→    }), { minX: 1, maxX: 0, minY: 1, maxY: 0 });
+   188→   188→
+   189→   189→    const fillGrad = ctx.createLinearGradient(
+   190→   190→      bounds.minX * W, bounds.minY * H,
+   191→   191→      bounds.maxX * W, bounds.maxY * H
+   192→   192→    );
+   193→   193→    fillGrad.addColorStop(0, cont.fillColor);
+   194→   194→    fillGrad.addColorStop(0.5, '#0c3420');
+   195→   195→    fillGrad.addColorStop(1, cont.fillColor);
+   196→   196→    ctx.fillStyle = fillGrad;
+   197→   197→    ctx.fill();
+   198→   198→
+   199→   199→    // Terrain detail
+   200→   200→    if (cont.terrain) {
+   201→   201→      cont.terrain.forEach(([tx, ty, color]) => {
+   202→   202→        const r = 20 + Math.random() * 40;
+   203→   203→        const grad = ctx.createRadialGradient(tx * W, ty * H, 0, tx * W, ty * H, r);
+   204→   204→        grad.addColorStop(0, color);
+   205→   205→        grad.addColorStop(1, 'transparent');
+   206→   206→        ctx.fillStyle = grad;
+   207→   207→        ctx.fillRect(tx * W - r, ty * H - r, r * 2, r * 2);
+   208→   208→      });
+   209→   209→    }
+   210→   210→
+   211→   211→    // Coastline glow
+   212→   212→    ctx.strokeStyle = cont.strokeColor;
+   213→   213→    ctx.lineWidth = 2;
+   214→   214→    ctx.stroke();
+   215→   215→
+   216→   216→    // Subtle inner coastline
+   217→   217→    ctx.strokeStyle = 'rgba(0, 240, 255, 0.015)';
+   218→   218→    ctx.lineWidth = 1;
+   219→   219→    ctx.stroke();
+   220→   220→  });
+   221→   221→
+   222→   222→  // Country borders (more detailed grid)
+   223→   223→  ctx.strokeStyle = 'rgba(0, 200, 160, 0.025)';
+   224→   224→  ctx.lineWidth = 0.5;
+   225→   225→  for (let lat = -80; lat <= 80; lat += 10) {
+   226→   226→    const y = ((90 - lat) / 180) * H;
+   227→   227→    ctx.beginPath();
+   228→   228→    ctx.moveTo(0, y);
+   229→   229→    ctx.lineTo(W, y);
+   230→   230→    ctx.stroke();
+   231→   231→  }
+   232→   232→  for (let lng = -180; lng <= 180; lng += 10) {
+   233→   233→    const x = ((lng + 180) / 360) * W;
+   234→   234→    ctx.beginPath();
+   235→   235→    ctx.moveTo(x, 0);
+   236→   236→    ctx.lineTo(x, H);
+   237→   237→    ctx.stroke();
+   238→   238→  }
+   239→   239→
+   240→   240→  // City lights - much more detailed
+   241→   241→  const cityPositions: [number, number, number][] = [
+   242→   242→    // US East
+   243→   243→    [0.21, 0.3, 12], [0.22, 0.28, 10], [0.23, 0.32, 8], [0.205, 0.31, 6], [0.215, 0.26, 7],
+   244→   244→    // US West
+   245→   245→    [0.13, 0.3, 10], [0.14, 0.28, 8], [0.135, 0.32, 6], [0.15, 0.29, 5],
+   246→   246→    // Europe
+   247→   247→    [0.48, 0.18, 12], [0.49, 0.2, 10], [0.5, 0.17, 8], [0.51, 0.19, 9],
+   248→   248→    [0.495, 0.22, 7], [0.52, 0.21, 6], [0.47, 0.21, 5],
+   249→   249→    // East Asia
+   250→   250→    [0.76, 0.24, 14], [0.77, 0.27, 12], [0.82, 0.24, 10], [0.825, 0.22, 8],
+   251→   251→    [0.78, 0.25, 7], [0.8, 0.23, 6],
+   252→   252→    // India
+   253→   253→    [0.72, 0.32, 10], [0.71, 0.34, 8], [0.73, 0.3, 7],
+   254→   254→    // Australia
+   255→   255→    [0.85, 0.62, 10], [0.86, 0.6, 8], [0.84, 0.64, 6],
+   256→   256→    // Middle East
+   257→   257→    [0.56, 0.32, 8], [0.57, 0.34, 6], [0.55, 0.3, 5],
+   258→   258→    // Africa
+   259→   259→    [0.51, 0.44, 8], [0.52, 0.48, 6], [0.5, 0.42, 5],
+   260→   260→    // South America
+   261→   261→    [0.23, 0.62, 8], [0.24, 0.58, 6], [0.22, 0.55, 5],
+   262→   262→    // Russia
+   263→   263→    [0.6, 0.14, 8], [0.65, 0.12, 6], [0.7, 0.13, 5], [0.55, 0.15, 7],
+   264→   264→  ];
+   265→   265→
+   266→   266→  cityPositions.forEach(([x, y, intensity]) => {
+   267→   267→    const px = x * W;
+   268→   268→    const py = y * H;
+   269→   269→    const glowRadius = intensity + 4;
+   270→   270→    const glow = ctx.createRadialGradient(px, py, 0, px, py, glowRadius);
+   271→   271→    glow.addColorStop(0, `rgba(0, 240, 255, ${0.08 + intensity * 0.01})`);
+   272→   272→    glow.addColorStop(0.4, `rgba(0, 200, 180, ${0.04 + intensity * 0.005})`);
+   273→   273→    glow.addColorStop(1, 'transparent');
+   274→   274→    ctx.fillStyle = glow;
+   275→   275→    ctx.fillRect(px - glowRadius, py - glowRadius, glowRadius * 2, glowRadius * 2);
+   276→   276→    // Core light
+   277→   277→    ctx.beginPath();
+   278→   278→    ctx.arc(px, py, 1 + intensity * 0.1, 0, Math.PI * 2);
+   279→   279→    ctx.fillStyle = `rgba(0, 240, 255, ${0.3 + intensity * 0.03})`;
+   280→   280→    ctx.fill();
+   281→   281→  });
+   282→   282→
+   283→   283→  return canvas;
+   284→   284→}
+   285→   285→
+   286→   286→// ─────────────────────────────────────────────────────────────
+   287→   287→// Night side texture with brighter city lights
+   288→   288→// ─────────────────────────────────────────────────────────────
+   289→   289→function createNightTexture(): HTMLCanvasElement {
+   290→   290→  const W = 4096;
+   291→   291→  const H = 2048;
+   292→   292→  const canvas = document.createElement('canvas');
+   293→   293→  canvas.width = W;
+   294→   294→  canvas.height = H;
+   295→   295→  const ctx = canvas.getContext('2d')!;
+   296→   296→
+   297→   297→  // Dark background
+   298→   298→  ctx.fillStyle = '#020408';
+   299→   299→  ctx.fillRect(0, 0, W, H);
+   300→   300→
+   301→   301→  // City lights (brighter for night side)
+   302→   302→  const cityPositions: [number, number, number][] = [
+   303→   303→    [0.21, 0.3, 16], [0.22, 0.28, 14], [0.23, 0.32, 12], [0.205, 0.31, 10], [0.215, 0.26, 8],
+   304→   304→    [0.13, 0.3, 14], [0.14, 0.28, 12], [0.135, 0.32, 8],
+   305→   305→    [0.48, 0.18, 18], [0.49, 0.2, 16], [0.5, 0.17, 14], [0.51, 0.19, 12],
+   306→   306→    [0.76, 0.24, 18], [0.77, 0.27, 16], [0.82, 0.24, 14], [0.825, 0.22, 12],
+   307→   307→    [0.72, 0.32, 14], [0.71, 0.34, 12],
+   308→   308→    [0.85, 0.62, 12], [0.86, 0.6, 10],
+   309→   309→    [0.56, 0.32, 10], [0.57, 0.34, 8],
+   310→   310→    [0.51, 0.44, 10], [0.52, 0.48, 8],
+   311→   311→    [0.23, 0.62, 10], [0.24, 0.58, 8],
+   312→   312→    [0.6, 0.14, 10], [0.65, 0.12, 8], [0.55, 0.15, 10],
+   313→   313→  ];
+   314→   314→
+   315→   315→  cityPositions.forEach(([x, y, intensity]) => {
+   316→   316→    const px = x * W;
+   317→   317→    const py = y * H;
+   318→   318→    // Bright glow
+   319→   319→    const glowRadius = intensity + 8;
+   320→   320→    const glow = ctx.createRadialGradient(px, py, 0, px, py, glowRadius);
+   321→   321→    glow.addColorStop(0, `rgba(255, 200, 80, ${0.15 + intensity * 0.01})`);
+   322→   322→    glow.addColorStop(0.3, `rgba(255, 180, 50, ${0.08 + intensity * 0.005})`);
+   323→   323→    glow.addColorStop(1, 'transparent');
+   324→   324→    ctx.fillStyle = glow;
+   325→   325→    ctx.fillRect(px - glowRadius, py - glowRadius, glowRadius * 2, glowRadius * 2);
+   326→   326→    // Core
+   327→   327→    ctx.beginPath();
+   328→   328→    ctx.arc(px, py, 1.5 + intensity * 0.08, 0, Math.PI * 2);
+   329→   329→    ctx.fillStyle = `rgba(255, 220, 120, ${0.5 + intensity * 0.02})`;
+   330→   330→    ctx.fill();
+   331→   331→  });
+   332→   332→
+   333→   333→  return canvas;
+   334→   334→}
+   335→   335→
+   336→   336→// ─────────────────────────────────────────────────────────────
+   337→   337→// Cloud texture
+   338→   338→// ─────────────────────────────────────────────────────────────
+   339→   339→function createCloudTexture(): HTMLCanvasElement {
+   340→   340→  const W = 2048;
+   341→   341→  const H = 1024;
+   342→   342→  const canvas = document.createElement('canvas');
+   343→   343→  canvas.width = W;
+   344→   344→  canvas.height = H;
+   345→   345→  const ctx = canvas.getContext('2d')!;
+   346→   346→
+   347→   347→  ctx.fillStyle = 'rgba(0, 0, 0, 0)';
+   348→   348→  ctx.clearRect(0, 0, W, H);
+   349→   349→
+   350→   350→  // Procedural clouds
+   351→   351→  for (let i = 0; i < 300; i++) {
+   352→   352→    const x = Math.random() * W;
+   353→   353→    const y = Math.random() * H;
+   354→   354→    const rx = 20 + Math.random() * 60;
+   355→   355→    const ry = 10 + Math.random() * 30;
+   356→   356→    const opacity = 0.01 + Math.random() * 0.04;
+   357→   357→
+   358→   358→    ctx.save();
+   359→   359→    ctx.translate(x, y);
+   360→   360→    ctx.rotate(Math.random() * Math.PI);
+   361→   361→    ctx.beginPath();
+   362→   362→    ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+   363→   363→    ctx.fillStyle = `rgba(200, 220, 255, ${opacity})`;
+   364→   364→    ctx.fill();
+   365→   365→    ctx.restore();
+   366→   366→  }
+   367→   367→
+   368→   368→  // Cloud bands
+   369→   369→  for (let band = 0; band < 8; band++) {
+   370→   370→    const y = H * (0.1 + band * 0.1);
+   371→   371→    const bandWidth = H * 0.08;
+   372→   372→    for (let i = 0; i < 30; i++) {
+   373→   373→      const cx = Math.random() * W;
+   374→   374→      const cy = y + (Math.random() - 0.5) * bandWidth;
+   375→   375→      const r = 30 + Math.random() * 80;
+   376→   376→      const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+   377→   377→      grad.addColorStop(0, `rgba(200, 220, 255, ${0.02 + Math.random() * 0.03})`);
+   378→   378→      grad.addColorStop(1, 'transparent');
+   379→   379→      ctx.fillStyle = grad;
+   380→   380→      ctx.fillRect(cx - r, cy - r, r * 2, r * 2);
+   381→   381→    }
+   382→   382→  }
+   383→   383→
+   384→   384→  return canvas;
+   385→   385→}
+   386→   386→
+   387→   387→// ─────────────────────────────────────────────────────────────
+   388→   388→// Atmosphere Shader
+   389→   389→// ─────────────────────────────────────────────────────────────
+   390→   390→const atmosphereVertexShader = `
+   391→   391→  varying vec3 vNormal;
+   392→   392→  varying vec3 vPosition;
+   393→   393→  void main() {
+   394→   394→    vNormal = normalize(normalMatrix * normal);
+   395→   395→    vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
+   396→   396→    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+   397→   397→  }
+   398→   398→`;
+   399→   399→
+   400→   400→const atmosphereFragmentShader = `
+   401→   401→  varying vec3 vNormal;
+   402→   402→  varying vec3 vPosition;
+   403→   403→  void main() {
+   404→   404→    float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+   405→   405→    vec3 color = mix(vec3(0.0, 0.94, 1.0), vec3(0.1, 0.4, 0.8), intensity);
+   406→   406→    gl_FragColor = vec4(color, intensity * 0.4);
+   407→   407→  }
+   408→   408→`;
+   409→   409→
+   410→   410→// ─────────────────────────────────────────────────────────────
+   411→   411→// Lat/Lng to 3D position
+   412→   412→// ─────────────────────────────────────────────────────────────
+   413→   413→function latLngToVector3(lat: number, lng: number, radius: number): THREE.Vector3 {
+   414→   414→  const phi = (90 - lat) * (Math.PI / 180);
+   415→   415→  const theta = (lng + 180) * (Math.PI / 180);
+   416→   416→  return new THREE.Vector3(
+   417→   417→    -radius * Math.sin(phi) * Math.cos(theta),
+   418→   418→    radius * Math.cos(phi),
+   419→   419→    radius * Math.sin(phi) * Math.sin(theta)
+   420→   420→  );
+   421→   421→}
+   422→   422→
+   423→   423→// ─────────────────────────────────────────────────────────────
+   424→   424→// Earth Component
+   425→   425→// ─────────────────────────────────────────────────────────────
+   426→   426→const GlobeEarth = memo(function GlobeEarth() {
+   427→   427→  const earthRef = useRef<THREE.Mesh>(null);
+   428→   428→  const cloudRef = useRef<THREE.Mesh>(null);
+   429→   429→
+   430→   430→  // Generate textures with useMemo to avoid lint error
+   431→   431→  const textures = useMemo(() => {
+   432→   432→    const earthCanvas = createEarthTexture();
+   433→   433→    const nightCanvas = createNightTexture();
+   434→   434→    const cloudCanvas = createCloudTexture();
+   435→   435→
+   436→   436→    const earthTex = new THREE.CanvasTexture(earthCanvas);
+   437→   437→    earthTex.anisotropy = 8;
+   438→   438→    const nightTex = new THREE.CanvasTexture(nightCanvas);
+   439→   439→    nightTex.anisotropy = 8;
+   440→   440→    const cloudTex = new THREE.CanvasTexture(cloudCanvas);
+   441→   441→
+   442→   442→    return { earth: earthTex, night: nightTex, clouds: cloudTex };
+   443→   443→  }, []);
+   444→   444→
+   445→   445→  useFrame((_, delta) => {
+   446→   446→    if (earthRef.current) earthRef.current.rotation.y += delta * 0.015;
+   447→   447→    if (cloudRef.current) cloudRef.current.rotation.y += delta * 0.02;
+   448→   448→  });
+   449→   449→
+   450→   450→  if (!textures) return null;
+   451→   451→
+   452→   452→  return (
+   453→   453→    <group>
+   454→   454→      {/* Main Earth */}
+   455→   455→      <mesh ref={earthRef} rotation={[0, 0, -23.4 * Math.PI / 180]}>
+   456→   456→        <sphereGeometry args={[EARTH_RADIUS, 128, 128]} />
+   457→   457→        <meshPhongMaterial
+   458→   458→          map={textures.earth}
+   459→   459→          emissiveMap={textures.night}
+   460→   460→          emissive={new THREE.Color(1, 1, 1)}
+   461→   461→          emissiveIntensity={0.6}
+   462→   462→          specular={new THREE.Color(0x111122)}
+   463→   463→          shininess={15}
+   464→   464→        />
+   465→   465→      </mesh>
+   466→   466→
+   467→   467→      {/* Clouds */}
+   468→   468→      <mesh ref={cloudRef} rotation={[0, 0, -23.4 * Math.PI / 180]}>
+   469→   469→        <sphereGeometry args={[CLOUD_RADIUS, 64, 64]} />
+   470→   470→        <meshPhongMaterial
+   471→   471→          map={textures.clouds}
+   472→   472→          transparent
+   473→   473→          opacity={0.35}
+   474→   474→          depthWrite={false}
+   475→   475→        />
+   476→   476→      </mesh>
+   477→   477→    </group>
+   478→   478→  );
+   479→   479→});
+   480→   480→
+   481→   481→// ─────────────────────────────────────────────────────────────
+   482→   482→// Atmosphere Component
+   483→   483→// ─────────────────────────────────────────────────────────────
+   484→   484→function Atmosphere() {
+   485→   485→  return (
+   486→   486→    <>
+   487→   487→      {/* Inner atmosphere glow */}
+   488→   488→      <mesh>
+   489→   489→        <sphereGeometry args={[ATMOSPHERE_RADIUS, 64, 64]} />
+   490→   490→        <shaderMaterial
+   491→   491→          vertexShader={atmosphereVertexShader}
+   492→   492→          fragmentShader={atmosphereFragmentShader}
+   493→   493→          transparent
+   494→   494→          side={THREE.BackSide}
+   495→   495→          depthWrite={false}
+   496→   496→        />
+   497→   497→      </mesh>
+   498→   498→
+   499→   499→      {/* Outer glow ring */}
+   500→   500→      <mesh>
+   501→   501→        <sphereGeometry args={[GLOW_RADIUS, 32, 32]} />
+   502→   502→        <meshBasicMaterial
+   503→   503→          color="#0088aa"
+   504→   504→          transparent
+   505→   505→          opacity={0.012}
+   506→   506→          side={THREE.BackSide}
+   507→   507→          depthWrite={false}
+   508→   508→        />
+   509→   509→      </mesh>
+   510→   510→    </>
+   511→   511→  );
+   512→   512→}
+   513→   513→
+   514→   514→// ─────────────────────────────────────────────────────────────
+   515→   515→// Attack Arc with particles and pulse - GPU accelerated
+   516→   516→// ─────────────────────────────────────────────────────────────
+   517→   517→const AttackArc = memo(function AttackArc({
+   518→   518→  attack,
+   519→   519→  isSelected,
+   520→   520→  isHovered,
+   521→   521→  isDimmed,
+   522→   522→}: {
+   523→   523→  attack: AttackConnection;
+   524→   524→  isSelected: boolean;
+   525→   525→  isHovered: boolean;
+   526→   526→  isDimmed: boolean;
+   527→   527→}) {
+   528→   528→  const groupRef = useRef<THREE.Group>(null);
+   529→   529→  const arcRef = useRef<THREE.Line>(null);
+   530→   530→  const particlesRef = useRef<THREE.Points>(null);
+   531→   531→  const sourcePulseRef = useRef<THREE.Mesh>(null);
+   532→   532→  const targetPulseRef = useRef<THREE.Mesh>(null);
+   533→   533→  const progressRef = useRef(0);
+   534→   534→  const particleTimeRef = useRef(0);
+   535→   535→
+   536→   536→  const color = SEVERITY_COLORS[attack.severity];
+   537→   537→  const threeColor = useMemo(() => new THREE.Color(color), [color]);
+   538→   538→
+   539→   539→  const startPos = useMemo(() =>
+   540→   540→    latLngToVector3(attack.sourceCoords[0], attack.sourceCoords[1], EARTH_RADIUS + 0.005),
+   541→   541→    [attack]
+   542→   542→  );
+   543→   543→  const endPos = useMemo(() =>
+   544→   544→    latLngToVector3(attack.targetCoords[0], attack.targetCoords[1], EARTH_RADIUS + 0.005),
+   545→   545→    [attack]
+   546→   546→  );
+   547→   547→
+   548→   548→  const { curve, arcPoints, particlePositions } = useMemo(() => {
+   549→   549→    const mid = new THREE.Vector3().addVectors(startPos, endPos).multiplyScalar(0.5);
+   550→   550→    const distance = startPos.distanceTo(endPos);
+   551→   551→    mid.normalize().multiplyScalar(EARTH_RADIUS + distance * 0.35);
+   552→   552→
+   553→   553→    const curve = new THREE.QuadraticBezierCurve3(startPos, mid, endPos);
+   554→   554→    const arcPoints = curve.getPoints(80);
+   555→   555→
+   556→   556→    // Particle positions along the arc
+   557→   557→    const particleCount = 20;
+   558→   558→    const positions = new Float32Array(particleCount * 3);
+   559→   559→    for (let i = 0; i < particleCount; i++) {
+   560→   560→      const t = i / (particleCount - 1);
+   561→   561→      const point = curve.getPoint(t);
+   562→   562→      positions[i * 3] = point.x;
+   563→   563→      positions[i * 3 + 1] = point.y;
+   564→   564→      positions[i * 3 + 2] = point.z;
+   565→   565→    }
+   566→   566→
+   567→   567→    return { curve, arcPoints, particlePositions: positions };
+   568→   568→  }, [startPos, endPos]);
+   569→   569→
+   570→   570→  // Arc line geometry
+   571→   571→  const arcGeometry = useMemo(() => {
+   572→   572→    const geom = new THREE.BufferGeometry().setFromPoints(arcPoints);
+   573→   573→    return geom;
+   574→   574→  }, [arcPoints]);
+   575→   575→
+   576→   576→  // Particle geometry
+   577→   577→  const particleGeom = useMemo(() => {
+   578→   578→    const geom = new THREE.BufferGeometry();
+   579→   579→    geom.setAttribute('position', new THREE.Float32BufferAttribute(particlePositions, 3));
+   580→   580→    return geom;
+   581→   581→  }, [particlePositions]);
+   582→   582→
+   583→   583→  const baseOpacity = isDimmed ? 0.05 : isSelected ? 0.8 : isHovered ? 0.7 : 0.4;
+   584→   584→  const pulseMultiplier = isSelected ? 1.5 : isHovered ? 1.2 : 1;
+   585→   585→
+   586→   586→  useFrame((state, delta) => {
+   587→   587→    progressRef.current = Math.min(progressRef.current + delta * 0.4, 1);
+   588→   588→    particleTimeRef.current += delta;
+   589→   589→
+   590→   590→    const opacity = progressRef.current * baseOpacity;
+   591→   591→
+   592→   592→    // Update arc
+   593→   593→    if (arcRef.current) {
+   594→   594→      const mat = arcRef.current.material as THREE.LineBasicMaterial;
+   595→   595→      mat.opacity = opacity;
+   596→   596→      if (isSelected || isHovered) {
+   597→   597→        mat.linewidth = 2;
+   598→   598→      }
+   599→   599→    }
+   600→   600→
+   601→   601→    // Animate particles along curve
+   602→   602→    if (particlesRef.current) {
+   603→   603→      const positions = particlesRef.current.geometry.attributes.position;
+   604→   604→      if (positions) {
+   605→   605→        const count = positions.count;
+   606→   606→        for (let i = 0; i < count; i++) {
+   607→   607→          const baseT = i / (count - 1);
+   608→   608→          const t = (baseT + particleTimeRef.current * 0.3) % 1;
+   609→   609→          const point = curve.getPoint(t);
+   610→   610→          positions.setXYZ(i, point.x, point.y, point.z);
+   611→   611→        }
+   612→   612→        positions.needsUpdate = true;
+   613→   613→      }
+   614→   614→      const pMat = particlesRef.current.material as THREE.PointsMaterial;
+   615→   615→      pMat.opacity = opacity * 0.8;
+   616→   616→      pMat.size = (isSelected ? 0.035 : isHovered ? 0.03 : 0.02) * pulseMultiplier;
+   617→   617→    }
+   618→   618→
+   619→   619→    // Source pulse animation
+   620→   620→    if (sourcePulseRef.current) {
+   621→   621→      const t = state.clock.getElapsedTime();
+   622→   622→      const scale = (1 + Math.sin(t * 3) * 0.4) * pulseMultiplier;
+   623→   623→      sourcePulseRef.current.scale.set(scale, scale, scale);
+   624→   624→      const sMat = sourcePulseRef.current.material as THREE.MeshBasicMaterial;
+   625→   625→      sMat.opacity = isDimmed ? 0.02 : (0.4 + Math.sin(t * 3) * 0.2) * (isSelected ? 1.3 : 1);
+   626→   626→    }
+   627→   627→
+   628→   628→    // Target pulse animation
+   629→   629→    if (targetPulseRef.current) {
+   630→   630→      const t = state.clock.getElapsedTime();
+   631→   631→      const scale = (1 + Math.sin(t * 2.5 + 1) * 0.3) * pulseMultiplier;
+   632→   632→      targetPulseRef.current.scale.set(scale, scale, scale);
+   633→   633→      const tMat = targetPulseRef.current.material as THREE.MeshBasicMaterial;
+   634→   634→      tMat.opacity = isDimmed ? 0.02 : (0.3 + Math.sin(t * 2.5 + 1) * 0.15);
+   635→   635→    }
+   636→   636→  });
+   637→   637→
+   638→   638→  return (
+   639→   639→    <group ref={groupRef}>
+   640→   640→      {/* Attack arc line */}
+   641→   641→      <line ref={arcRef} geometry={arcGeometry}>
+   642→   642→        <lineBasicMaterial
+   643→   643→          color={threeColor}
+   644→   644→          transparent
+   645→   645→          opacity={0}
+   646→   646→          depthWrite={false}
+   647→   647→        />
+   648→   648→      </line>
+   649→   649→
+   650→   650→      {/* Flowing particles */}
+   651→   651→      <points ref={particlesRef} geometry={particleGeom}>
+   652→   652→        <pointsMaterial
+   653→   653→          color={threeColor}
+   654→   654→          transparent
+   655→   655→          opacity={0}
+   656→   656→          size={0.02}
+   657→   657→          sizeAttenuation
+   658→   658→          depthWrite={false}
+   659→   659→          blending={THREE.AdditiveBlending}
+   660→   660→        />
+   661→   661→      </points>
+   662→   662→
+   663→   663→      {/* Source marker with pulse */}
+   664→   664→      <group position={startPos}>
+   665→   665→        <mesh>
+   666→   666→          <sphereGeometry args={[0.018, 12, 12]} />
+   667→   667→          <meshBasicMaterial color={threeColor} transparent opacity={isDimmed ? 0.05 : 0.9} />
+   668→   668→        </mesh>
+   669→   669→        {/* Pulse ring */}
+   670→   670→        <mesh ref={sourcePulseRef}>
+   671→   671→          <ringGeometry args={[0.025, 0.04, 24]} />
+   672→   672→          <meshBasicMaterial
+   673→   673→            color={threeColor}
+   674→   674→            transparent
+   675→   675→            opacity={0.4}
+   676→   676→            side={THREE.DoubleSide}
+   677→   677→            depthWrite={false}
+   678→   678→            blending={THREE.AdditiveBlending}
+   679→   679→          />
+   680→   680→        </mesh>
+   681→   681→        {/* Expanding ripple */}
+   682→   682→        <ExpandingRipple color={threeColor} position={[0, 0, 0]} baseSize={0.05} isDimmed={isDimmed} />
+   683→   683→      </group>
+   684→   684→
+   685→   685→      {/* Target marker with pulse */}
+   686→   686→      <group position={endPos}>
+   687→   687→        <mesh>
+   688→   688→          <sphereGeometry args={[0.015, 12, 12]} />
+   689→   689→          <meshBasicMaterial color="#ffffff" transparent opacity={isDimmed ? 0.03 : 0.7} />
+   690→   690→        </mesh>
+   691→   691→        <mesh ref={targetPulseRef}>
+   692→   692→          <ringGeometry args={[0.02, 0.032, 24]} />
+   693→   693→          <meshBasicMaterial
+   694→   694→            color={threeColor}
+   695→   695→            transparent
+   696→   696→            opacity={0.3}
+   697→   697→            side={THREE.DoubleSide}
+   698→   698→            depthWrite={false}
+   699→   699→            blending={THREE.AdditiveBlending}
+   700→   700→          />
+   701→   701→        </mesh>
+   702→   702→        <ExpandingRipple color={threeColor} position={[0, 0, 0]} baseSize={0.04} isDimmed={isDimmed} />
+   703→   703→      </group>
+   704→   704→    </group>
+   705→   705→  );
+   706→   706→});
+   707→   707→
+   708→   708→// ─────────────────────────────────────────────────────────────
+   709→   709→// Expanding Ripple Effect
+   710→   710→// ─────────────────────────────────────────────────────────────
+   711→   711→function ExpandingRipple({
+   712→   712→  color,
+   713→   713→  position,
+   714→   714→  baseSize,
+   715→   715→  isDimmed,
+   716→   716→}: {
+   717→   717→  color: THREE.Color;
+   718→   718→  position: [number, number, number];
+   719→   719→  baseSize: number;
+   720→   720→  isDimmed: boolean;
+   721→   721→}) {
+   722→   722→  const meshRef = useRef<THREE.Mesh>(null);
+   723→   723→  const startTime = useRef(Math.random() * 3);
+   724→   724→
+   725→   725→  useFrame((state) => {
+   726→   726→    if (!meshRef.current) return;
+   727→   727→    const t = (state.clock.getElapsedTime() + startTime.current) % 2;
+   728→   728→    const scale = 1 + t * 1.5;
+   729→   729→    meshRef.current.scale.set(scale, scale, scale);
+   730→   730→    const mat = meshRef.current.material as THREE.MeshBasicMaterial;
+   731→   731→    mat.opacity = isDimmed ? 0 : Math.max(0, (1 - t / 2) * 0.3);
+   732→   732→  });
+   733→   733→
+   734→   734→  return (
+   735→   735→    <mesh ref={meshRef} position={position}>
+   736→   736→      <ringGeometry args={[baseSize * 0.8, baseSize, 24]} />
+   737→   737→      <meshBasicMaterial
+   738→   738→        color={color}
+   739→   739→        transparent
+   740→   740→        opacity={0.3}
+   741→   741→        side={THREE.DoubleSide}
+   742→   742→        depthWrite={false}
+   743→   743→        blending={THREE.AdditiveBlending}
+   744→   744→      />
+   745→   745→    </mesh>
+   746→   746→  );
+   747→   747→}
+   748→   748→
+   749→   749→// ─────────────────────────────────────────────────────────────
+   750→   750→// Attack Tooltip (HTML overlay)
+   751→   751→// ─────────────────────────────────────────────────────────────
+   752→   752→function AttackTooltip({ attack, position }: { attack: AttackConnection; position: THREE.Vector3 }) {
+   753→   753→  return (
+   754→   754→    <Html position={position} center distanceFactor={8} style={{ pointerEvents: 'none' }}>
+   755→   755→      <div
+   756→   756→        className="rounded-xl p-3 min-w-[220px] shadow-2xl backdrop-blur-xl"
+   757→   757→        style={{
+   758→   758→          background: 'rgba(8, 13, 24, 0.85)',
+   759→   759→          border: `1px solid ${SEVERITY_COLORS[attack.severity]}20`,
+   760→   760→          borderLeft: `3px solid ${SEVERITY_COLORS[attack.severity]}`,
+   761→   761→          boxShadow: `0 0 20px ${SEVERITY_COLORS[attack.severity]}10, 0 8px 32px rgba(0,0,0,0.4)`,
+   762→   762→        }}
+   763→   763→      >
+   764→   764→        <div className="flex items-center gap-2 mb-2">
+   765→   765→          <div className="h-2 w-2 rounded-full" style={{ backgroundColor: SEVERITY_COLORS[attack.severity], boxShadow: `0 0 6px ${SEVERITY_COLORS[attack.severity]}` }} />
+   766→   766→          <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: SEVERITY_COLORS[attack.severity] }}>
+   767→   767→            {attack.severity}
+   768→   768→          </span>
+   769→   769→          <span className="text-[9px] text-gray-500 ml-auto">{formatTime(attack.timestamp)}</span>
+   770→   770→        </div>
+   771→   771→        <div className="space-y-1 text-[10px]">
+   772→   772→          <div className="flex justify-between">
+   773→   773→            <span className="text-gray-500">Type</span>
+   774→   774→            <span className="text-gray-300">{ATTACK_TYPE_LABELS[attack.attackType]}</span>
+   775→   775→          </div>
+   776→   776→          <div className="flex justify-between">
+   777→   777→            <span className="text-gray-500">Source</span>
+   778→   778→            <span className="text-gray-300 font-mono">{attack.sourceIp}</span>
+   779→   779→          </div>
+   780→   780→          <div className="flex justify-between">
+   781→   781→            <span className="text-gray-500">Target</span>
+   782→   782→            <span className="text-gray-300 font-mono">{attack.targetIp}</span>
+   783→   783→          </div>
+   784→   784→          <div className="flex justify-between">
+   785→   785→            <span className="text-gray-500">Adversary</span>
+   786→   786→            <span className="text-gray-300">{attack.adversary}</span>
+   787→   787→          </div>
+   788→   788→        </div>
+   789→   789→      </div>
+   790→   790→    </Html>
+   791→   791→  );
+   792→   792→}
+   793→   793→
+   794→   794→// ─────────────────────────────────────────────────────────────
+   795→   795→// Globe Scene - Main 3D Scene
+   796→   796→// ─────────────────────────────────────────────────────────────
+   797→   797→function GlobeScene({
+   798→   798→  attacks,
+   799→   799→  selectedAttack,
+   800→   800→  hoveredAttack,
+   801→   801→  onSelectAttack,
+   802→   802→  onHoverAttack,
+   803→   803→}: {
+   804→   804→  attacks: AttackConnection[];
+   805→   805→  selectedAttack: AttackConnection | null;
+   806→   806→  hoveredAttack: AttackConnection | null;
+   807→   807→  onSelectAttack: (a: AttackConnection) => void;
+   808→   808→  onHoverAttack: (a: AttackConnection | null) => void;
+   809→   809→}) {
+   810→   810→  const controlsRef = useRef<any>(null);
+   811→   811→
+   812→   812→  // Limit displayed attacks for performance
+   813→   813→  const displayAttacks = useMemo(() => attacks.slice(-50), [attacks]);
+   814→   814→
+   815→   815→  return (
+   816→   816→    <>
+   817→   817→      {/* Lighting */}
+   818→   818→      <ambientLight intensity={0.12} />
+   819→   819→      <directionalLight position={[5, 3, 5]} intensity={0.5} color="#d0e8ff" />
+   820→   820→      <directionalLight position={[-3, -1, -5]} intensity={0.08} color="#00f0ff" />
+   821→   821→      <pointLight position={[0, 5, 0]} intensity={0.1} color="#4488ff" />
+   822→   822→
+   823→   823→      {/* Stars */}
+   824→   824→      <Stars radius={100} depth={50} count={3000} factor={4} saturation={0} fade speed={0.5} />
+   825→   825→
+   826→   826→      {/* Earth + Atmosphere */}
+   827→   827→      <GlobeEarth />
+   828→   828→      <Atmosphere />
+   829→   829→
+   830→   830→      {/* Attack visualizations */}
+   831→   831→      {displayAttacks.map(attack => (
+   832→   832→        <AttackArc
+   833→   833→          key={attack.id}
+   834→   834→          attack={attack}
+   835→   835→          isSelected={selectedAttack?.id === attack.id}
+   836→   836→          isHovered={hoveredAttack?.id === attack.id}
+   837→   837→          isDimmed={selectedAttack !== null && selectedAttack.id !== attack.id}
+   838→   838→        />
+   839→   839→      ))}
+   840→   840→
+   841→   841→      {/* Selected attack tooltip */}
+   842→   842→      {selectedAttack && (
+   843→   843→        <AttackTooltip
+   844→   844→          attack={selectedAttack}
+   845→   845→          position={latLngToVector3(
+   846→   846→            selectedAttack.sourceCoords[0],
+   847→   847→            selectedAttack.sourceCoords[1],
+   848→   848→            EARTH_RADIUS + 0.3
+   849→   849→          )}
+   850→   850→        />
+   851→   851→      )}
+   852→   852→
+   853→   853→      {/* OrbitControls with premium feel */}
+   854→   854→      <OrbitControls
+   855→   855→        ref={controlsRef}
+   856→   856→        enablePan={false}
+   857→   857→        enableZoom={true}
+   858→   858→        minDistance={2.8}
+   859→   859→        maxDistance={8}
+   860→   860→        enableDamping
+   861→   861→        dampingFactor={0.06}
+   862→   862→        rotateSpeed={0.5}
+   863→   863→        autoRotate
+   864→   864→        autoRotateSpeed={0.15}
+   865→   865→        enableInertia
+   866→   866→        inertiaFactor={0.8}
+   867→   867→      />
+   868→   868→
+   869→   869→      {/* Post-processing effects */}
+   870→   870→      <EffectComposer>
+   871→   871→        <Bloom
+   872→   872→          intensity={0.4}
+   873→   873→          luminanceThreshold={0.6}
+   874→   874→          luminanceSmoothing={0.9}
+   875→   875→          mipmapBlur
+   876→   876→        />
+   877→   877→        <Vignette offset={0.3} darkness={0.5} blendFunction={BlendFunction.NORMAL} />
+   878→   878→      </EffectComposer>
+   879→   879→    </>
+   880→   880→  );
+   881→   881→}
+   882→   882→
+   883→   883→// ─────────────────────────────────────────────────────────────
+   884→   884→// Main 3D Globe Component (exported)
+   885→   885→// ─────────────────────────────────────────────────────────────
+   886→   886→export function ThreeGlobe({
+   887→   887→  attacks,
+   888→   888→  selectedAttack,
+   889→   889→  hoveredAttack,
+   890→   890→  onSelectAttack,
+   891→   891→  onHoverAttack,
+   892→   892→}: {
+   893→   893→  attacks: AttackConnection[];
+   894→   894→  selectedAttack: AttackConnection | null;
+   895→   895→  hoveredAttack: AttackConnection | null;
+   896→   896→  onSelectAttack: (a: AttackConnection) => void;
+   897→   897→  onHoverAttack: (a: AttackConnection | null) => void;
+   898→   898→}) {
+   899→   899→  return (
+   900→   900→    <div className="h-full w-full">
+   901→   901→      <Canvas
+   902→   902→        camera={{ position: [0, 0, 5], fov: 45, near: 0.1, far: 1000 }}
+   903→   903→        gl={{
+   904→   904→          antialias: true,
+   905→   905→          alpha: true,
+   906→   906→          powerPreference: 'high-performance',
+   907→   907→          toneMapping: THREE.ACESFilmicToneMapping,
+   908→   908→          toneMappingExposure: 1.2,
+   909→   909→        }}
+   910→   910→        dpr={[1, 2]}
+   911→   911→        style={{ background: 'transparent' }}
+   912→   912→        performance={{ min: 0.5 }}
+   913→   913→      >
+   914→   914→        <GlobeScene
+   915→   915→          attacks={attacks}
+   916→   916→          selectedAttack={selectedAttack}
+   917→   917→          hoveredAttack={hoveredAttack}
+   918→   918→          onSelectAttack={onSelectAttack}
+   919→   919→          onHoverAttack={onHoverAttack}
+   920→   920→        />
+   921→   921→      </Canvas>
+   922→   922→    </div>
+   923→   923→  );
+   924→   924→}
+   925→   925→
