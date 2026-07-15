@@ -30,6 +30,9 @@ interface UIStore {
   // Notification drawer
   notificationDrawerOpen: boolean;
 
+  // Command palette
+  commandPaletteOpen: boolean;
+
   // Actions
   login: (username: string, role: string, name: string) => void;
   logout: () => void;
@@ -70,6 +73,7 @@ export const useUIStore = create<UIStore>((set, get) => ({
   dataMode: 'mock',
 
   notificationDrawerOpen: false,
+  commandPaletteOpen: false,
 
   login: (username: string, role: string, name: string) => {
     set({ isLoggedIn: true, username, userRole: role, userName: name });
@@ -113,6 +117,9 @@ export const useUIStore = create<UIStore>((set, get) => ({
   },
 
   toggleNotificationDrawer: () => set(state => ({ notificationDrawerOpen: !state.notificationDrawerOpen })),
+
+  toggleCommandPalette: () => set(state => ({ commandPaletteOpen: !state.commandPaletteOpen })),
+  setCommandPaletteOpen: (v: boolean) => set({ commandPaletteOpen: v }),
 
   setGlowIntensity: (v: number) => set({ glowIntensity: v }),
   setAnimationSpeed: (v: number) => set({ animationSpeed: v }),

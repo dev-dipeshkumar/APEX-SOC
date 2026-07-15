@@ -16,6 +16,7 @@ import { AssetsView } from '@/components/soc/assets-view';
 import { SettingsView } from '@/components/soc/settings-view';
 import { NotificationDrawer } from '@/components/soc/notification-drawer';
 import { CyberBackground } from '@/components/soc/cyber-background';
+import { CommandPalette } from '@/components/soc/command-palette';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Home() {
@@ -79,11 +80,14 @@ export default function Home() {
     };
   }, [isLoggedIn, initialized, setWsConnected, addAttackConnection, addAlert, addLogLine, updateDashboardStats]);
 
-  // Keyboard shortcuts
+  // Keyboard shortcuts (number keys for quick navigation)
   useEffect(() => {
     if (!isLoggedIn) return;
     const handler = (e: KeyboardEvent) => {
+      // Don't trigger when typing in inputs or when CMD/CTRL is held
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.metaKey || e.ctrlKey) return;
+
       const viewMap: Record<string, ViewType> = {
         '1': 'dashboard',
         '2': 'alerts',
@@ -118,7 +122,7 @@ export default function Home() {
     <div className="flex h-screen overflow-hidden bg-[#050810] relative">
       {/* Animated cyber background */}
       <CyberBackground />
-      
+
       {/* Main layout */}
       <div className="relative z-10 flex h-full w-full">
         <Sidebar />
@@ -142,6 +146,9 @@ export default function Home() {
 
       {/* Notification drawer */}
       <NotificationDrawer />
+
+      {/* Command Palette (CMD/CTRL+K) */}
+      <CommandPalette />
     </div>
   );
 }

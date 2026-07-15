@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function Topbar() {
-  const { userName, userRole, wsConnected, activeView, toggleNotificationDrawer, logout } = useUIStore();
+  const { userName, userRole, wsConnected, activeView, toggleNotificationDrawer, toggleCommandPalette, logout } = useUIStore();
   const { unreadCount, getFilteredAlerts } = useAlertStore();
   const canExport = userRole ? ROLE_PERMISSIONS[userRole as keyof typeof ROLE_PERMISSIONS]?.includes(Permission.EXPORT_DATA) : false;
 
@@ -79,10 +79,11 @@ export function Topbar() {
       </div>
 
       <div className="flex items-center gap-2">
-        {/* Search */}
+        {/* Search - triggers Command Palette */}
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
+          onClick={toggleCommandPalette}
           className="hidden sm:flex items-center gap-2 rounded-lg glass-light px-3 py-1.5 text-[#475569] hover:text-[#94a3b8] hover:border-[rgba(0,240,255,0.12)] transition-all"
         >
           <Search className="h-3.5 w-3.5" />
