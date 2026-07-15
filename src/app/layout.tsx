@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "APEX SOC — Enterprise Threat Intelligence Platform",
   description: "Enterprise-grade Security Operations Center with real-time threat monitoring, 3D intelligence mapping, and asset inventory.",
   icons: {
-    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>",
+    icon: "/favicon.svg",
   },
 };
 

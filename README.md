@@ -1,7 +1,7 @@
 <div align="center">
 
 <!-- LOGO -->
-<img src="public/logo.svg" alt="APEX SOC Logo" width="120" height="120" />
+<img src="public/logo.svg" alt="APEX SOC Logo" width="140" height="140" />
 
 # APEX SOC
 
