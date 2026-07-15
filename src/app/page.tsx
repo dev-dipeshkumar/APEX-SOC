@@ -11,7 +11,11 @@ import { Topbar } from '@/components/soc/topbar';
 import { LoginPage } from '@/components/soc/login-page';
 import { DashboardView } from '@/components/soc/dashboard-view';
 import { AlertsView } from '@/components/soc/alerts-view';
-import { IntelMapView } from '@/components/soc/intel-map-view';
+import dynamic from 'next/dynamic';
+const IntelMapView = dynamic(() => import('@/components/soc/intel-map-view').then(m => ({ default: m.IntelMapView })), {
+  ssr: false,
+  loading: () => <div className="flex items-center justify-center h-full text-[#475569]"><p className="text-xs">Loading Intel Map...</p></div>
+});
 import { AssetsView } from '@/components/soc/assets-view';
 import { SettingsView } from '@/components/soc/settings-view';
 import { NotificationDrawer } from '@/components/soc/notification-drawer';

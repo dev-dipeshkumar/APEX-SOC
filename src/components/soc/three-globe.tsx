@@ -866,15 +866,14 @@ function GlobeScene({
         inertiaFactor={0.8}
       />
 
-      {/* Post-processing effects */}
-      <EffectComposer>
+      {/* Post-processing effects - minimal for performance */}
+      <EffectComposer multisampling={0}>
         <Bloom
-          intensity={0.4}
-          luminanceThreshold={0.6}
+          intensity={0.3}
+          luminanceThreshold={0.7}
           luminanceSmoothing={0.9}
           mipmapBlur
         />
-        <Vignette offset={0.3} darkness={0.5} blendFunction={BlendFunction.NORMAL} />
       </EffectComposer>
     </>
   );
@@ -901,13 +900,13 @@ export function ThreeGlobe({
       <Canvas
         camera={{ position: [0, 0, 5], fov: 45, near: 0.1, far: 1000 }}
         gl={{
-          antialias: true,
+          antialias: false,
           alpha: true,
-          powerPreference: 'high-performance',
+          powerPreference: 'low-power',
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.2,
+          toneMappingExposure: 1.0,
         }}
-        dpr={[1, 2]}
+        dpr={1}
         style={{ background: 'transparent' }}
         performance={{ min: 0.5 }}
       >

@@ -11,7 +11,7 @@ export function Starfield() {
   const pointsRef = useRef<THREE.Points>(null);
 
   const { positions, colors, sizes } = useMemo(() => {
-    const count = 3000;
+    const count = 1000;
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
     const sizes = new Float32Array(count);
@@ -89,7 +89,7 @@ export function AmbientParticles() {
   const pointsRef = useRef<THREE.Points>(null);
 
   const { positions, opacities } = useMemo(() => {
-    const count = 500;
+    const count = 200;
     const positions = new Float32Array(count * 3);
     const opacities = new Float32Array(count);
 

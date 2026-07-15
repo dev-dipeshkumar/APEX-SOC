@@ -91,7 +91,7 @@ function smoothNoise(x: number, y: number, scale: number): number {
   return a * (1-u)*(1-v) + b * u*(1-v) + c * (1-u)*v + d * u*v;
 }
 
-function fbm(x: number, y: number, octaves: number = 5): number {
+function fbm(x: number, y: number, octaves: number = 3): number {
   let val = 0, amp = 0.5, freq = 1;
   for (let i = 0; i < octaves; i++) {
     val += amp * smoothNoise(x * freq, y * freq, 200);
@@ -105,7 +105,7 @@ function fbm(x: number, y: number, octaves: number = 5): number {
 // Main texture generation
 // ─────────────────────────────────────────────────────────────
 
-export function createEarthDayTexture(width = 4096, height = 2048): THREE.CanvasTexture {
+export function createEarthDayTexture(width = 1024, height = 512): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
@@ -194,7 +194,7 @@ export function createEarthDayTexture(width = 4096, height = 2048): THREE.Canvas
   return tex;
 }
 
-export function createEarthNightTexture(width = 4096, height = 2048): THREE.CanvasTexture {
+export function createEarthNightTexture(width = 1024, height = 512): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
@@ -282,7 +282,7 @@ export function createEarthNightTexture(width = 4096, height = 2048): THREE.Canv
   return tex;
 }
 
-export function createEarthBumpTexture(width = 4096, height = 2048): THREE.CanvasTexture {
+export function createEarthBumpTexture(width = 512, height = 256): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
@@ -319,7 +319,7 @@ export function createEarthBumpTexture(width = 4096, height = 2048): THREE.Canva
   return tex;
 }
 
-export function createCloudTexture(width = 2048, height = 1024): THREE.CanvasTexture {
+export function createCloudTexture(width = 512, height = 256): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
@@ -354,7 +354,7 @@ export function createCloudTexture(width = 2048, height = 1024): THREE.CanvasTex
   return tex;
 }
 
-export function createSpecularTexture(width = 4096, height = 2048): THREE.CanvasTexture {
+export function createSpecularTexture(width = 512, height = 256): THREE.CanvasTexture {
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;

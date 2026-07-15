@@ -2,8 +2,6 @@
 
 import { Suspense, useEffect, useCallback, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { EffectComposer, Bloom, Vignette, ToneMapping } from '@react-three/postprocessing';
-import { BlendFunction, ToneMappingMode } from 'postprocessing';
 import * as THREE from 'three';
 import { EarthMesh } from './earth-mesh';
 import { AtmosphereMesh, AtmosphereInnerGlow } from './atmosphere';
@@ -11,7 +9,7 @@ import { CloudsMesh } from './clouds';
 import { CinematicCamera } from './cinematic-camera';
 import { ThreatVisualization } from './threat-visualization';
 import { GlobeInteractionHandler } from './globe-interaction';
-import { Starfield, AmbientParticles, NeuralNetworkLines } from './background-effects';
+import { Starfield, AmbientParticles } from './background-effects';
 import { useGlobeStore } from '@/stores/globe-store';
 import type { AttackConnection } from '@/lib/constants';
 
@@ -21,31 +19,9 @@ import type { AttackConnection } from '@/lib/constants';
 function GlobeLoader() {
   return (
     <mesh>
-      <sphereGeometry args={[2, 32, 16]} />
+      <sphereGeometry args={[2, 16, 8]} />
       <meshBasicMaterial color="#0a1628" transparent opacity={0.5} />
     </mesh>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────
-// Post-processing effects
-// ─────────────────────────────────────────────────────────────
-function PostProcessing() {
-  return (
-    <EffectComposer multisampling={4}>
-      <Bloom
-        intensity={0.4}
-        luminanceThreshold={0.6}
-        luminanceSmoothing={0.9}
-        mipmapBlur
-      />
-      <Vignette
-        offset={0.3}
-        darkness={0.3}
-        blendFunction={BlendFunction.NORMAL}
-      />
-      <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-    </EffectComposer>
   );
 }
 
@@ -62,14 +38,12 @@ function GlobeSceneContent() {
 
   return (
     <>
-      {/* HDR-like lighting */}
-      <ambientLight intensity={0.15} />
-      <directionalLight position={[5, 3, 5]} intensity={0.8} color="#ffffff" />
-      <directionalLight position={[-5, -3, -5]} intensity={0.15} color="#4488ff" />
+      {/* Lighting */}
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[5, 3, 5]} intensity={0.7} color="#ffffff" />
 
       {/* Background */}
       <Starfield />
-      <NeuralNetworkLines />
       <AmbientParticles />
 
       {/* Globe layers */}
@@ -86,9 +60,6 @@ function GlobeSceneContent() {
 
       {/* Interaction handler */}
       <GlobeInteractionHandler />
-
-      {/* Post-processing */}
-      <PostProcessing />
     </>
   );
 }
@@ -147,17 +118,14 @@ export function GlobeScene({ attacks }: GlobeSceneProps) {
         position: [0, 0, 5],
         fov: 45,
         near: 0.1,
-        far: 200,
+        far: 100,
       }}
       gl={{
-        antialias: true,
+        antialias: false,
         alpha: true,
-        powerPreference: 'high-performance',
-        toneMapping: THREE.ACESFilmicToneMapping,
-        toneMappingExposure: 1.2,
-        outputColorSpace: THREE.SRGBColorSpace,
+        powerPreference: 'low-power',
       }}
-      dpr={[1, 2]}
+      dpr={1}
       style={{ background: 'transparent' }}
     >
       <Suspense fallback={<GlobeLoader />}>

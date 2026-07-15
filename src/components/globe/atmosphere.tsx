@@ -18,7 +18,7 @@ export function AtmosphereMesh() {
   }), []);
 
   const geometry = useMemo(() => {
-    return new THREE.SphereGeometry(ATMOSPHERE_RADIUS, 64, 32);
+    return new THREE.SphereGeometry(ATMOSPHERE_RADIUS, 32, 16);
   }, []);
 
   useFrame((_, delta) => {
@@ -57,7 +57,7 @@ export function AtmosphereInnerGlow() {
   }), []);
 
   const geometry = useMemo(() => {
-    return new THREE.SphereGeometry(2.04, 64, 32);
+    return new THREE.SphereGeometry(2.04, 32, 16);
   }, []);
 
   useFrame((_, delta) => {
