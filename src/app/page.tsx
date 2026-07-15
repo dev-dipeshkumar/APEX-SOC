@@ -116,6 +116,7 @@ export default function Home() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
         >
+          <CyberCursor />
           <LandingPage onEnterApp={() => setPhase('login')} />
         </motion.div>
       </AnimatePresence>
@@ -133,6 +134,7 @@ export default function Home() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
         >
+          <CyberCursor />
           <LoginPage onLogin={(u, r, n) => login(u, r, n)} />
         </motion.div>
       </AnimatePresence>
