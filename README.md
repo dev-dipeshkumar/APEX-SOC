@@ -463,15 +463,17 @@ bun run dev
 
 The application will be available at **http://localhost:3000**.
 
-### Default Login Credentials
+### Demo Login Credentials
 
-| Username | Password | Role | Display Name |
-|----------|----------|------|-------------|
-| `admin` | `apex-admin-2024` | Admin | SOC Commander |
-| `analyst` | `apex-analyst-2024` | Analyst | Jane Reyes |
-| `viewer` | `apex-viewer-2024` | Viewer | Guest Observer |
+The live demo includes quick-fill login buttons. Click any demo account on the login screen to auto-populate credentials.
 
-> ⚠️ **Important:** These are default development credentials. In production, replace them with proper authentication via NextAuth.js and a secure identity provider.
+| Role | Username | Display Name |
+|------|----------|-------------|
+| Admin | `admin` | SOC Commander |
+| Analyst | `analyst` | Jane Reyes |
+| Viewer | `viewer` | Guest Observer |
+
+> ⚠️ **Important:** These are demo-only credentials for the live preview. In production, replace them with proper authentication via NextAuth.js and a secure identity provider.
 
 ### Production Build
 

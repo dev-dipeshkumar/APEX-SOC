@@ -27,7 +27,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
       if (user) {
         onLogin(user.username, user.role, user.name);
       } else {
-        setError('Invalid credentials. Try: admin / apex-admin-2024');
+        setError('Invalid credentials. Please check your username and password.');
       }
       setLoading(false);
     }, 800);
@@ -231,9 +231,9 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   onClick={() => { setUsername(u.username); setPassword(u.password); }}
                   className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs transition-all group"
                 >
-                  <span className="text-[#94a3b8] font-mono">{u.username} <span className="text-[#546380]">/ {u.password}</span></span>
+                  <span className="text-[#94a3b8] font-mono">{u.name} <span className="text-[#546380]">({u.role})</span></span>
                   <span className="status-chip severity-low">
-                    {u.role}
+                    {u.username}
                   </span>
                 </motion.button>
               ))}

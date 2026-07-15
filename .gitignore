@@ -50,5 +50,23 @@ test
 prompt
 
 server.log
+
 # Skills directory
 /skills/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+db/
+
+# Upload & temporary files
+upload/
+download/screenshot-*
+screenshot-*.png
+
+# Proxy configs (contain internal URLs)
+Caddyfile
+
+# Keep .env.example but ignore all other env files
+!.env.example
