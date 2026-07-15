@@ -1,7 +1,32 @@
 {
-  "name": "nextjs_tailwind_shadcn_ts",
+  "name": "@dev-dipeshkumar/apex-soc",
   "version": "0.2.0",
   "private": true,
+  "description": "Enterprise Threat Intelligence Platform — Real-time threat monitoring, interactive 3D globe visualization, SOC dashboard, alert triage, and asset inventory",
+  "license": "MIT",
+  "author": "dev-dipeshkumar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dev-dipeshkumar/APEX-SOC.git"
+  },
+  "homepage": "https://github.com/dev-dipeshkumar/APEX-SOC#readme",
+  "keywords": [
+    "cybersecurity",
+    "soc",
+    "threat-intelligence",
+    "threejs",
+    "react",
+    "nextjs",
+    "typescript",
+    "tailwindcss",
+    "dashboard",
+    "3d-globe",
+    "security-operations-center",
+    "enterprise",
+    "framer-motion",
+    "zustand",
+    "recharts"
+  ],
   "scripts": {
     "dev": "next dev -p 3000 2>&1 | tee dev.log",
     "build": "next build && cp -r .next/static .next/standalone/.next/ && cp -r public .next/standalone/",
