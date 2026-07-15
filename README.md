@@ -25,10 +25,8 @@
 
 <br />
 
-<!-- HERO BANNER PLACEHOLDER -->
-<img src="docs/images/banner.png" alt="APEX SOC Banner" width="100%" />
-
-> 📸 **Banner placeholder** — Replace `docs/images/banner.png` with a high-resolution screenshot or animated GIF of the dashboard. Recommended dimensions: 1280×640px. Consider using a panoramic shot of the Intel Map with active threat arcs.
+<!-- HERO BANNER -->
+<img src="docs/images/banner.png" alt="APEX SOC — Enterprise Threat Intelligence Platform Dashboard" width="100%" />
 
 </div>
 
@@ -163,47 +161,45 @@ APEX SOC is built as a single-page application on Next.js 16 with React 19, leve
 
 ## Screenshots
 
-> 📸 **Screenshot placeholders** — Replace each image path with an actual screenshot or animated GIF. Recommended format: PNG at 1280×720 or GIF at 800×450 for animations.
-
 ### Dashboard
 
-<img src="docs/images/screenshots/dashboard.png" alt="Dashboard View" width="100%" />
+<img src="docs/images/screenshots/dashboard.png" alt="APEX SOC Dashboard" width="100%" />
 
 *The SOC dashboard presenting real-time KPI cards, severity distribution, threat trends, and a condensed alert feed — all synchronized with the live data stream.*
 
 ### Alerts
 
-<img src="docs/images/screenshots/alerts.png" alt="Alerts View" width="100%" />
+<img src="docs/images/screenshots/alerts.png" alt="APEX SOC Alerts Console" width="100%" />
 
 *The alert investigation console with multi-axis filtering, bulk triage operations, and a detail drawer for per-alert deep analysis.*
 
 ### Intel Map
 
-<img src="docs/images/screenshots/intel-map.png" alt="Intel Map View" width="100%" />
+<img src="docs/images/screenshots/intel-map.png" alt="APEX SOC Intel Map" width="100%" />
 
 *The interactive 3D globe with cinematic rendering, atmospheric shaders, and real-time attack arc visualization tracing threat origins and targets.*
 
 ### Assets
 
-<img src="docs/images/screenshots/assets.png" alt="Assets View" width="100%" />
+<img src="docs/images/screenshots/assets.png" alt="APEX SOC Asset Inventory" width="100%" />
 
 *The asset inventory in card view with risk scoring, status indicators, and type categorization.*
 
 ### Network Topology
 
-<img src="docs/images/screenshots/topology.png" alt="Network Topology" width="100%" />
+<img src="docs/images/screenshots/topology.png" alt="APEX SOC Network Topology" width="100%" />
 
 *The force-directed network topology graph showing asset relationships, traffic flow, and edge pulse animations.*
 
 ### Settings
 
-<img src="docs/images/screenshots/settings.png" alt="Settings View" width="100%" />
+<img src="docs/images/screenshots/settings.png" alt="APEX SOC Settings" width="100%" />
 
 *The settings center with display preferences, data source configuration, notification rules, and security policies.*
 
 ### Login
 
-<img src="docs/images/screenshots/login.png" alt="Login Screen" width="100%" />
+<img src="docs/images/screenshots/login.png" alt="APEX SOC Login" width="100%" />
 
 *The login screen with the animated cyber background, form validation, and role-based authentication.*
 
