@@ -45,6 +45,8 @@ interface UIStore {
   setTrendData: (data: TrendDataPoint[]) => void;
   addThreatScore: (score: number) => void;
   toggleNotificationDrawer: () => void;
+  toggleCommandPalette: () => void;
+  setCommandPaletteOpen: (v: boolean) => void;
   setGlowIntensity: (v: number) => void;
   setAnimationSpeed: (v: number) => void;
   setDensityMode: (v: 'comfortable' | 'compact') => void;

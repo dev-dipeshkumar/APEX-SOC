@@ -14,7 +14,14 @@ import { AlertsView } from '@/components/soc/alerts-view';
 import dynamic from 'next/dynamic';
 const IntelMapView = dynamic(() => import('@/components/soc/intel-map-view').then(m => ({ default: m.IntelMapView })), {
   ssr: false,
-  loading: () => <div className="flex items-center justify-center h-full text-[#475569]"><p className="text-xs">Loading Intel Map...</p></div>
+  loading: () => (
+    <div className="flex items-center justify-center h-full">
+      <div className="text-center">
+        <div className="h-8 w-8 mx-auto mb-3 rounded-full border-2 border-blue-500/30 border-t-blue-400 animate-spin" />
+        <p className="text-xs text-[#546380]">Loading Intel Map...</p>
+      </div>
+    </div>
+  ),
 });
 import { AssetsView } from '@/components/soc/assets-view';
 import { SettingsView } from '@/components/soc/settings-view';
@@ -54,26 +61,11 @@ export default function Home() {
 
     const simulate = () => {
       tick++;
-
-      if (Math.random() < 0.8) {
-        const attack = generateAttackConnection();
-        addAttackConnection(attack);
-      }
-
-      if (Math.random() < 0.5) {
-        const alert = generateAlert();
-        addAlert(alert);
-      }
-
-      const log = generateLogLine();
-      addLogLine(log);
-      if (Math.random() < 0.5) {
-        addLogLine(generateLogLine());
-      }
-
-      if (tick % 5 === 0) {
-        updateDashboardStats(generateDashboardStats());
-      }
+      if (Math.random() < 0.8) { addAttackConnection(generateAttackConnection()); }
+      if (Math.random() < 0.5) { addAlert(generateAlert()); }
+      addLogLine(generateLogLine());
+      if (Math.random() < 0.5) { addLogLine(generateLogLine()); }
+      if (tick % 5 === 0) { updateDashboardStats(generateDashboardStats()); }
     };
 
     intervalRef.current = setInterval(simulate, 1500);
@@ -84,24 +76,16 @@ export default function Home() {
     };
   }, [isLoggedIn, initialized, setWsConnected, addAttackConnection, addAlert, addLogLine, updateDashboardStats]);
 
-  // Keyboard shortcuts (number keys for quick navigation)
+  // Keyboard shortcuts
   useEffect(() => {
     if (!isLoggedIn) return;
     const handler = (e: KeyboardEvent) => {
-      // Don't trigger when typing in inputs or when CMD/CTRL is held
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.metaKey || e.ctrlKey) return;
-
       const viewMap: Record<string, ViewType> = {
-        '1': 'dashboard',
-        '2': 'alerts',
-        '3': 'intel-map',
-        '4': 'assets',
-        '5': 'settings',
+        '1': 'dashboard', '2': 'alerts', '3': 'intel-map', '4': 'assets', '5': 'settings',
       };
-      if (viewMap[e.key]) {
-        setActiveView(viewMap[e.key]);
-      }
+      if (viewMap[e.key]) setActiveView(viewMap[e.key]);
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -123,23 +107,21 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#050810] relative">
-      {/* Animated cyber background */}
+    <div className="flex h-screen overflow-hidden bg-[#060b18] relative">
       <CyberBackground />
 
-      {/* Main layout */}
       <div className="relative z-10 flex h-full w-full">
         <Sidebar />
         <div className="flex flex-1 flex-col overflow-hidden">
           <Topbar />
-          <main className="flex-1 overflow-auto p-4 lg:p-6">
+          <main className="flex-1 overflow-auto p-5 lg:p-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeView}
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2, ease: 'easeInOut' }}
+                transition={{ duration: 0.25, ease: 'easeInOut' }}
               >
                 {renderView()}
               </motion.div>
@@ -148,10 +130,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Notification drawer */}
       <NotificationDrawer />
-
-      {/* Command Palette (CMD/CTRL+K) */}
       <CommandPalette />
     </div>
   );

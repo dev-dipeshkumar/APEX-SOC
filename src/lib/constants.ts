@@ -23,45 +23,45 @@ export const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
 };
 
 export const SEVERITY_COLORS: Record<Severity, string> = {
-  critical: '#ff2d55',
-  high: '#ff9500',
-  medium: '#ffd60a',
-  low: '#30d158',
+  critical: '#ef4444',
+  high: '#f97316',
+  medium: '#f59e0b',
+  low: '#10b981',
 };
 
 export const SEVERITY_BG: Record<Severity, string> = {
-  critical: 'rgba(255, 45, 85, 0.1)',
-  high: 'rgba(255, 149, 0, 0.1)',
-  medium: 'rgba(255, 214, 10, 0.1)',
-  low: 'rgba(48, 209, 88, 0.1)',
+  critical: 'rgba(239, 68, 68, 0.1)',
+  high: 'rgba(249, 115, 22, 0.1)',
+  medium: 'rgba(245, 158, 11, 0.1)',
+  low: 'rgba(16, 185, 129, 0.1)',
 };
 
 export const SEVERITY_BORDER: Record<Severity, string> = {
-  critical: 'rgba(255, 45, 85, 0.3)',
-  high: 'rgba(255, 149, 0, 0.3)',
-  medium: 'rgba(255, 214, 10, 0.3)',
-  low: 'rgba(48, 209, 88, 0.3)',
+  critical: 'rgba(239, 68, 68, 0.3)',
+  high: 'rgba(249, 115, 22, 0.3)',
+  medium: 'rgba(245, 158, 11, 0.3)',
+  low: 'rgba(16, 185, 129, 0.3)',
 };
 
 export const STATUS_COLORS: Record<AlertStatus, string> = {
-  new: '#00f0ff',
-  acknowledged: '#30d158',
-  escalated: '#ff9500',
-  false_positive: '#475569',
-  dismissed: '#475569',
+  new: '#3b82f6',
+  acknowledged: '#10b981',
+  escalated: '#f97316',
+  false_positive: '#546380',
+  dismissed: '#546380',
 };
 
 export const ATTACK_TYPE_COLORS: Record<AttackType, string> = {
-  c2_beaconing: '#ff2d55',
-  spear_phishing: '#ff9500',
-  brute_force: '#ffd60a',
-  ddos: '#ff2d55',
-  exploit: '#ff9500',
-  scan: '#ffd60a',
-  lateral_move: '#ff9500',
-  data_exfil: '#ff2d55',
-  recon: '#30d158',
-  zero_day: '#ff2d55',
+  c2_beaconing: '#ef4444',
+  spear_phishing: '#f97316',
+  brute_force: '#f59e0b',
+  ddos: '#ef4444',
+  exploit: '#f97316',
+  scan: '#f59e0b',
+  lateral_move: '#f97316',
+  data_exfil: '#ef4444',
+  recon: '#10b981',
+  zero_day: '#ef4444',
 };
 
 export const ATTACK_TYPE_LABELS: Record<AttackType, string> = {

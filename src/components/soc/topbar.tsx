@@ -3,15 +3,31 @@
 import { useUIStore } from '@/stores/ui-store';
 import { useAlertStore } from '@/stores/alert-store';
 import { ROLE_PERMISSIONS, Permission } from '@/lib/constants';
-import { Bell, Download, Wifi, WifiOff, LogOut, User, Search, Command } from 'lucide-react';
+import {
+  Bell, Download, LogOut, User, Search, Command,
+  Wifi, WifiOff, Clock, Activity, Shield,
+} from 'lucide-react';
 import { exportToCSV } from '@/lib/exporters';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 export function Topbar() {
   const { userName, userRole, wsConnected, activeView, toggleNotificationDrawer, toggleCommandPalette, logout } = useUIStore();
   const { unreadCount, getFilteredAlerts } = useAlertStore();
   const canExport = userRole ? ROLE_PERMISSIONS[userRole as keyof typeof ROLE_PERMISSIONS]?.includes(Permission.EXPORT_DATA) : false;
+  const [currentTime, setCurrentTime] = useState('');
+  const [threatLevel, setThreatLevel] = useState<'elevated' | 'high' | 'critical'>('elevated');
+
+  useEffect(() => {
+    const update = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+    };
+    update();
+    const interval = setInterval(update, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleExport = () => {
     const alerts = getFilteredAlerts();
@@ -20,15 +36,9 @@ export function Topbar() {
       return;
     }
     const data = alerts.map(a => ({
-      ID: a.id,
-      Title: a.title,
-      Severity: a.severity,
-      Status: a.status,
-      SourceIP: a.sourceIp,
-      TargetIP: a.targetIp,
-      AttackType: a.attackType,
-      Adversary: a.adversary,
-      Timestamp: a.timestamp,
+      ID: a.id, Title: a.title, Severity: a.severity, Status: a.status,
+      SourceIP: a.sourceIp, TargetIP: a.targetIp, AttackType: a.attackType,
+      Adversary: a.adversary, Timestamp: a.timestamp,
     }));
     exportToCSV(data, `apex-soc-${activeView}-alerts`);
     toast.success(`Exported ${data.length} alerts`);
@@ -43,7 +53,7 @@ export function Topbar() {
   };
 
   return (
-    <header className="flex h-12 items-center justify-between border-b border-[rgba(0,240,255,0.06)] bg-[#080d18]/60 backdrop-blur-xl px-4 relative z-10">
+    <header className="flex h-12 items-center justify-between border-b border-[#1a2744]/60 bg-[#070c1a]/70 backdrop-blur-xl px-4 relative z-10">
       {/* Scan line effect */}
       <div className="scan-line absolute inset-0 pointer-events-none overflow-hidden" />
 
@@ -56,7 +66,7 @@ export function Topbar() {
               animate={{ scale: 1, opacity: 1 }}
               className="flex items-center gap-1.5 rounded-full glass-light px-2.5 py-1"
             >
-              <div className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.5)] status-pulse" />
+              <div className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.4)] status-pulse" />
               <span className="text-[10px] text-emerald-400 font-semibold tracking-wider">LIVE</span>
             </motion.div>
           ) : (
@@ -72,31 +82,43 @@ export function Topbar() {
         </div>
 
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs text-[#475569]">
-          <span className="text-[#475569]/40">/</span>
+        <div className="flex items-center gap-2 text-xs">
+          <span className="text-[#546380]/40">/</span>
           <span className="text-[#94a3b8] font-medium">{viewLabels[activeView] || activeView}</span>
         </div>
       </div>
 
       <div className="flex items-center gap-2">
+        {/* Time sync */}
+        <div className="hidden lg:flex items-center gap-1.5 rounded-lg glass-light px-2.5 py-1">
+          <Clock className="h-3 w-3 text-[#546380]" />
+          <span className="text-[10px] font-mono text-[#94a3b8] tracking-wider">{currentTime}</span>
+        </div>
+
+        {/* SOC Status indicator */}
+        <div className="hidden md:flex items-center gap-1.5 rounded-lg glass-light px-2.5 py-1">
+          <Activity className="h-3 w-3 text-amber-400" />
+          <span className="text-[10px] text-amber-400 font-semibold tracking-wider">ELEVATED</span>
+        </div>
+
         {/* Search - triggers Command Palette */}
         <motion.button
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={toggleCommandPalette}
-          className="hidden sm:flex items-center gap-2 rounded-lg glass-light px-3 py-1.5 text-[#475569] hover:text-[#94a3b8] hover:border-[rgba(0,240,255,0.12)] transition-all"
+          className="hidden sm:flex items-center gap-2 rounded-lg glass-light px-3 py-1.5 text-[#546380] hover:text-[#94a3b8] hover:border-blue-500/10 transition-all"
         >
           <Search className="h-3.5 w-3.5" />
           <span className="text-xs">Search...</span>
-          <kbd className="hidden md:flex items-center gap-0.5 rounded bg-[#0a0f1c] px-1.5 py-0.5 text-[9px] text-[#475569]">
+          <kbd className="hidden md:flex items-center gap-0.5 rounded bg-[#0b1121] px-1.5 py-0.5 text-[9px] text-[#546380] border border-[#1a2744]">
             <Command className="h-2.5 w-2.5" />K
           </kbd>
         </motion.button>
 
         {/* Role badge */}
         <div className="flex items-center gap-1.5 rounded-full glass-light px-2.5 py-1">
-          <User className="h-3 w-3 text-cyan-400" />
-          <span className="text-[10px] font-medium text-cyan-400 uppercase tracking-wider">{userRole}</span>
+          <Shield className="h-3 w-3 text-blue-400" />
+          <span className="text-[10px] font-semibold text-blue-400 uppercase tracking-wider">{userRole}</span>
         </div>
 
         {/* Export button */}
@@ -105,7 +127,7 @@ export function Topbar() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={handleExport}
-            className="flex items-center gap-1.5 rounded-lg glass-light px-2.5 py-1.5 text-[#94a3b8] hover:text-[#e2e8f0] transition-all"
+            className="flex items-center gap-1.5 rounded-lg glass-light px-2.5 py-1.5 text-[#94a3b8] hover:text-[#e8ecf4] transition-all"
             title="Export current view"
           >
             <Download className="h-3.5 w-3.5" />
@@ -118,7 +140,7 @@ export function Topbar() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={toggleNotificationDrawer}
-          className="relative flex items-center justify-center rounded-lg glass-light p-2 text-[#94a3b8] hover:text-[#e2e8f0] transition-all"
+          className="relative flex items-center justify-center rounded-lg glass-light p-2 text-[#94a3b8] hover:text-[#e8ecf4] transition-all"
         >
           <Bell className="h-4 w-4" />
           <AnimatePresence>
@@ -127,7 +149,7 @@ export function Topbar() {
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0 }}
-                className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white shadow-[0_0_8px_rgba(255,45,85,0.5)]"
+                className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[9px] font-bold text-white shadow-[0_0_8px_rgba(239,68,68,0.4)]"
               >
                 {unreadCount > 9 ? '9+' : unreadCount}
               </motion.span>
@@ -136,18 +158,16 @@ export function Topbar() {
         </motion.button>
 
         {/* User menu */}
-        <div className="flex items-center gap-2 border-l border-[rgba(0,240,255,0.06)] pl-3">
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-6 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-cyan-500/20 flex items-center justify-center">
-              <span className="text-[10px] font-bold text-cyan-400">{userName?.[0] || '?'}</span>
-            </div>
-            <span className="text-xs text-[#94a3b8] hidden md:inline">{userName}</span>
+        <div className="flex items-center gap-2 border-l border-[#1a2744]/60 pl-3">
+          <div className="h-7 w-7 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/15 border border-blue-500/15 flex items-center justify-center">
+            <span className="text-[10px] font-bold text-blue-400">{userName?.[0] || '?'}</span>
           </div>
+          <span className="text-xs text-[#94a3b8] hidden md:inline">{userName}</span>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={logout}
-            className="rounded-md p-1.5 text-[#475569] hover:text-red-400 hover:bg-red-500/5 transition-all"
+            className="rounded-md p-1.5 text-[#546380] hover:text-red-400 hover:bg-red-500/5 transition-all"
             title="Sign out"
           >
             <LogOut className="h-3.5 w-3.5" />

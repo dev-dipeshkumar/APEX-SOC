@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DEFAULT_USERS } from '@/lib/constants';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Eye, EyeOff, Loader2, Fingerprint } from 'lucide-react';
+import { Shield, Eye, EyeOff, Loader2, Fingerprint, Lock, Cpu } from 'lucide-react';
 
 interface LoginPageProps {
   onLogin: (username: string, role: string, name: string) => void;
@@ -15,6 +15,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [focused, setFocused] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,60 +34,103 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#050810] p-4 relative overflow-hidden">
-      {/* Background grid effect */}
-      <div className="pointer-events-none fixed inset-0 hex-grid opacity-50" />
-      
-      {/* Floating geometric shapes */}
-      <div className="pointer-events-none fixed inset-0">
-        <div className="absolute top-[15%] left-[10%] w-32 h-32 border border-cyan-500/5 rounded-full animate-float" />
-        <div className="absolute bottom-[20%] right-[15%] w-24 h-24 border border-purple-500/5 rotate-45 animate-float" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-[60%] left-[70%] w-16 h-16 border border-cyan-500/3 rounded-lg animate-float" style={{ animationDelay: '2s' }} />
+    <div className="flex min-h-screen items-center justify-center bg-[#060b18] p-4 relative overflow-hidden">
+      {/* Animated digital grid background */}
+      <div className="pointer-events-none fixed inset-0 hex-grid opacity-40" />
+
+      {/* Animated background particles (CSS-only) */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        {Array.from({ length: 20 }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full animate-float"
+            style={{
+              width: `${2 + Math.random() * 3}px`,
+              height: `${2 + Math.random() * 3}px`,
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              backgroundColor: i % 3 === 0 ? 'rgba(59,130,246,0.15)' : i % 3 === 1 ? 'rgba(6,182,212,0.12)' : 'rgba(139,92,246,0.1)',
+              animationDuration: `${3 + Math.random() * 4}s`,
+              animationDelay: `${Math.random() * 3}s`,
+            }}
+          />
+        ))}
       </div>
 
-      {/* Radial glow */}
+      {/* Ambient radial glow */}
       <div className="pointer-events-none fixed inset-0">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gradient-to-r from-cyan-500/3 via-transparent to-purple-500/2 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full bg-gradient-to-r from-blue-500/[0.03] via-transparent to-cyan-500/[0.02] blur-3xl" />
+        <div className="absolute top-[30%] left-[20%] w-[400px] h-[400px] rounded-full bg-blue-500/[0.02] blur-3xl animate-float" style={{ animationDuration: '6s' }} />
+        <div className="absolute bottom-[20%] right-[15%] w-[300px] h-[300px] rounded-full bg-purple-500/[0.015] blur-3xl animate-float" style={{ animationDuration: '8s', animationDelay: '2s' }} />
+      </div>
+
+      {/* Animated security lines */}
+      <div className="pointer-events-none fixed inset-0">
+        <svg className="w-full h-full opacity-5" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="30%" x2="100%" y2="30%" stroke="#3b82f6" strokeWidth="0.5" strokeDasharray="4 8">
+            <animate attributeName="stroke-dashoffset" values="0;24" dur="3s" repeatCount="indefinite" />
+          </line>
+          <line x1="0" y1="70%" x2="100%" y2="70%" stroke="#06b6d4" strokeWidth="0.5" strokeDasharray="4 8">
+            <animate attributeName="stroke-dashoffset" values="24;0" dur="4s" repeatCount="indefinite" />
+          </line>
+        </svg>
       </div>
 
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
         className="relative w-full max-w-md"
       >
         {/* Glow behind card */}
-        <div className="absolute -inset-6 rounded-2xl bg-gradient-to-r from-cyan-500/5 via-cyan-500/8 to-purple-500/5 blur-2xl" />
+        <div className="absolute -inset-8 rounded-3xl bg-gradient-to-r from-blue-500/[0.04] via-cyan-500/[0.06] to-purple-500/[0.03] blur-2xl" />
 
-        <div className="relative rounded-xl glass-heavy p-8 shadow-2xl animate-border-glow">
+        <div className="relative rounded-2xl glass-heavy p-8 shadow-2xl animate-border-glow overflow-hidden">
+          {/* Subtle top accent line */}
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+
           {/* Logo / Brand */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
             className="mb-8 text-center"
           >
-            <div className="mb-4 inline-flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/15 to-cyan-500/5 border border-cyan-500/20 neon-glow">
-                <Shield className="h-6 w-6 text-cyan-400" />
+            <div className="mb-5 inline-flex items-center gap-3">
+              <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/15 to-cyan-500/10 border border-blue-500/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]">
+                <Shield className="h-7 w-7 text-blue-400" />
+                {/* Animated ring */}
+                <div className="absolute inset-0 rounded-2xl border border-blue-400/20 animate-ping" style={{ animationDuration: '3s' }} />
               </div>
               <div className="text-left">
-                <h1 className="text-xl font-bold tracking-wider text-[#e2e8f0]">APEX SOC</h1>
-                <p className="text-[9px] tracking-[0.3em] text-cyan-400/60 uppercase">Threat Intelligence Platform</p>
+                <h1 className="text-2xl font-bold tracking-wider text-[#e8ecf4]" style={{ fontFamily: 'var(--font-geist-sans)' }}>APEX SOC</h1>
+                <p className="text-[9px] tracking-[0.3em] text-blue-400/60 uppercase mt-0.5">Threat Intelligence Platform</p>
               </div>
             </div>
-            <p className="text-sm text-[#475569]">Enterprise Security Operations Center</p>
+            <p className="text-sm text-[#546380]">Enterprise Security Operations Center</p>
+          </motion.div>
+
+          {/* Security badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-6 flex items-center justify-center gap-2 rounded-lg bg-emerald-500/[0.06] border border-emerald-500/10 px-3 py-2"
+          >
+            <Lock className="h-3 w-3 text-emerald-400" />
+            <span className="text-[10px] text-emerald-400 font-medium tracking-wider">SECURE AUTHENTICATION</span>
+            <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 status-pulse" />
           </motion.div>
 
           <motion.form
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.4 }}
             onSubmit={handleSubmit}
-            className="space-y-4"
+            className="space-y-5"
           >
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
+              <label className="mb-2 block text-[10px] font-semibold text-[#94a3b8] uppercase tracking-[0.15em]">
                 Username
               </label>
               <div className="relative">
@@ -94,15 +138,22 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   type="text"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
-                  className="w-full rounded-lg border border-[rgba(0,240,255,0.08)] bg-[#050810]/60 px-4 py-2.5 text-sm text-[#e2e8f0] placeholder-[#475569] focus:border-cyan-500/30 focus:outline-none focus:ring-1 focus:ring-cyan-500/20 focus:shadow-[0_0_15px_rgba(0,240,255,0.05)] transition-all backdrop-blur-sm"
+                  onFocus={() => setFocused('username')}
+                  onBlur={() => setFocused(null)}
+                  className={`w-full rounded-xl border bg-[#060b18]/70 px-4 py-3 text-sm text-[#e8ecf4] placeholder-[#546380] focus:outline-none transition-all duration-300 backdrop-blur-sm ${
+                    focused === 'username'
+                      ? 'border-blue-500/30 ring-2 ring-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.06)]'
+                      : 'border-[#1a2744]'
+                  }`}
                   placeholder="Enter username"
                   autoComplete="username"
                 />
+                <Cpu className={`absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors duration-300 ${focused === 'username' ? 'text-blue-400' : 'text-[#546380]'}`} />
               </div>
             </div>
 
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
+              <label className="mb-2 block text-[10px] font-semibold text-[#94a3b8] uppercase tracking-[0.15em]">
                 Password
               </label>
               <div className="relative">
@@ -110,14 +161,20 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  className="w-full rounded-lg border border-[rgba(0,240,255,0.08)] bg-[#050810]/60 px-4 py-2.5 pr-10 text-sm text-[#e2e8f0] placeholder-[#475569] focus:border-cyan-500/30 focus:outline-none focus:ring-1 focus:ring-cyan-500/20 focus:shadow-[0_0_15px_rgba(0,240,255,0.05)] transition-all backdrop-blur-sm"
+                  onFocus={() => setFocused('password')}
+                  onBlur={() => setFocused(null)}
+                  className={`w-full rounded-xl border bg-[#060b18]/70 px-4 py-3 pr-10 text-sm text-[#e8ecf4] placeholder-[#546380] focus:outline-none transition-all duration-300 backdrop-blur-sm ${
+                    focused === 'password'
+                      ? 'border-blue-500/30 ring-2 ring-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.06)]'
+                      : 'border-[#1a2744]'
+                  }`}
                   placeholder="Enter password"
                   autoComplete="current-password"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#94a3b8] transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#546380] hover:text-[#94a3b8] transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -130,7 +187,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
-                  className="rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-2.5 text-xs text-red-400"
+                  className="rounded-xl border border-red-500/15 bg-red-500/[0.06] px-4 py-3 text-xs text-red-400"
                 >
                   {error}
                 </motion.div>
@@ -138,11 +195,11 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             </AnimatePresence>
 
             <motion.button
-              whileHover={{ scale: 1.01, boxShadow: '0 0 20px rgba(0, 240, 255, 0.15)' }}
+              whileHover={{ scale: 1.01, boxShadow: '0 0 25px rgba(59, 130, 246, 0.12)' }}
               whileTap={{ scale: 0.99 }}
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-gradient-to-r from-cyan-500/10 to-cyan-500/5 border border-cyan-500/20 py-2.5 text-sm font-medium text-cyan-400 hover:from-cyan-500/15 hover:to-cyan-500/10 hover:border-cyan-500/30 transition-all disabled:opacity-50 magnetic-btn"
+              className="w-full rounded-xl bg-gradient-to-r from-blue-600/90 to-blue-500/90 py-3 text-sm font-semibold text-white hover:from-blue-500 hover:to-blue-400 transition-all disabled:opacity-50 shadow-[0_4px_15px_rgba(59,130,246,0.2)]"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -162,20 +219,20 @@ export function LoginPage({ onLogin }: LoginPageProps) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="mt-6 border-t border-[rgba(0,240,255,0.06)] pt-4"
+            transition={{ delay: 0.6 }}
+            className="mt-6 border-t border-[#1a2744] pt-4"
           >
-            <p className="mb-2 text-[10px] uppercase tracking-wider text-[#475569]">Demo Accounts</p>
-            <div className="space-y-1.5">
+            <p className="mb-2.5 text-[9px] uppercase tracking-[0.2em] text-[#546380] font-semibold">Demo Accounts</p>
+            <div className="space-y-1">
               {DEFAULT_USERS.map(u => (
                 <motion.button
                   key={u.username}
-                  whileHover={{ x: 4 }}
+                  whileHover={{ x: 4, backgroundColor: 'rgba(59, 130, 246, 0.04)' }}
                   onClick={() => { setUsername(u.username); setPassword(u.password); }}
-                  className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs hover:bg-[rgba(0,240,255,0.02)] transition-all group"
+                  className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs transition-all group"
                 >
-                  <span className="text-[#94a3b8] font-mono">{u.username} <span className="text-[#475569]">/ {u.password}</span></span>
-                  <span className="rounded-full glass-light px-2 py-0.5 text-[10px] font-medium text-cyan-400 capitalize">
+                  <span className="text-[#94a3b8] font-mono">{u.username} <span className="text-[#546380]">/ {u.password}</span></span>
+                  <span className="status-chip severity-low">
                     {u.role}
                   </span>
                 </motion.button>
