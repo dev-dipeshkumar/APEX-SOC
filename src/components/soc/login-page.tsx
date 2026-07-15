@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { DEFAULT_USERS } from '@/lib/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Eye, EyeOff, Loader2, Fingerprint, Lock, Cpu } from 'lucide-react';
+import { CyberCursor } from '@/components/soc/cyber-cursor';
 
 interface LoginPageProps {
   onLogin: (username: string, role: string, name: string) => void;
@@ -35,6 +36,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-[#060b18] p-4 relative overflow-hidden">
+      <CyberCursor />
       {/* Animated digital grid background */}
       <div className="pointer-events-none fixed inset-0 hex-grid opacity-40" />
 

@@ -27,6 +27,7 @@ import { AssetsView } from '@/components/soc/assets-view';
 import { SettingsView } from '@/components/soc/settings-view';
 import { NotificationDrawer } from '@/components/soc/notification-drawer';
 import { CyberBackground } from '@/components/soc/cyber-background';
+import { CyberCursor } from '@/components/soc/cyber-cursor';
 import { CommandPalette } from '@/components/soc/command-palette';
 import { AnimatePresence, motion } from 'framer-motion';
 
@@ -109,6 +110,7 @@ export default function Home() {
   return (
     <div className="flex h-screen overflow-hidden bg-[#060b18] relative">
       <CyberBackground />
+      <CyberCursor />
 
       <div className="relative z-10 flex h-full w-full">
         <Sidebar />

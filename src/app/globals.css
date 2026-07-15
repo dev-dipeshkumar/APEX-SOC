@@ -637,3 +637,89 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ═══════════════════════════════════════
+   CYBER CURSOR — Advanced Hacker Cursor
+   ═══════════════════════════════════════ */
+
+/* Hide default cursor everywhere */
+* {
+  cursor: none !important;
+}
+
+/* Click ripple animation */
+@keyframes cursorRipple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* Scan line on scroll */
+@keyframes scanLine {
+  0% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(2.5);
+  }
+}
+
+/* Cursor glow pulse */
+@keyframes cursorGlow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4), 0 0 2px rgba(255, 255, 255, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(59, 130, 246, 0.6), 0 0 4px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Ring rotation for hover state */
+@keyframes ringRotate {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+/* Data stream particles on fast movement */
+@keyframes dataStream {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.3);
+  }
+}
+
+/* Hover target glow effect */
+.cyber-hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+.cyber-hover-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.05) !important;
+}
+
+/* Touch device fallback — restore default cursor */
+@media (hover: none) and (pointer: coarse) {
+  * {
+    cursor: auto !important;
+  }
+  .cyber-cursor-dot,
+  .cyber-cursor-ring,
+  .cyber-cursor-canvas,
+  .cyber-cursor-ripple {
+    display: none !important;
+  }
+}
