@@ -693,6 +693,17 @@
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.05) !important;
 }
 
+/* Scan line animation for landing page */
+@keyframes scan {
+  0% { top: -2px; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+.animate-scan {
+  animation: scan 8s linear infinite;
+}
+
 /* Touch device fallback — restore default cursor */
 @media (hover: none) and (pointer: coarse) {
   * {

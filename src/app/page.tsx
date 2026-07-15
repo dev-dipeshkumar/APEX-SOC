@@ -9,6 +9,7 @@ import { DEFAULT_USERS, type ViewType } from '@/lib/constants';
 import { Sidebar } from '@/components/soc/sidebar';
 import { Topbar } from '@/components/soc/topbar';
 import { LoginPage } from '@/components/soc/login-page';
+import { LandingPage } from '@/components/soc/landing-page';
 import { DashboardView } from '@/components/soc/dashboard-view';
 import { AlertsView } from '@/components/soc/alerts-view';
 import dynamic from 'next/dynamic';
@@ -31,6 +32,8 @@ import { CyberCursor } from '@/components/soc/cyber-cursor';
 import { CommandPalette } from '@/components/soc/command-palette';
 import { AnimatePresence, motion } from 'framer-motion';
 
+type AppPhase = 'landing' | 'login' | 'app';
+
 export default function Home() {
   const {
     isLoggedIn, activeView, sidebarCollapsed, notificationDrawerOpen,
@@ -41,6 +44,16 @@ export default function Home() {
   const { initialize: initAssets } = useAssetStore();
   const [initialized, setInitialized] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Phase management: landing -> login -> app
+  const [phase, setPhase] = useState<AppPhase>('landing');
+
+  // When user is already logged in (e.g. from previous session), skip to app
+  useEffect(() => {
+    if (isLoggedIn && phase !== 'app') {
+      setPhase('app');
+    }
+  }, [isLoggedIn, phase]);
 
   // Initialize data
   useEffect(() => {
@@ -92,10 +105,41 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handler);
   }, [isLoggedIn, setActiveView]);
 
-  if (!isLoggedIn) {
-    return <LoginPage onLogin={(u, r, n) => login(u, r, n)} />;
+  // ─── Phase: Landing Page ───
+  if (phase === 'landing') {
+    return (
+      <AnimatePresence mode="wait">
+        <motion.div
+          key="landing"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <LandingPage onEnterApp={() => setPhase('login')} />
+        </motion.div>
+      </AnimatePresence>
+    );
   }
 
+  // ─── Phase: Login ───
+  if (!isLoggedIn) {
+    return (
+      <AnimatePresence mode="wait">
+        <motion.div
+          key="login"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4 }}
+        >
+          <LoginPage onLogin={(u, r, n) => login(u, r, n)} />
+        </motion.div>
+      </AnimatePresence>
+    );
+  }
+
+  // ─── Phase: Main App ───
   const renderView = () => {
     switch (activeView) {
       case 'dashboard': return <DashboardView />;

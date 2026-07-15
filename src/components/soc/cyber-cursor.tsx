@@ -24,6 +24,7 @@ export function CyberCursor() {
   const [ripples, setRipples] = useState<ClickRipple[]>([]);
   const [cursorState, setCursorState] = useState<'default' | 'hover' | 'click' | 'text'>('default');
   const [coords, setCoords] = useState({ x: 0, y: 0 });
+  const [cursorVisible, setCursorVisible] = useState(false);
 
   // Particle system
   const particles = useRef<Array<{
@@ -177,7 +178,10 @@ export function CyberCursor() {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current = { x: e.clientX, y: e.clientY };
-      if (!isVisible.current) isVisible.current = true;
+      if (!isVisible.current) {
+        isVisible.current = true;
+        setCursorVisible(true);
+      }
       if (cursorRef.current) {
         cursorRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
       }
@@ -186,12 +190,14 @@ export function CyberCursor() {
 
     const handleMouseEnter = () => {
       isVisible.current = true;
+      setCursorVisible(true);
       if (cursorRef.current) cursorRef.current.style.opacity = '1';
       if (reticleRef.current) reticleRef.current.style.opacity = '1';
     };
 
     const handleMouseLeave = () => {
       isVisible.current = false;
+      setCursorVisible(false);
       if (cursorRef.current) cursorRef.current.style.opacity = '0';
       if (reticleRef.current) reticleRef.current.style.opacity = '0';
     };
@@ -242,12 +248,18 @@ export function CyberCursor() {
     };
   }, [spawnParticles]);
 
-  // Update reticle position
+  // Update reticle position + rotation
   useEffect(() => {
     let frame: number;
     const updateReticle = () => {
       if (reticleRef.current) {
         reticleRef.current.style.transform = `translate(${reticlePos.current.x}px, ${reticlePos.current.y}px)`;
+      }
+      // Also update the inner SVG rotation directly via DOM
+      const svg = reticleRef.current?.querySelector('svg');
+      if (svg) {
+        const deg = rotationAngle.current * (180 / Math.PI);
+        svg.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`;
       }
       frame = requestAnimationFrame(updateReticle);
     };
@@ -281,7 +293,7 @@ export function CyberCursor() {
         style={{
           position: 'fixed', top: 0, left: 0,
           zIndex: 999999, pointerEvents: 'none',
-          opacity: isVisible.current ? 1 : 0,
+          opacity: cursorVisible ? 1 : 0,
           transition: 'opacity 0.2s',
           willChange: 'transform',
         }}
@@ -385,7 +397,7 @@ export function CyberCursor() {
           width={reticleSize * 2} height={reticleSize * 2}
           viewBox={`0 0 ${reticleSize * 2} ${reticleSize * 2}`}
           style={{
-            transform: `translate(-50%, -50%) rotate(${rotationAngle.current * (180 / Math.PI)}deg)`,
+            transform: `translate(-50%, -50%) rotate(0deg)`,
             transition: 'width 0.3s cubic-bezier(0.16,1,0.3,1), height 0.3s cubic-bezier(0.16,1,0.3,1)',
             animation: cursorState !== 'text' ? 'reticleRotate 8s linear infinite' : 'none',
           }}
@@ -444,12 +456,12 @@ export function CyberCursor() {
       </div>
 
       {/* ═══ COORDINATE READOUT ═══ */}
-      {cursorState !== 'text' && isVisible.current && (
+      {cursorState !== 'text' && cursorVisible && (
         <div
           style={{
             position: 'fixed',
-            left: mousePos.current.x + 24,
-            top: mousePos.current.y + 24,
+            left: coords.x + 24,
+            top: coords.y + 24,
             zIndex: 999996,
             pointerEvents: 'none',
             fontFamily: 'var(--font-geist-mono), monospace',

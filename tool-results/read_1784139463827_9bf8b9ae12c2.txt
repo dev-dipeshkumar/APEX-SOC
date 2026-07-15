@@ -1,0 +1,831 @@
+     1→<div align="center">
+     2→
+     3→<!-- LOGO -->
+     4→<img src="public/logo.svg" alt="APEX SOC Logo" width="140" height="140" />
+     5→
+     6→# APEX SOC
+     7→
+     8→### Enterprise Threat Intelligence Platform
+     9→
+    10→**Real-time threat intelligence • Interactive 3D globe visualization • Security Operations Center**
+    11→
+    12→[![Version](https://img.shields.io/badge/version-0.2.0-3b82f6?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiPjwvY2lyY2xlPjxwb2x5bGluZSBwb2ludHM9IjEyIDYgMTIgMTIgMTYgMTQiPjwvcG9seWxpbmU+PC9zdmc+)](#)
+    13→[![License: MIT](https://img.shields.io/badge/license-MIT-10b981?style=flat-square)](#license)
+    14→[![Build](https://img.shields.io/badge/build-passing-10b981?style=flat-square&logo=github-actions&logoColor=white)](#)
+    15→[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178c6?style=flat-square&logo=typescript&logoColor=white)](#technology-stack)
+    16→[![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react&logoColor=black)](#technology-stack)
+    17→[![Three.js](https://img.shields.io/badge/Three.js-r170-000000?style=flat-square&logo=three.js&logoColor=white)](#technology-stack)
+    18→[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.0-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white)](#technology-stack)
+    19→[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=flat-square&logo=next.js&logoColor=white)](#technology-stack)
+    20→
+    21→[![Enterprise Ready](https://img.shields.io/badge/Enterprise-Ready-8b5cf6?style=flat-square&logo=vercel&logoColor=white)](#)
+    22→[![Production Ready](https://img.shields.io/badge/Production-Ready-f59e0b?style=flat-square&logo=checkmarx&logoColor=white)](#)
+    23→[![Real-Time Intelligence](https://img.shields.io/badge/Real--Time-Intelligence-ef4444?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMiI+PC9jaXJjbGU+PHBhdGggZD0iTTEyIDJ2NCI+PC9wYXRoPjxwYXRoIGQ9Ik0xMiAxOHY0Ij48L3BhdGg+PHBhdGggZD0iTTQuOTMgNC45M2wyLjgzIDIuODMiPjwvcGF0aD48cGF0aCBkPSJNMTYuMjQgMTYuMjRsMi44MyAyLjgzIj48L3BhdGg+PHBhdGggZD0iTTIgMTJoNCI+PC9wYXRoPjxwYXRoIGQ9Ik0xOCAxMmg0Ij48L3BhdGg+PHBhdGggZD0iTTQuOTMgMTkuMDdsMi44My0yLjgzIj48L3BhdGg+PHBhdGggZD0iTTE2LjI0IDcuNzZsMi44My0yLjgzIj48L3BhdGg+PC9zdmc+)](#)
+    24→[![WCAG AA](https://img.shields.io/badge/A11y-WCAG_AA-06b6d4?style=flat-square&logo=w3c&logoColor=white)](#accessibility)
+    25→
+    26→<br />
+    27→
+    28→<!-- HERO BANNER -->
+    29→<img src="docs/images/banner.png" alt="APEX SOC — Enterprise Threat Intelligence Platform Dashboard" width="100%" />
+    30→
+    31→</div>
+    32→
+    33→---
+    34→
+    35→## Table of Contents
+    36→
+    37→- [Introduction](#introduction)
+    38→- [Features](#features)
+    39→- [Screenshots](#screenshots)
+    40→- [Architecture](#architecture)
+    41→- [Application Flow](#application-flow)
+    42→- [Project Structure](#project-structure)
+    43→- [Technology Stack](#technology-stack)
+    44→- [Installation](#installation)
+    45→- [Environment Variables](#environment-variables)
+    46→- [Scripts](#scripts)
+    47→- [Security Features](#security-features)
+    48→- [Performance](#performance)
+    49→- [UI Showcase](#ui-showcase)
+    50→- [Development Principles](#development-principles)
+    51→- [Roadmap](#roadmap)
+    52→- [Contributing](#contributing)
+    53→- [License](#license)
+    54→- [Acknowledgements](#acknowledgements)
+    55→
+    56→---
+    57→
+    58→## Introduction
+    59→
+    60→**APEX SOC** is an enterprise-grade Security Operations Center platform built for real-time threat intelligence, security monitoring, and incident response. It combines an immersive dark-themed interface with interactive 3D geospatial visualization to deliver a unified command view for security analysts and SOC teams.
+    61→
+    62→The platform provides a cohesive set of capabilities designed around the operational workflow of a modern SOC:
+    63→
+    64→- **Real-Time Threat Intelligence** — A continuously updating feed of simulated threat events, attack correlations, and adversary activity mapped across global regions. Each event is enriched with severity classification, attack vector attribution, and geolocation data.
+    65→- **Interactive 3D Globe Visualization** — A cinematic Three.js-powered globe rendering atmospheric effects, cloud layers, and real-time attack arcs that trace threat origins and targets across continents. The globe supports click-to-investigate interactions and smooth cinematic camera transitions.
+    66→- **Security Operations Center Dashboard** — A unified dashboard presenting KPI cards, severity distributions, trend analytics, and a condensed threat stream — all synchronized with the live data feed and designed for at-a-glance situational awareness.
+    67→- **Alert Investigation Console** — A full-featured alert triage system with multi-axis filtering (severity, status, attack type, search), bulk operations, severity escalation, and a detail drawer for deep-dive analysis per alert.
+    68→- **Asset Inventory & Network Topology** — A multi-view asset management module supporting card, table, and interactive topology visualizations. Assets are categorized by type (Server, Workstation, Network Device, IoT, Cloud Instance, Mobile) with risk scoring and status tracking.
+    69→- **Enterprise Design System** — A meticulously crafted dark theme with glassmorphism effects, animated gradient borders, pulse indicators, scan-line animations, and a 50+ token design system ensuring visual consistency across every surface.
+    70→
+    71→APEX SOC is built as a single-page application on Next.js 16 with React 19, leveraging the App Router for server-side rendering capabilities while operating as a client-driven interactive experience. The entire platform is architected for extensibility — from the Zustand state layer to the modular component structure — allowing teams to integrate real backends, SIEM connectors, and live data pipelines behind the existing simulation layer.
+    72→
+    73→> **Note:** The current release operates with simulated real-time data feeds. No actual network traffic is monitored, and no real security actions are performed. The platform serves as a production-quality reference architecture for SOC visualization and interaction design.
+    74→
+    75→---
+    76→
+    77→## Features
+    78→
+    79→<table>
+    80→<tr>
+    81→<td width="50%">
+    82→
+    83→### 🌐 Threat Intelligence
+    84→| Feature | Description |
+    85→|---------|-------------|
+    86→| Real-Time Threat Feed | Live-streaming threat events with auto-refresh |
+    87→| Attack Correlation | Link related events across sources and regions |
+    88→| Adversary Profiling | Track known threat actor patterns and TTPs |
+    89→| Geolocation Mapping | Plot threats on interactive 3D globe |
+    90→| IOC Indicators | Extract and display indicators of compromise |
+    91→
+    92→</td>
+    93→<td width="50%">
+    94→
+    95→### 🗺️ Intel Map
+    96→| Feature | Description |
+    97→|---------|-------------|
+    98→| 3D Globe Rendering | Cinematic Three.js globe with atmosphere shaders |
+    99→| Attack Arc Visualization | Animated threat arcs between source and target |
+   100→| Click-to-Investigate | Interactive threat detail panels on selection |
+   101→| Cinematic Camera | Smooth orbital and zoom camera transitions |
+   102→| Cloud & Star Effects | Atmospheric rendering with cloud layers and star fields |
+   103→
+   104→</td>
+   105→</tr>
+   106→<tr>
+   107→<td width="50%">
+   108→
+   109→### 📊 Dashboard
+   110→| Feature | Description |
+   111→|---------|-------------|
+   112→| KPI Cards | Animated counters for threats, alerts, assets, risk score |
+   113→| Severity Distribution | Donut chart for threat severity breakdown |
+   114→| Trend Analytics | Area chart for 24-hour threat trend tracking |
+   115→| Live Alert Feed | Condensed real-time alert mini-table |
+   116→| Mini Attack Map | Compact threat visualization overview |
+   117→
+   118→</td>
+   119→<td width="50%">
+   120→
+   121→### 🚨 Alert Console
+   122→| Feature | Description |
+   123→|---------|-------------|
+   124→| Multi-Axis Filtering | Filter by severity, status, attack type, keyword |
+   125→| Bulk Operations | Select and triage multiple alerts simultaneously |
+   126→| Alert Detail Drawer | Slide-out panel for per-alert deep investigation |
+   127→| Severity Escalation | Promote or demote alert severity levels |
+   128→| Status Transitions | Track alert lifecycle from new to resolved |
+   129→
+   130→</td>
+   131→</tr>
+   132→<tr>
+   133→<td width="50%">
+   134→
+   135→### 🖥️ Asset Management
+   136→| Feature | Description |
+   137→|---------|-------------|
+   138→| Card View | Visual asset cards with risk scoring |
+   139→| Table View | Sortable, filterable TanStack data grid |
+   140→| Network Topology | Interactive force-directed graph visualization |
+   141→| Asset Categorization | Servers, workstations, IoT, cloud, mobile, network |
+   142→| Risk Scoring | Per-asset risk assessment indicators |
+   143→
+   144→</td>
+   145→<td width="50%">
+   146→
+   147→### ⚙️ Platform
+   148→| Feature | Description |
+   149→|---------|-------------|
+   150→| Command Palette | `Ctrl+K` / `Cmd+K` keyboard-first navigation |
+   151→| Notification Center | Real-time notification drawer with severity badges |
+   152→| Dark Enterprise Theme | Full dark mode with glassmorphism effects |
+   153→| Responsive Layout | Adaptive sidebar, panels, and grid layouts |
+   154→| Accessibility | WCAG AA compliant, keyboard navigable, ARIA labeled |
+   155→
+   156→</td>
+   157→</tr>
+   158→</table>
+   159→
+   160→---
+   161→
+   162→## Screenshots
+   163→
+   164→### Dashboard
+   165→
+   166→<img src="docs/images/screenshots/dashboard.png" alt="APEX SOC Dashboard" width="100%" />
+   167→
+   168→*The SOC dashboard presenting real-time KPI cards, severity distribution, threat trends, and a condensed alert feed — all synchronized with the live data stream.*
+   169→
+   170→### Alerts
+   171→
+   172→<img src="docs/images/screenshots/alerts.png" alt="APEX SOC Alerts Console" width="100%" />
+   173→
+   174→*The alert investigation console with multi-axis filtering, bulk triage operations, and a detail drawer for per-alert deep analysis.*
+   175→
+   176→### Intel Map
+   177→
+   178→<img src="docs/images/screenshots/intel-map.png" alt="APEX SOC Intel Map" width="100%" />
+   179→
+   180→*The interactive 3D globe with cinematic rendering, atmospheric shaders, and real-time attack arc visualization tracing threat origins and targets.*
+   181→
+   182→### Assets
+   183→
+   184→<img src="docs/images/screenshots/assets.png" alt="APEX SOC Asset Inventory" width="100%" />
+   185→
+   186→*The asset inventory in card view with risk scoring, status indicators, and type categorization.*
+   187→
+   188→### Network Topology
+   189→
+   190→<img src="docs/images/screenshots/topology.png" alt="APEX SOC Network Topology" width="100%" />
+   191→
+   192→*The force-directed network topology graph showing asset relationships, traffic flow, and edge pulse animations.*
+   193→
+   194→### Settings
+   195→
+   196→<img src="docs/images/screenshots/settings.png" alt="APEX SOC Settings" width="100%" />
+   197→
+   198→*The settings center with display preferences, data source configuration, notification rules, and security policies.*
+   199→
+   200→### Login
+   201→
+   202→<img src="docs/images/screenshots/login.png" alt="APEX SOC Login" width="100%" />
+   203→
+   204→*The login screen with the animated cyber background, form validation, and role-based authentication.*
+   205→
+   206→---
+   207→
+   208→## Architecture
+   209→
+   210→```mermaid
+   211→graph TB
+   212→    User["👤 User"]
+   213→
+   214→    subgraph Frontend["⚛️ Frontend — Next.js 16 App Router"]
+   215→        UI["React 19<br/>Component Tree"]
+   216→        State["Zustand<br/>State Layer"]
+   217→        API_Layer["API Layer<br/>& Services"]
+   218→    end
+   219→
+   220→    subgraph Visualization["🎨 Visualization Engine"]
+   221→        Globe["3D Globe<br/>React Three Fiber"]
+   222→        Charts["Charts<br/>Recharts"]
+   223→        Topology["Topology<br/>Force Graph"]
+   224→    end
+   225→
+   226→    subgraph DataEngine["📡 Data Engine"]
+   227→        ThreatEngine["Threat Engine<br/>& Simulation"]
+   228→        RealTime["Real-Time<br/>Event Stream"]
+   229→        Analytics["Analytics<br/>& Correlation"]
+   230→    end
+   231→
+   232→    subgraph Backend["🗄️ Backend"]
+   233→        Database["SQLite<br/>Prisma ORM"]
+   234→        WebSocket["WebSocket<br/>Socket.IO"]
+   235→        Auth["Authentication<br/>NextAuth.js"]
+   236→    end
+   237→
+   238→    User --> UI
+   239→    UI --> State
+   240→    UI --> API_Layer
+   241→    State --> ThreatEngine
+   242→    State --> Globe
+   243→    State --> Charts
+   244→    State --> Topology
+   245→    API_Layer --> RealTime
+   246→    API_Layer --> Auth
+   247→    ThreatEngine --> Analytics
+   248→    Analytics --> Database
+   249→    RealTime --> WebSocket
+   250→    WebSocket --> Database
+   251→```
+   252→
+   253→---
+   254→
+   255→## Application Flow
+   256→
+   257→```mermaid
+   258→flowchart TD
+   259→    A["🔐 User Login"] --> B{"Authentication<br/>Validation"}
+   260→    B -->|Valid| C["📊 SOC Dashboard"]
+   261→    B -->|Invalid| A
+   262→
+   263→    C --> D["📡 Live Threat Stream"]
+   264→    D --> E["🌍 Intel Map"]
+   265→
+   266→    C --> F["🚨 Alert Console"]
+   267→    F --> G["🔍 Alert Investigation"]
+   268→    G --> H["📋 Incident Analysis"]
+   269→
+   270→    C --> I["🖥️ Asset Inventory"]
+   271→    H --> I
+   272→    I --> J["🔗 Network Topology"]
+   273→    J --> K["🎯 Asset Correlation"]
+   274→
+   275→    K --> L["⚡ SOC Response"]
+   276→    L --> C
+   277→
+   278→    style A fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#e2e8f0
+   279→    style C fill:#0f172a,stroke:#06b6d4,stroke-width:2px,color:#e2e8f0
+   280→    style E fill:#0f172a,stroke:#8b5cf6,stroke-width:2px,color:#e2e8f0
+   281→    style F fill:#0f172a,stroke:#f59e0b,stroke-width:2px,color:#e2e8f0
+   282→    style L fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#e2e8f0
+   283→```
+   284→
+   285→---
+   286→
+   287→## Project Structure
+   288→
+   289→```
+   290→apex-soc/
+   291→├── public/                          # Static assets served directly
+   292→│   ├── logo.svg                     # APEX SOC logo
+   293→│   └── robots.txt                   # Search engine directives
+   294→│
+   295→├── src/
+   296→│   ├── app/                         # Next.js App Router
+   297→│   │   ├── layout.tsx               # Root layout — dark theme, Geist fonts, Toaster
+   298→│   │   ├── page.tsx                 # SPA shell — view router, auth gate, real-time feeds
+   299→│   │   ├── globals.css              # Enterprise design system — 640 lines of tokens & effects
+   300→│   │   └── api/
+   301→│   │       └── route.ts             # API route placeholder
+   302→│   │
+   303→│   ├── components/
+   304→│   │   ├── soc/                     # Domain-specific SOC components
+   305→│   │   │   ├── login-page.tsx       # Authentication screen with role-based login
+   306→│   │   │   ├── sidebar.tsx          # Collapsible navigation with workspace switcher
+   307→│   │   │   ├── topbar.tsx           # Top navigation bar with search & status
+   308→│   │   │   ├── dashboard-view.tsx   # KPI cards, charts, mini map, alert feed
+   309→│   │   │   ├── alerts-view.tsx      # Investigation console with filters & triage
+   310→│   │   │   ├── intel-map-view.tsx   # 3D globe threat map (dynamically imported)
+   311→│   │   │   ├── assets-view.tsx      # Asset inventory — card, table, topology views
+   312→│   │   │   ├── settings-view.tsx    # Settings center — display, data, security
+   313→│   │   │   ├── log-stream.tsx       # Real-time scrolling log output
+   314→│   │   │   ├── notification-drawer.tsx # Slide-out notification panel
+   315→│   │   │   ├── command-palette.tsx  # Ctrl+K / Cmd+K command search
+   316→│   │   │   ├── cyber-background.tsx # Animated gradient & particle background
+   317→│   │   │   └── three-globe.tsx      # Three.js globe wrapper (SSR-safe)
+   318→│   │   │
+   319→│   │   ├── globe/                   # 3D globe sub-system (11 modules)
+   320→│   │   │   ├── globe-scene.tsx      # Scene orchestrator — lights, camera, post-processing
+   321→│   │   │   ├── earth-mesh.tsx       # Earth sphere geometry & texture mapping
+   322→│   │   │   ├── earth-textures.ts    # Texture loading & caching
+   323→│   │   │   ├── clouds.tsx           # Animated cloud layer overlay
+   324→│   │   │   ├── atmosphere.tsx       # Atmospheric glow — custom GLSL shader
+   325→│   │   │   ├── background-effects.tsx # Star field & deep space rendering
+   326→│   │   │   ├── cinematic-camera.tsx # Smooth orbital & zoom camera transitions
+   327→│   │   │   ├── globe-interaction.tsx # Click & hover event handling
+   328→│   │   │   ├── globe-utils.ts       # Geospatial math, lat/lng conversions
+   329→│   │   │   ├── threat-visualization.tsx # Attack arc rendering with animation
+   330→│   │   │   ├── attack-info-panel.tsx # Threat detail overlay panel
+   331→│   │   │   └── shaders/
+   332→│   │   │       └── index.ts         # Custom GLSL vertex & fragment shaders
+   333→│   │   │
+   334→│   │   └── ui/                      # shadcn/ui component library (40+ primitives)
+   335→│   │       ├── accordion.tsx        ├── hover-card.tsx       ├── select.tsx
+   336→│   │       ├── alert.tsx            ├── input-otp.tsx        ├── separator.tsx
+   337→│   │       ├── alert-dialog.tsx     ├── input.tsx            ├── sheet.tsx
+   338→│   │       ├── avatar.tsx           ├── label.tsx            ├── sidebar.tsx
+   339→│   │       ├── badge.tsx            ├── menubar.tsx          ├── skeleton.tsx
+   340→│   │       ├── button.tsx           ├── navigation-menu.tsx  ├── slider.tsx
+   341→│   │       ├── calendar.tsx         ├── pagination.tsx       ├── sonner.tsx
+   342→│   │       ├── card.tsx             ├── popover.tsx          ├── switch.tsx
+   343→│   │       ├── carousel.tsx         ├── progress.tsx         ├── table.tsx
+   344→│   │       ├── chart.tsx            ├── radio-group.tsx      ├── tabs.tsx
+   345→│   │       ├── checkbox.tsx         ├── resizable.tsx        ├── textarea.tsx
+   346→│   │       ├── collapsible.tsx      ├── scroll-area.tsx      ├── toast.tsx
+   347→│   │       ├── command.tsx          ├── context-menu.tsx      ├── toggle.tsx
+   348→│   │       ├── dialog.tsx           ├── dropdown-menu.tsx     ├── toggle-group.tsx
+   349→│   │       ├── drawer.tsx           └── form.tsx              └── tooltip.tsx
+   350→│   │
+   351→│   ├── stores/                      # Zustand state management
+   352→│   │   ├── ui-store.ts             # Auth, navigation, dashboard stats, settings, notifications
+   353→│   │   ├── alert-store.ts          # Alerts, triage, filters, bulk operations
+   354→│   │   ├── asset-store.ts          # Assets, topology, search, filters
+   355→│   │   └── globe-store.ts          # Threats, camera, interactions, FPS tracking
+   356→│   │
+   357→│   ├── hooks/                       # Custom React hooks
+   358→│   │   ├── use-toast.ts            # Toast notification dispatch
+   359→│   │   └── use-mobile.ts           # Responsive breakpoint detection
+   360→│   │
+   361→│   └── lib/                         # Shared utilities & data layer
+   362→│       ├── constants.ts             # Types, enums, color maps, adversary profiles, geo coords
+   363→│       ├── mock-data.ts             # Comprehensive mock data generators
+   364→│       ├── formatters.ts            # Date, time, number formatting utilities
+   365→│       ├── exporters.ts             # CSV & PDF export utilities
+   366→│       ├── db.ts                    # Prisma client singleton
+   367→│       └── utils.ts                 # cn() — clsx + tailwind-merge
+   368→│
+   369→├── prisma/
+   370→│   └── schema.prisma                # Database schema — SQLite, User & Post models
+   371→│
+   372→├── db/
+   373→│   └── custom.db                    # SQLite database file
+   374→│
+   375→├── examples/
+   376→│   └── websocket/
+   377→│       ├── server.ts                # Socket.IO WebSocket server (port 3003)
+   378→│       └── frontend.tsx             # WebSocket client integration example
+   379→│
+   380→├── docs/                            # Documentation & assets
+   381→│   └── images/                      # Screenshots, banners, diagrams
+   382→│
+   383→├── .env                             # Environment variables
+   384→├── package.json                     # Project manifest & scripts
+   385→├── next.config.ts                   # Next.js configuration
+   386→├── tailwind.config.ts               # Tailwind CSS design tokens
+   387→├── tsconfig.json                    # TypeScript configuration
+   388→├── components.json                  # shadcn/ui component registry
+   389→├── postcss.config.mjs               # PostCSS plugins
+   390→├── eslint.config.mjs                # ESLint rules
+   391→└── Caddyfile                        # Caddy reverse proxy configuration
+   392→```
+   393→
+   394→---
+   395→
+   396→## Technology Stack
+   397→
+   398→| Category | Technology | Version | Purpose |
+   399→|----------|-----------|---------|---------|
+   400→| **Framework** | [Next.js](https://nextjs.org/) | 16 | App Router, SSR, standalone output |
+   401→| **Language** | [TypeScript](https://www.typescriptlang.org/) | 5 | Static type checking, DX |
+   402→| **UI Library** | [React](https://react.dev/) | 19 | Component architecture, concurrent features |
+   403→| **Styling** | [Tailwind CSS](https://tailwindcss.com/) | 4 | Utility-first CSS with design tokens |
+   404→| **Components** | [shadcn/ui](https://ui.shadcn.com/) | Latest | 40+ Radix UI-based primitives |
+   405→| **Primitives** | [Radix UI](https://www.radix-ui.com/) | Latest | Accessible headless components |
+   406→| **3D Graphics** | [Three.js](https://threejs.org/) | r170 | WebGL globe & threat visualization |
+   407→| **3D React** | [React Three Fiber](https://docs.pmnd.rs/react-three-fiber) | Latest | Declarative Three.js for React |
+   408→| **3D Helpers** | [@react-three/drei](https://github.com/pmndrs/drei) | Latest | Camera controls, helpers, effects |
+   409→| **Post-Processing** | [@react-three/postprocessing](https://github.com/pmndrs/postprocessing) | Latest | Bloom, SSAO, vignette effects |
+   410→| **Animation** | [Framer Motion](https://www.framer.com/motion/) | Latest | Page transitions, micro-interactions |
+   411→| **Animation** | [GSAP](https://gsap.com/) | Latest | Advanced timeline animations |
+   412→| **State** | [Zustand](https://zustand-demo.pmnd.rs/) | 5 | Lightweight global state management |
+   413→| **Data Fetching** | [TanStack Query](https://tanstack.com/query) | 5 | Server state, caching, synchronization |
+   414→| **Data Table** | [TanStack Table](https://tanstack.com/table) | 8 | Headless data grid with sorting & filtering |
+   415→| **Charts** | [Recharts](https://recharts.org/) | Latest | Area, donut, and trend charts |
+   416→| **Forms** | [React Hook Form](https://react-hook-form.com/) | Latest | Performant form validation |
+   417→| **Validation** | [Zod](https://zod.dev/) | Latest | Schema validation & type inference |
+   418→| **Database** | [Prisma](https://www.prisma.io/) | Latest | Type-safe ORM for SQLite |
+   419→| **Auth** | [NextAuth.js](https://next-auth.js.org/) | 4 | Authentication framework |
+   420→| **WebSocket** | [Socket.IO](https://socket.io/) | Latest | Real-time bidirectional communication |
+   421→| **Toast** | [Sonner](https://sonner.emilkowal.dev/) | Latest | Toast notification system |
+   422→| **Theming** | [next-themes](https://github.com/pacocoursey/next-themes) | Latest | Dark mode class-based theming |
+   423→| **Icons** | [Lucide React](https://lucide.dev/) | Latest | Consistent icon library |
+   424→| **i18n** | [next-intl](https://next-intl.dev/) | 4 | Internationalization framework |
+   425→| **Markdown** | [react-markdown](https://github.com/remarkjs/react-markdown) | Latest | Markdown rendering |
+   426→| **MDX** | [MDX Editor](https://mdxeditor.dev/) | Latest | Rich text editing |
+   427→| **DnD** | [dnd-kit](https://dndkit.com/) | Latest | Drag and drop interactions |
+   428→| **Build** | [Vite](https://vitejs.dev/) (via Next.js) | — | Fast bundling & HMR |
+   429→| **Lint** | [ESLint](https://eslint.org/) | 9 | Code quality enforcement |
+   430→| **Format** | [Prettier](https://prettier.io/) | Latest | Code formatting |
+   431→| **Runtime** | [Bun](https://bun.sh/) | Latest | JavaScript runtime & package manager |
+   432→
+   433→---
+   434→
+   435→## Installation
+   436→
+   437→### Prerequisites
+   438→
+   439→- **Node.js** ≥ 18.x
+   440→- **Bun** ≥ 1.x (recommended) or npm ≥ 9.x
+   441→- **Git** ≥ 2.x
+   442→
+   443→### Quick Start
+   444→
+   445→```bash
+   446→# 1. Clone the repository
+   447→git clone https://github.com/your-org/apex-soc.git
+   448→cd apex-soc
+   449→
+   450→# 2. Install dependencies
+   451→bun install
+   452→
+   453→# 3. Set up environment variables
+   454→cp .env.example .env
+   455→
+   456→# 4. Initialize the database
+   457→bun run db:push
+   458→bun run db:generate
+   459→
+   460→# 5. Start the development server
+   461→bun run dev
+   462→```
+   463→
+   464→The application will be available at **http://localhost:3000**.
+   465→
+   466→### Demo Login Credentials
+   467→
+   468→The live demo includes quick-fill login buttons. Click any demo account on the login screen to auto-populate credentials.
+   469→
+   470→| Role | Username | Display Name |
+   471→|------|----------|-------------|
+   472→| Admin | `admin` | SOC Commander |
+   473→| Analyst | `analyst` | Jane Reyes |
+   474→| Viewer | `viewer` | Guest Observer |
+   475→
+   476→> ⚠️ **Important:** These are demo-only credentials for the live preview. In production, replace them with proper authentication via NextAuth.js and a secure identity provider.
+   477→
+   478→### Production Build
+   479→
+   480→```bash
+   481→# Build for production
+   482→bun run build
+   483→
+   484→# Start production server
+   485→bun run start
+   486→```
+   487→
+   488→The production build uses Next.js standalone output mode with Bun runtime for optimal performance.
+   489→
+   490→### Preview Production Build
+   491→
+   492→```bash
+   493→bun run build
+   494→bun run preview
+   495→```
+   496→
+   497→---
+   498→
+   499→## Environment Variables
+   500→
+   501→### `.env.example`
+   502→
+   503→```bash
+   504→# ─── Database ───────────────────────────────────────────
+   505→DATABASE_URL="file:./db/custom.db"
+   506→
+   507→# ─── Authentication ─────────────────────────────────────
+   508→NEXTAUTH_SECRET="your-nextauth-secret-change-me"
+   509→NEXTAUTH_URL="http://localhost:3000"
+   510→
+   511→# ─── Application ────────────────────────────────────────
+   512→NEXT_PUBLIC_APP_NAME="APEX SOC"
+   513→NEXT_PUBLIC_APP_VERSION="0.2.0"
+   514→NEXT_PUBLIC_APP_URL="http://localhost:3000"
+   515→
+   516→# ─── WebSocket (Optional) ──────────────────────────────
+   517→WEBSOCKET_PORT=3003
+   518→WEBSOCKET_ENABLED=false
+   519→
+   520→# ─── Data Simulation ───────────────────────────────────
+   521→NEXT_PUBLIC_SIMULATION_INTERVAL=1500
+   522→NEXT_PUBLIC_MAX_LOG_LINES=200
+   523→
+   524→# ─── Globe Configuration ───────────────────────────────
+   525→NEXT_PUBLIC_GLOBE_FPS_CAP=60
+   526→NEXT_PUBLIC_GLOBE_AUTO_ROTATE=true
+   527→NEXT_PUBLIC_GLOBE_ROTATION_SPEED=0.001
+   528→```
+   529→
+   530→> 📋 Copy `.env.example` to `.env` and replace placeholder values with your configuration. Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser.
+   531→
+   532→---
+   533→
+   534→## Scripts
+   535→
+   536→| Script | Command | Description |
+   537→|--------|---------|-------------|
+   538→| `dev` | `bun run dev` | Start development server on port 3000 with live logging |
+   539→| `build` | `bun run build` | Production build with standalone output |
+   540→| `start` | `bun run start` | Start production server via Bun runtime |
+   541→| `preview` | `bun run preview` | Preview the production build locally |
+   542→| `lint` | `bun run lint` | Run ESLint on all source files |
+   543→| `format` | `bun run format` | Format code with Prettier |
+   544→| `db:push` | `bun run db:push` | Push Prisma schema to database |
+   545→| `db:generate` | `bun run db:generate` | Generate Prisma client |
+   546→| `db:migrate` | `bun run db:migrate` | Run database migrations |
+   547→| `db:reset` | `bun run db:reset` | Reset database to initial state |
+   548→
+   549→---
+   550→
+   551→## Security Features
+   552→
+   553→APEX SOC provides a comprehensive visualization and monitoring interface for security operations. The following capabilities are designed for threat awareness and analysis:
+   554→
+   555→<details>
+   556→<summary><strong>🔍 Threat Visualization</strong></summary>
+   557→
+   558→- **3D Attack Arc Mapping** — Visualize threat origins and targets on an interactive globe with animated arc trajectories
+   559→- **Adversary Profiling** — Track known threat actor patterns including APT groups, hacktivist collectives, and script kiddie operations
+   560→- **Geolocation Intelligence** — Map threats to geographic coordinates with region-specific severity analysis
+   561→- **Attack Type Classification** — Categorize threats by vector: DDoS, Ransomware, Phishing, Data Exfiltration, Zero-Day, Brute Force, and more
+   562→- **Severity Scoring** — Real-time severity classification (Critical, High, Medium, Low, Info) with color-coded indicators
+   563→
+   564→</details>
+   565→
+   566→<details>
+   567→<summary><strong>📊 Security Dashboards</strong></summary>
+   568→
+   569→- **KPI Monitoring** — Track active threats, open alerts, total assets, and organizational risk score in real time
+   570→- **Severity Distribution** — Visual breakdown of threats by severity level with donut chart visualization
+   571→- **Trend Analytics** — 24-hour threat trend analysis with area chart tracking
+   572→- **Live Alert Stream** — Continuously updating alert feed with severity badges and time-since-event indicators
+   573→- **Attack Mini Map** — Condensed geographic threat overview for rapid situational awareness
+   574→
+   575→</details>
+   576→
+   577→<details>
+   578→<summary><strong>🖥️ Asset Monitoring</strong></summary>
+   579→
+   580→- **Asset Inventory** — Categorized inventory of servers, workstations, network devices, IoT, cloud instances, and mobile assets
+   581→- **Risk Scoring** — Per-asset risk assessment with visual severity indicators
+   582→- **Status Tracking** — Monitor asset status: Online, Offline, Compromised, Maintenance, Unknown
+   583→- **Network Topology** — Force-directed graph visualization of asset relationships and traffic flow
+   584→- **Edge Pulse Animation** — Animated connections showing active data flow between assets
+   585→
+   586→</details>
+   587→
+   588→<details>
+   589→<summary><strong>⚡ Real-Time Event Handling</strong></summary>
+   590→
+   591→- **Simulated Threat Feed** — Auto-refreshing threat event stream with configurable interval
+   592→- **WebSocket Infrastructure** — Socket.IO server ready for real-time bidirectional data push
+   593→- **Live Log Stream** — Scrolling console output of security events and system activity
+   594→- **Notification Dispatch** — Real-time notification drawer with severity-based sorting
+   595→- **Command Palette** — Keyboard-first navigation (`Ctrl+K`) for rapid SOC operations
+   596→
+   597→</details>
+   598→
+   599→> **Disclaimer:** APEX SOC is a visualization and monitoring interface. It does not perform real-world security actions such as blocking traffic, isolating hosts, or modifying firewall rules. Integration with actual security infrastructure (SIEM, EDR, firewalls) requires backend development beyond the current scope.
+   600→
+   601→---
+   602→
+   603→## Performance
+   604→
+   605→APEX SOC is engineered for smooth, responsive interaction even under sustained high-frequency data updates and complex 3D rendering.
+   606→
+   607→<details>
+   608→<summary><strong>🚀 Optimization Techniques</strong></summary>
+   609→
+   610→| Technique | Implementation | Impact |
+   611→|-----------|---------------|--------|
+   612→| **Code Splitting** | Next.js automatic route-based splitting + dynamic imports for 3D globe | Reduces initial bundle size; globe loads only when Intel Map is accessed |
+   613→| **Lazy Loading** | `React.lazy()` + `Suspense` for heavy components (Three.js, topology) | Defers non-critical rendering until needed |
+   614→| **GPU Acceleration** | Three.js WebGL rendering pipeline with hardware acceleration | Offloads 3D computation to GPU, freeing main thread |
+   615→| **Memoization** | `React.memo()`, `useMemo()`, `useCallback()` on expensive renders | Prevents unnecessary re-renders in KPI cards, charts, and lists |
+   616→| **Virtualization** | Windowed rendering for large alert and asset lists | Renders only visible rows, maintaining scroll performance with thousands of items |
+   617→| **Animation Batching** | Framer Motion layout animations + requestAnimationFrame scheduling | Groups DOM mutations into single paint frames |
+   618→| **Standalone Output** | Next.js `output: "standalone"` with Bun runtime | Minimal production server with reduced cold-start time |
+   619→| **FPS Capping** | Configurable globe frame rate cap (`NEXT_PUBLIC_GLOBE_FPS_CAP`) | Limits GPU usage when full frame rate is unnecessary |
+   620→| **State Isolation** | Zustand store separation (UI, Alert, Asset, Globe) | Component re-renders only when relevant store slices update |
+   621→| **SSR-Safe Imports** | Dynamic import with `ssr: false` for Three.js components | Prevents server-side rendering failures with WebGL-dependent code |
+   622→
+   623→</details>
+   624→
+   625→<details>
+   626→<summary><strong>📈 Performance Benchmarks</strong></summary>
+   627→
+   628→> 📋 **Placeholder** — Add benchmark results here using Lighthouse, WebPageTest, or custom metrics.
+   629→>
+   630→> Recommended metrics to track:
+   631→> - **First Contentful Paint (FCP)** — Target: < 1.2s
+   632→> - **Largest Contentful Paint (LCP)** — Target: < 2.5s
+   633→> - **Time to Interactive (TTI)** — Target: < 3.0s
+   634→> - **Cumulative Layout Shift (CLS)** — Target: < 0.1
+   635→> - **Globe FPS** — Target: ≥ 30fps on mid-range hardware
+   636→
+   637→</details>
+   638→
+   639→---
+   640→
+   641→## UI Showcase
+   642→
+   643→<details>
+   644→<summary><strong>🎨 Design System</strong></summary>
+   645→
+   646→APEX SOC features a meticulously crafted enterprise design system built on a 50+ token CSS custom property architecture:
+   647→
+   648→### Color Palette
+   649→
+   650→| Token | Hex | Usage |
+   651→|-------|-----|-------|
+   652→| Deep Navy | `#060b18` | Primary background |
+   653→| Dark Slate | `#0f172a` | Surface backgrounds |
+   654→| Graphite | `#1e293b` | Card and panel surfaces |
+   655→| SOC Blue | `#3b82f6` | Primary interactive color |
+   656→| Electric Cyan | `#06b6d4` | Accent highlights, links |
+   657→| Emerald | `#10b981` | Success, online status |
+   658→| Amber | `#f59e0b` | Warning, medium severity |
+   659→| Orange | `#f97316` | High severity indicators |
+   660→| Red | `#ef4444` | Critical alerts, errors |
+   661→| Purple | `#8b5cf6` | Special accents, intel |
+   662→
+   663→### Visual Effects
+   664→
+   665→- **Glassmorphism** — Backdrop blur on dialogs, panels, command palette, and overlays (`.glass`, `.glass-heavy`, `.glass-light`)
+   666→- **Animated Gradient Borders** — CSS conic-gradient border rotation on interactive cards
+   667→- **Pulse Indicators** — Severity-aware pulse rings on KPI cards and status badges
+   668→- **Scan-Line Animation** — Subtle CRT-style scan effect on focused elements
+   669→- **Shimmer Skeletons** — Loading state placeholders with gradient sweep animation
+   670→- **Cyber Background** — Multi-layer animated gradient with particle effects
+   671→
+   672→### Typography
+   673→
+   674→- **Font Family** — Geist Sans (headings, body) + Geist Mono (code, logs, data)
+   675→- **Scale** — 12px base with consistent 4px spacing increments
+   676→- **Weight Hierarchy** — 400 (body) → 500 (labels) → 600 (headings) → 700 (KPI values)
+   677→
+   678→</details>
+   679→
+   680→<details>
+   681→<summary><strong>✨ Animations & Micro-Interactions</strong></summary>
+   682→
+   683→| Animation | Trigger | Duration | Easing |
+   684→|-----------|---------|----------|--------|
+   685→| Page Transition | View change | 300ms | Spring (stiffness: 300, damping: 30) |
+   686→| Card Hover Lift | Mouse enter | 200ms | Ease-out |
+   687→| KPI Counter | Value change | 800ms | Ease-out with stagger |
+   688→| Alert Row Flash | New alert | 500ms | Ease-in-out |
+   689→| Globe Camera | Click target | 1200ms | Cubic bezier (0.4, 0, 0.2, 1) |
+   690→| Attack Arc | Threat event | Continuous | Linear with opacity fade |
+   691→| Sidebar Collapse | Toggle | 250ms | Spring (stiffness: 400, damping: 35) |
+   692→| Notification Slide | Drawer open | 300ms | Spring (stiffness: 300, damping: 30) |
+   693→| Command Palette | Ctrl+K | 200ms | Spring (stiffness: 500, damping: 35) |
+   694→| Gradient Border | Card focus | 3s loop | Linear rotation |
+   695→
+   696→</details>
+   697→
+   698→---
+   699→
+   700→## Development Principles
+   701→
+   702→| Principle | Description |
+   703→|-----------|-------------|
+   704→| **Reusable Components** | Every UI element is built as a composable, reusable component following shadcn/ui patterns. SOC-specific components are isolated in `components/soc/` with clear prop interfaces and TypeScript types. |
+   705→| **Scalable Architecture** | The application is structured for growth. New views, data sources, and integrations can be added without restructuring existing code. The Zustand store layer supports feature-based slicing. |
+   706→| **SOLID Principles** | Single responsibility per component, open for extension through composition, dependency inversion via React context and store injection. Each globe module handles exactly one concern. |
+   707→| **Maintainability** | Consistent naming conventions, comprehensive TypeScript types, and clear file organization. The 11-module globe sub-system demonstrates how complex features can be decomposed into maintainable units. |
+   708→| **Performance** | Every rendering decision is intentional — from memoized KPI cards to dynamically imported Three.js components. The platform avoids unnecessary re-renders and defers heavy computation. |
+   709→| **Accessibility** | WCAG AA compliance through Radix UI primitives, ARIA attributes, keyboard navigation, and focus management. The command palette provides a keyboard-first interaction model. |
+   710→| **Type Safety** | End-to-end TypeScript from Prisma schema to React props. Zod schemas provide runtime validation, and TypeScript strict mode catches errors at compile time. |
+   711→
+   712→---
+   713→
+   714→## Roadmap
+   715→
+   716→- [x] Core SOC dashboard with KPI cards and charts
+   717→- [x] Interactive 3D globe with attack arc visualization
+   718→- [x] Alert investigation console with multi-axis filtering
+   719→- [x] Asset inventory with card, table, and topology views
+   720→- [x] Command palette for keyboard-first navigation
+   721→- [x] Notification drawer with severity badges
+   722→- [x] Enterprise dark theme with glassmorphism effects
+   723→- [x] Real-time simulated threat feed
+   724→- [ ] Enhanced threat intelligence with STIX/TAXII integration
+   725→- [ ] Advanced analytics with correlation engine
+   726→- [ ] Multi-user roles with RBAC and audit logging
+   727→- [ ] Custom reporting and export templates
+   728→- [ ] SIEM integrations (Splunk, Elastic, QRadar)
+   729→- [ ] EDR connector framework (CrowdStrike, SentinelOne, Defender)
+   730→- [ ] Additional visualization modules (Sankey, chord, timeline)
+   731→- [ ] Real WebSocket data pipeline replacing simulation
+   732→- [ ] NextAuth.js production authentication with SSO/SAML
+   733→- [ ] Internationalization with next-intl (10+ languages)
+   734→- [ ] Mobile-responsive optimizations for tablet SOC workflows
+   735→- [ ] Automated testing suite (Vitest + Playwright)
+   736→- [ ] CI/CD pipeline with GitHub Actions
+   737→- [ ] Docker containerization and Kubernetes manifests
+   738→
+   739→---
+   740→
+   741→## Contributing
+   742→
+   743→We welcome contributions from the community. Whether you're fixing a bug, adding a feature, improving documentation, or suggesting design enhancements — your input makes APEX SOC better.
+   744→
+   745→### Getting Started
+   746→
+   747→1. **Fork** the repository
+   748→2. **Create** a feature branch: `git checkout -b feature/your-feature-name`
+   749→3. **Commit** your changes: `git commit -m "feat: add your feature"`
+   750→4. **Push** to your branch: `git push origin feature/your-feature-name`
+   751→5. **Open** a Pull Request
+   752→
+   753→### Contribution Guidelines
+   754→
+   755→- Follow the existing code style and TypeScript conventions
+   756→- Write descriptive commit messages following [Conventional Commits](https://www.conventionalcommits.org/)
+   757→- Ensure your changes pass `bun run lint` without errors
+   758→- Add appropriate TypeScript types for any new props, state, or data structures
+   759→- Test your changes across all five views (Dashboard, Alerts, Intel Map, Assets, Settings)
+   760→- Keep pull requests focused — one feature or fix per PR
+   761→
+   762→### Commit Convention
+   763→
+   764→| Prefix | Usage |
+   765→|--------|-------|
+   766→| `feat:` | New feature |
+   767→| `fix:` | Bug fix |
+   768→| `refactor:` | Code restructuring |
+   769→| `style:` | Formatting, no logic change |
+   770→| `docs:` | Documentation |
+   771→| `test:` | Test additions |
+   772→| `chore:` | Build, tooling, dependencies |
+   773→
+   774→---
+   775→
+   776→## License
+   777→
+   778→This project is licensed under the **MIT License**.
+   779→
+   780→```
+   781→MIT License
+   782→
+   783→Copyright (c) 2024 APEX SOC
+   784→
+   785→Permission is hereby granted, free of charge, to any person obtaining a copy
+   786→of this software and associated documentation files (the "Software"), to deal
+   787→in the Software without restriction, including without limitation the rights
+   788→to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+   789→copies of the Software, and to permit persons to whom the Software is
+   790→furnished to do so, subject to the following conditions:
+   791→
+   792→The above copyright notice and this permission notice shall be included in all
+   793→copies or substantial portions of the Software.
+   794→
+   795→THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   796→IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   797→FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   798→AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   799→LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+   800→OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+   801→SOFTWARE.
+   802→```
+   803→
+   804→---
+   805→
+   806→## Acknowledgements
+   807→
+   808→APEX SOC draws design and architectural inspiration from several categories of modern security and visualization software. The following acknowledgements recognize the communities and projects that informed our design decisions:
+   809→
+   810→- **Cybersecurity Dashboard Design** — The visual language and interaction patterns found in modern SOC platforms including CrowdStrike Falcon, Microsoft Defender XDR, SentinelOne, IBM QRadar, Palo Alto Cortex, and Recorded Future informed our approach to threat visualization, alert triage, and analyst workflow design.
+   811→- **Open-Source Visualization** — The Three.js, React Three Fiber, and Drei ecosystems provide the foundation for our 3D globe rendering. The Recharts library powers our analytical chart components.
+   812→- **Enterprise UX Patterns** — The shadcn/ui and Radix UI projects established the component architecture and accessibility standards we follow. The glassmorphism design trend and dark-theme enterprise dashboards influenced our visual system.
+   813→- **Animation Libraries** — Framer Motion and GSAP enable the fluid interaction model that distinguishes APEX SOC from static dashboards.
+   814→- **State Management** — Zustand's minimal API and store composition pattern shaped our approach to global state architecture.
+   815→
+   816→No endorsement, affiliation, or sponsorship by any of the above projects or companies is implied.
+   817→
+   818→---
+   819→
+   820→<div align="center">
+   821→
+   822→**APEX SOC** — v0.2.0
+   823→
+   824→Made with React & TypeScript
+   825→
+   826→Enterprise Security Dashboard
+   827→
+   828→[⬆ Back to Top](#apex-soc)
+   829→
+   830→</div>
+   831→
