@@ -1,0 +1,1205 @@
+     1→This is a serious build. Let me give you a complete, production-grade implementation plan — not a toy demo sketch, but something you could hand to a team and execute against.
+     2→
+     3→---
+     4→
+     5→# APEX SOC — Enterprise Threat Intelligence Dashboard
+     6→## Implementation Plan v1.0
+     7→
+     8→---
+     9→
+    10→## 1. System Architecture
+    11→
+    12→```
+    13→┌─────────────────────────────────────────────────────────────────┐
+    14→│                        CLIENT (React)                           │
+    15→│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐          │
+    16→│  │ Dashboard │ │  Alerts  │ │Intel Map │ │ Assets   │  Settings │
+    17→│  │  Overview │ │   Log    │ │  Globe   │ │Inventory │           │
+    18→│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘          │
+    19→│       └────────────┴────────────┴────────────┘                 │
+    20→│                         │                                       │
+    21→│              ┌──────────┴──────────┐                           │
+    22→│              │   State Management   │                           │
+    23→│              │   (Zustand + React   │                           │
+    24→│              │    Query / TanStack) │                           │
+    25→│              └──────────┬──────────┘                           │
+    26→│                         │                                       │
+    27→│              ┌──────────┴──────────┐                           │
+    28→│              │   Data Service Layer │  ← Single swap point      │
+    29→│              │   (AbstractAdapter)  │    for mock → real API    │
+    30→│              └──────────┬──────────┘                           │
+    31→└─────────────────────────┼───────────────────────────────────────┘
+    32→                          │
+    33→              ┌───────────┴───────────┐
+    34→              │   WebSocket Channel   │  ← Live events, attack feed
+    35→              │   REST API Endpoints  │  ← Queries, CRUD, auth
+    36→              └───────────┬───────────┘
+    37→                          │
+    38→┌─────────────────────────┼───────────────────────────────────────┐
+    39→│                   SERVER (Python)                                │
+    40→│              ┌──────────┴──────────┐                           │
+    41→│              │    FastAPI Server    │                           │
+    42→│              ├──────────┬──────────┤                           │
+    43→│              │ Auth     │ Data Gen  │                           │
+    44→│              │ Module   │ Engine    │                           │
+    45→│              │ (JWT +   │ (Faker +  │                           │
+    46→│              │  RBAC)   │  Custom)  │                           │
+    47→│              ├──────────┴──────────┤                           │
+    48→│              │   WebSocket Manager  │                           │
+    49→│              │   (broadcast loops)  │                           │
+    50→│              └──────────┬──────────┘                           │
+    51→│                         │                                       │
+    52→│              ┌──────────┴──────────┐                           │
+    53→│              │  Adapter Interface   │                           │
+    54→│              ├──────────┬──────────┤                           │
+    55→│              │ MockAdapter│ RealAdapter │  ← Strategy pattern  │
+    56→│              │ (default)  │ (VirusTotal,│                     │
+    57→│              │            │  Shodan, etc)│                    │
+    58→│              └───────────┴────────────┘                        │
+    59→└─────────────────────────────────────────────────────────────────┘
+    60→```
+    61→
+    62→**Key architectural decision:** The `DataAdapter` interface is the single most important abstraction. Every data call on the client goes through one function signature. Switching from mock to real means swapping one class, not rewriting components.
+    63→
+    64→---
+    65→
+    66→## 2. Project Structure
+    67→
+    68→```
+    69→apex-soc/
+    70→├── client/                          # React frontend
+    71→│   ├── public/
+    72→│   │   └── fonts/                   # Self-hosted: JetBrains Mono, Space Grotesk
+    73→│   ├── src/
+    74→│   │   ├── app/
+    75→│   │   │   ├── App.tsx
+    76→│   │   │   ├── routes.tsx           # React Router config
+    77→│   │   │   └── providers.tsx        # Auth, theme, query providers
+    78→│   │   ├── auth/
+    79→│   │   │   ├── auth-context.tsx     # React context for auth state
+    80→│   │   │   ├── guards.tsx           # RoleRoute, AuthRoute wrappers
+    81→│   │   │   ├── login-page.tsx
+    82→│   │   │   └── types.ts             # User, Role, Permission enums
+    83→│   │   ├── layout/
+    84→│   │   │   ├── shell.tsx            # Sidebar + topbar + outlet
+    85→│   │   │   ├── sidebar.tsx
+    86→│   │   │   ├── topbar.tsx           # Role badge, notifications, export btn
+    87→│   │   │   └── notification-drawer.tsx
+    88→│   │   ├── views/
+    89→│   │   │   ├── dashboard/           # Overview page
+    90→│   │   │   │   ├── index.tsx
+    91→│   │   │   │   ├── stats-row.tsx    # KPI cards (active threats, etc.)
+    92→│   │   │   │   ├── severity-chart.tsx
+    93→│   │   │   │   ├── mini-map.tsx     # Small attack map preview
+    94→│   │   │   │   ├── recent-alerts-table.tsx
+    95→│   │   │   │   └── activity-timeline.tsx
+    96→│   │   │   ├── alerts/              # Live alerts & log stream
+    97→│   │   │   │   ├── index.tsx
+    98→│   │   │   │   ├── log-stream.tsx   # Terminal-style live feed
+    99→│   │   │   │   ├── alert-table.tsx  # Sortable, filterable, triage actions
+   100→│   │   │   │   ├── alert-detail-drawer.tsx
+   101→│   │   │   │   └── filter-bar.tsx
+   102→│   │   │   ├── intel-map/           # Full threat intel map
+   103→│   │   │   │   ├── index.tsx
+   104→│   │   │   │   ├── globe-canvas.tsx # Three.js / deck.gl globe
+   105→│   │   │   │   ├── connection-layer.tsx
+   106→│   │   │   │   ├── intel-sidebar.tsx # Clicked-attack details
+   107→│   │   │   │   └── legend.tsx
+   108→│   │   │   ├── assets/              # Asset inventory
+   109→│   │   │   │   ├── index.tsx
+   110→│   │   │   │   ├── asset-table.tsx
+   111→│   │   │   │   ├── topology-graph.tsx # D3 force-directed network
+   112→│   │   │   │   ├── asset-detail-panel.tsx
+   113→│   │   │   │   └── vulnerability-tags.tsx
+   114→│   │   │   └── settings/
+   115→│   │   │       ├── index.tsx
+   116→│   │   │       ├── user-management.tsx   # Admin only
+   117→│   │   │       ├── api-configuration.tsx # Swap mock/real adapters
+   118→│   │   │       └── display-preferences.tsx
+   119→│   │   ├── services/                # DATA SERVICE LAYER — critical
+   120→│   │   │   ├── adapter.ts           # Abstract interface
+   121→│   │   │   ├── mock-adapter.ts      # Full mock implementation
+   122→│   │   │   ├── real-adapter.ts      # Stub for future real APIs
+   123→│   │   │   ├── websocket.ts         # WS client singleton
+   124→│   │   │   └── index.ts             # Factory: returns active adapter
+   125→│   │   ├── stores/                  # Zustand stores
+   126→│   │   │   ├── alert-store.ts
+   127→│   │   │   ├── asset-store.ts
+   128→│   │   │   ├── filter-store.ts
+   129→│   │   │   └── ui-store.ts          # Sidebar state, theme, panels
+   130→│   │   ├── hooks/                   # Custom React hooks
+   131→│   │   │   ├── use-alerts.ts
+   132→│   │   │   ├── use-websocket.ts
+   133→│   │   │   ├── use-export.ts        # PDF/CSV logic
+   134→│   │   │   └── use-permissions.ts   # Role-based UI gating
+   135→│   │   ├── components/              # Shared UI components
+   136→│   │   │   ├── ui/                  # Base primitives
+   137→│   │   │   │   ├── button.tsx
+   138→│   │   │   │   ├── badge.tsx
+   139→│   │   │   │   ├── card.tsx
+   140→│   │   │   │   ├── table.tsx
+   141→│   │   │   │   ├── input.tsx
+   142→│   │   │   │   ├── select.tsx
+   143→│   │   │   │   ├── modal.tsx
+   144→│   │   │   │   ├── drawer.tsx
+   145→│   │   │   │   ├── tooltip.tsx
+   146→│   │   │   │   └── skeleton.tsx
+   147→│   │   │   ├── charts/              # Recharts/D3 wrappers
+   148→│   │   │   │   ├── severity-donut.tsx
+   149→│   │   │   │   ├── trend-line.tsx
+   150→│   │   │   │   ├── bar-cluster.tsx
+   151→│   │   │   │   └── gauge.tsx
+   152→│   │   │   └── feedback/            # Toast, confirm dialogs
+   153→│   │   │       ├── toast.tsx
+   154→│   │   │       └── confirm-dialog.tsx
+   155→│   │   ├── lib/                     # Pure utility functions
+   156→│   │   │   ├── formatters.ts        # IP, date, byte, severity formatters
+   157→│   │   │   ├── validators.ts
+   158→│   │   │   ├── exporters.ts         # PDF generation, CSV serialization
+   159→│   │   │   └── constants.ts         # Severity levels, status enums, colors
+   160→│   │   └── styles/
+   161→│   │       ├── globals.css          # Tailwind directives + custom props
+   162→│   │       └── theme.ts             # Design tokens as JS object
+   163→│   ├── tailwind.config.ts
+   164→│   ├── tsconfig.json
+   165→│   ├── vite.config.ts
+   166→│   └── package.json
+   167→│
+   168→├── server/                          # Python backend
+   169→│   ├── app/
+   170→│   │   ├── main.py                  # FastAPI entry point
+   171→│   │   ├── config.py                # Settings via pydantic-settings
+   172→│   │   ├── auth/
+   173→│   │   │   ├── router.py            # /auth/login, /auth/refresh
+   174→│   │   │   ├── jwt.py               # Token creation/validation
+   175→│   │   │   ├── rbac.py              # Permission checker decorator
+   176→│   │   │   └── users.py             # In-memory user store (MVP)
+   177→│   │   ├── ws/
+   178→│   │   │   ├── manager.py           # Connection manager, broadcast
+   179→│   │   │   └── events.py            # Event type definitions
+   180→│   │   ├── routers/
+   181→│   │   │   ├── alerts.py            # /api/alerts, /api/alerts/{id}
+   182→│   │   │   ├── assets.py            # /api/assets, /api/assets/{id}
+   183→│   │   │   ├── intel.py             # /api/intel/attacks, /api/intel/iocs
+   184→│   │   │   ├── dashboard.py         # /api/dashboard/stats, /api/dashboard/trends
+   185→│   │   │   └── settings.py          # /api/settings/*
+   186→│   │   ├── adapters/
+   187→│   │   │   ├── base.py              # Abstract DataAdapter class
+   188→│   │   │   ├── mock/
+   189→│   │   │   │   ├── alert_gen.py     # Realistic alert generator
+   190→│   │   │   │   ├── attack_gen.py    # Geo-coordinate attack pairs
+   191→│   │   │   │   ├── asset_gen.py     # Network asset inventory
+   192→│   │   │   │   ├── log_gen.py       # Syslog-style log lines
+   193→│   │   │   │   ├── ioc_gen.py       # IPs, domains, hashes
+   194→│   │   │   │   └── topology_gen.py  # Node/edge graph data
+   195→│   │   │   └── real/                # Stubs
+   196→│   │   │       ├── virustotal.py
+   197→│   │   │       ├── shodan.py
+   198→│   │   │       └── splunk.py
+   199→│   │   ├── models/                  # Pydantic models (shared contract)
+   200→│   │   │   ├── alert.py
+   201→│   │   │   ├── asset.py
+   202→│   │   │   ├── attack.py
+   203→│   │   │   ├── user.py
+   204→│   │   │   └── dashboard.py
+   205→│   │   └── tasks/
+   206→│   │       ├── broadcast_loop.py    # Asyncio task: push events every 1-2s
+   207→│   │       └── state_evolution.py   # Slowly mutate state over time
+   208→│   ├── requirements.txt
+   209→│   ├── Dockerfile
+   210→│   └── .env.example
+   211→│
+   212→├── docker-compose.yml               # Full stack: client + server
+   213→├── nginx.conf                       # Reverse proxy for prod
+   214→└── README.md
+   215→```
+   216→
+   217→---
+   218→
+   219→## 3. Data Layer Design — The Adapter Pattern
+   220→
+   221→This is the **most critical piece** of the entire architecture. Get this right and swapping data sources is a config change, not a rewrite.
+   222→
+   223→### 3.1 Abstract Interface (Python)
+   224→
+   225→```python
+   226→# server/app/adapters/base.py
+   227→from abc import ABC, abstractmethod
+   228→from app.models.alert import Alert, AlertList
+   229→from app.models.asset import Asset, AssetList
+   230→from app.models.attack import AttackConnection, AttackList
+   231→from app.models.dashboard import DashboardStats, TrendData
+   232→from app.models.ioc import IOCList
+   233→
+   234→class DataAdapter(ABC):
+   235→
+   236→    @abstractmethod
+   237→    async def get_dashboard_stats(self) -> DashboardStats: ...
+   238→
+   239→    @abstractmethod
+   240→    async def get_alerts(self, offset: int, limit: int,
+   241→                         severity: str | None, status: str | None) -> AlertList: ...
+   242→
+   243→    @abstractmethod
+   244→    async def get_alert_by_id(self, alert_id: str) -> Alert: ...
+   245→
+   246→    @abstractmethod
+   247→    async def triage_alert(self, alert_id: str,
+   248→                           status: str, assignee: str | None) -> Alert: ...
+   249→
+   250→    @abstractmethod
+   251→    async def get_assets(self, offset: int, limit: int,
+   252→                         status: str | None) -> AssetList: ...
+   253→
+   254→    @abstractmethod
+   255→    async def get_asset_by_id(self, asset_id: str) -> Asset: ...
+   256→
+   257→    @abstractmethod
+   258→    async def get_attack_connections(self, since_seconds: int) -> AttackList: ...
+   259→
+   260→    @abstractmethod
+   261→    async def get_topology(self) -> dict: ...
+   262→
+   263→    @abstractmethod
+   264→    async def get_iocs(self, query: str | None, type: str | None) -> IOCList: ...
+   265→
+   266→    @abstractmethod
+   267→    async def get_trend_data(self, hours: int) -> list[TrendData]: ...
+   268→
+   269→    @abstractmethod
+   270→    async def stream_logs(self): ...  # Async generator for WS push
+   271→```
+   272→
+   273→### 3.2 Mock Data Generators — Making It Look Alive
+   274→
+   275→The mock generators need to produce **realistic, correlated data**, not random noise. Here's the strategy:
+   276→
+   277→```python
+   278→# server/app/adapters/mock/attack_gen.py
+   279→# Core idea: maintain a pool of "active adversary clusters" that evolve over time
+   280→
+   281→ADVERSARY_PROFILES = [
+   282→    {
+   283→        "name": "APT-PHANTOM SPIDER",
+   284→        "origin_countries": ["CN", "RU"],
+   285→        "target_sectors": ["finance", "energy"],
+   286→        "attack_types": ["spear_phishing", "c2_beaconing", "lateral_move"],
+   287→        "source_ips_pool": ["103.224.182.*", "185.220.101.*"],
+   288→        "target_ips_pool": ["10.0.1.*", "10.0.2.*"],  # Internal range
+   289→        "active_since_hours": 72,
+   290→        "intensity": 0.7,  # 0-1, affects frequency
+   291→    },
+   292→    # ... 4-6 more profiles
+   293→]
+   294→
+   295→# Each broadcast tick:
+   296→# 1. For each active adversary, roll against intensity to decide if they attack this tick
+   297→# 2. Pick random source IP from their pool, random target from their pool
+   298→# 3. Look up geo-coordinates for both
+   299→# 4. Pick attack type from their profile
+   300→# 5. Generate severity based on attack type + some noise
+   301→# 6. Emit as AttackConnection event
+   302→```
+   303→
+   304→**Key realism techniques:**
+   305→- Adversary clusters persist across time (same group attacking over hours)
+   306→- Attack patterns match the profile (APT doesn't do DDoS, script kiddies don't do zero-day)
+   307→- Correlate alerts with attack map events (same IP appears in both)
+   308→- Asset vulnerabilities match the attacks targeting them
+   309→- Log lines reference the same IPs/timestamps as alerts
+   310→
+   311→### 3.3 Client-Side Adapter Mirror
+   312→
+   313→```typescript
+   314→// client/src/services/adapter.ts
+   315→export interface DataAdapter {
+   316→  getDashboardStats(): Promise<DashboardStats>;
+   317→  getAlerts(params: AlertQueryParams): Promise<PaginatedResponse<Alert>>;
+   318→  getAlertById(id: string): Promise<Alert>;
+   319→  triageAlert(id: string, action: TriageAction): Promise<Alert>;
+   320→  getAssets(params: AssetQueryParams): Promise<PaginatedResponse<Asset>>;
+   321→  getAssetById(id: string): Promise<Asset>;
+   322→  getAttackConnections(sinceSeconds: number): Promise<AttackConnection[]>;
+   323→  getTopology(): Promise<TopologyData>;
+   324→  getIOCs(params: IOCQueryParams): Promise<PaginatedResponse<IOC>>;
+   325→  getTrendData(hours: number): Promise<TrendDataPoint[]>;
+   326→}
+   327→```
+   328→
+   329→```typescript
+   330→// client/src/services/index.ts
+   331→// Factory — controlled by Settings page or env var
+   332→let activeAdapter: DataAdapter;
+   333→
+   334→export function initAdapter(mode: 'mock' | 'real') {
+   335→  if (mode === 'mock') {
+   336→    activeAdapter = new MockAdapter(); // Has its own local generators
+   337→  } else {
+   338→    activeAdapter = new RealAdapter(); // Talks to Python server
+   339→  }
+   340→}
+   341→
+   342→export function getAdapter(): DataAdapter {
+   343→  return activeAdapter;
+   344→}
+   345→```
+   346→
+   347→**Why a client-side mock adapter too?** So the frontend can be developed and demoed **completely standalone** without the Python server running. The client mock adapter has its own smaller generators. For full realism, connect to the server.
+   348→
+   349→---
+   350→
+   351→## 4. Authentication & RBAC
+   352→
+   353→### 4.1 Role-Permission Matrix
+   354→
+   355→```
+   356→┌─────────────────────────┬─────────┬──────────┬─────────┐
+   357→│ Capability              │ Admin   │ Analyst  │ Viewer  │
+   358→├─────────────────────────┼─────────┼──────────┼─────────┤
+   359→│ View dashboard          │    ✓    │    ✓     │    ✓    │
+   360→│ View alerts             │    ✓    │    ✓     │    ✓    │
+   361→│ View alert detail       │    ✓    │    ✓     │    ✓    │
+   362→│ Triage alerts           │    ✓    │    ✓     │    ✗    │
+   363→│ Assign alerts           │    ✓    │    ✓     │    ✗    │
+   364→│ Dismiss alerts          │    ✓    │    ✓     │    ✗    │
+   365→│ View intel map          │    ✓    │    ✓     │    ✓    │
+   366→│ View assets             │    ✓    │    ✓     │    ✓    │
+   367→│ Edit asset notes        │    ✓    │    ✓     │    ✗    │
+   368→│ Export PDF/CSV          │    ✓    │    ✓     │    ✗    │
+   369→│ Manage users            │    ✓    │    ✗     │    ✗    │
+   370→│ Change data source      │    ✓    │    ✗     │    ✗    │
+   371→│ View settings           │    ✓    │    ✓     │    ✓    │
+   372→│ Edit settings           │    ✓    │    ✗     │    ✗    │
+   373→└─────────────────────────┴─────────┴──────────┴─────────┘
+   374→```
+   375→
+   376→### 4.2 Implementation Approach
+   377→
+   378→```typescript
+   379→// client/src/auth/types.ts
+   380→export enum Role {
+   381→  ADMIN = 'admin',
+   382→  ANALYST = 'analyst',
+   383→  VIEWER = 'viewer',
+   384→}
+   385→
+   386→export enum Permission {
+   387→  ALERT_TRIAGE = 'alert:triage',
+   388→  ALERT_ASSIGN = 'alert:assign',
+   389→  ASSET_EDIT = 'asset:edit',
+   390→  EXPORT_DATA = 'data:export',
+   391→  USER_MANAGE = 'user:manage',
+   392→  SETTINGS_EDIT = 'settings:edit',
+   393→}
+   394→
+   395→// Role-to-permission mapping
+   396→const ROLE_PERMISSIONS: Record<Role, Permission[]> = {
+   397→  [Role.ADMIN]: Object.values(Permission), // All permissions
+   398→  [Role.ANALYST]: [
+   399→    Permission.ALERT_TRIAGE,
+   400→    Permission.ALERT_ASSIGN,
+   401→    Permission.ASSET_EDIT,
+   402→    Permission.EXPORT_DATA,
+   403→  ],
+   404→  [Role.VIEWER]: [],
+   405→};
+   406→```
+   407→
+   408→```typescript
+   409→// client/src/auth/guards.tsx
+   410→// Used as: <RoleRoute roles={[Role.ADMIN, Role.ANALYST]}><SettingsPage/></RoleRoute>
+   411→export function RoleRoute({ roles, children }: Props) {
+   412→  const { user } = useAuth();
+   413→  if (!user) return <Navigate to="/login" />;
+   414→  if (!roles.includes(user.role)) {
+   415→    return <AccessDenied />; // Custom 403-like component
+   416→  }
+   417→  return <>{children}</>;
+   418→}
+   419→
+   420→// Used in components to hide/disable individual buttons
+   421→export function usePermission(permission: Permission): boolean {
+   422→  const { user } = useAuth();
+   423→  if (!user) return false;
+   424→  return ROLE_PERMISSIONS[user.role].includes(permission);
+   425→}
+   426→```
+   427→
+   428→### 4.3 Default Users (MVP)
+   429→
+   430→```python
+   431→# server/app/auth/users.py
+   432→DEFAULT_USERS = [
+   433→    {"username": "admin", "password": "apex-admin-2024", "role": "admin", "name": "SOC Commander"},
+   434→    {"username": "analyst", "password": "apex-analyst-2024", "role": "analyst", "name": "Jane Reyes"},
+   435→    {"username": "viewer", "password": "apex-viewer-2024", "role": "viewer", "name": "Guest Observer"},
+   436→]
+   437→```
+   438→Passwords are hashed with bcrypt. JWT tokens have a 15-minute expiry with refresh tokens.
+   439→
+   440→---
+   441→
+   442→## 5. View Specifications
+   443→
+   444→### 5.1 Main Dashboard (Overview)
+   445→
+   446→**Purpose:** Give the SOC lead a 5-second situational awareness scan.
+   447→
+   448→```
+   449→┌──────────────────────────────────────────────────────────────────┐
+   450→│ [Topbar: APEX SOC  │  Role: Admin  │  🔔 3  │  ⚡ Export  │ 👤] │
+   451→├────────┬─────────────────────────────────────────────────────────┤
+   452→│        │  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐        │
+   453→│  D     │  │ACTIVE│ │CRIT- │ │UNTRI-│ │ASSETS│ │THREAT│        │
+   454→│  A     │  │THREATS│ │ICAL /│ │AGED  │ │AT-RISK│ │SCORE │        │
+   455→│  S     │  │  47   │ │  12  │ │  23  │ │  8   │ │ 78/100│       │
+   456→│  H     │  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘        │
+   457→│  B     │                                                        │
+   458→│  O     │  ┌─────────────────────┐ ┌──────────────────────┐      │
+   459→│  A     │  │                     │ │  SEVERITY BREAKDOWN  │      │
+   460→│  R     │  │   MINI ATTACK MAP   │ │                      │      │
+   461→│        │  │   (globe preview)   │ │    [Donut Chart]     │      │
+   462→│  📊    │  │                     │ │  Critical  12  Red   │      │
+   463→│  Over  │  │   "Click to expand" │ │  High       8  Orange│      │
+   464→│  ⚡    │  │                     │ │  Medium    15  Yellow│      │
+   465→│  Alerts│  └─────────────────────┘ │  Low       12  Green │      │
+   466→│  🌍    │                          └──────────────────────┘      │
+   467→│  Intel │  ┌──────────────────────────────────────────────┐      │
+   468→│  🖥    │  │  TREND: Alerts Last 24h (Area Chart)         │      │
+   469→│  Assets│  │  ▁▂▃▅▇█▇▅▃▂▁▂▃▅▇▆▄▃▂▁▂                     │      │
+   470→│  ⚙    │  └──────────────────────┬───────────────────────┘      │
+   471→│        │  ┌──────────────────────┴───────────────────────┐      │
+   472→│        │  │  RECENT CRITICAL ALERTS (last 5, live)       │      │
+   473→│        │  │  🔴 14:23:01 │ 185.220.101.3 → 10.0.1.42    │      │
+   474→│        │  │  │ C2 Beacon Detected │ APT-PHANTOM SPIDER   │      │
+   475→│        │  │  🔴 14:22:47 │ 103.224.182.7 → 10.0.2.18   │      │
+   476→│        │  │  │ Brute Force SSH   │ Unknown Actor         │      │
+   477→│        │  │  ... (auto-scrolls as new ones arrive)       │      │
+   478→│        │  └──────────────────────────────────────────────┘      │
+   479→└────────┴─────────────────────────────────────────────────────────┘
+   480→```
+   481→
+   482→**KPI Cards specification:**
+   483→- Animated count-up on page load
+   484→- Subtle pulse glow when value changes
+   485→- Sparkline in the background of each card (last 60 data points)
+   486→- Color-coded border-left accent (red for critical, amber for warnings, green for healthy)
+   487→
+   488→### 5.2 Live Alerts & Logs
+   489→
+   490→**Purpose:** The workhorse view where analysts spend 80% of their time.
+   491→
+   492→```
+   493→┌──────────────────────────────────────────────────────────────────┐
+   494→│ Filter Bar:                                                       │
+   495→│ [Severity ▼] [Status ▼] [Source IP input] [Date range]          │
+   496→│ [Adversary ▼] [Attack Type ▼]    [Reset] [Apply]                 │
+   497→├────────────────────────────────────┬─────────────────────────────┤
+   498→│                                    │                             │
+   499→│  ALERT TABLE (sortable columns)    │   LOG STREAM                │
+   500→│  ┌────┬──────────┬──────┬────────┐ │   ┌─────────────────────┐   │
+   501→│  │ ☐  │ Time     │Sev   │Source  │ │   │ 14:23:01 [WARN]    │   │
+   502→│  │ ☐  │ 14:23:01 │ 🔴   │185.220 │ │   │ firewall: DENY      │   │
+   503→│  │ ☐  │ 14:22:47 │ 🔴   │103.224 │ │   │ src=185.220.101.3   │   │
+   504→│  │ ☐  │ 14:22:31 │ 🟠   │45.33.32│ │   │ dst=10.0.1.42:443  │   │
+   505→│  │ ☐  │ 14:22:15 │ 🟡   │91.189.8│ │   │ rule="C2 Outbound"  │   │
+   506→│  │    │          │      │        │ │   │                     │   │
+   507→│  │    │  [Bulk Actions ▼]         │ │   │ 14:22:58 [INFO]    │   │
+   508→│  │    │  Assign │ Dismiss │ Escalate│ │  │ ids: IPS alert on   │   │
+   509→│  │    │          │      │        │ │   │ 10.0.2.18 port 22   │   │
+   510→│  └────┴──────────┴──────┴────────┘ │   │ action=monitor      │   │
+   511→│                                    │   │                     │   │
+   512→│  [← Prev]  Page 1 of 47  [Next →] │   │ 14:22:47 [CRIT]    │   │
+   513→│                                    │   │ sshd: Failed auth   │   │
+   514→│                                    │   │ attempt #47 from    │   │
+   515→│                                    │   │ 103.224.182.7       │   │
+   516→│                                    │   └─────────────────────┘   │
+   517→└────────────────────────────────────┴─────────────────────────────┘
+   518→```
+   519→
+   520→**Log stream behavior:**
+   521→- Fixed-height container, `overflow-y: auto`
+   522→- New lines append at bottom, auto-scrolls **unless user has scrolled up** (smart scroll-lock)
+   523→- Each line colored by log level: CRIT=red, WARN=amber, INFO=cyan, DEBUG=gray
+   524→- Monospace font (JetBrains Mono), syntax-highlighted key=value pairs
+   525→- Virtual scrolling if buffer exceeds 500 lines (use `@tanstack/react-virtual`)
+   526→
+   527→**Alert table interactions:**
+   528→- Row click opens detail drawer (right side, slides in)
+   529→- Checkbox selection enables bulk actions toolbar
+   530→- Column headers sort on click (client-side for mock, server-side for real)
+   531→- Severity column uses colored dot + text, not just color (accessibility)
+   532→- "Triage" button in detail drawer opens inline dropdown: Acknowledge / Escalate / False Positive / Assign To...
+   533→
+   534→### 5.3 Threat Intelligence Map
+   535→
+   536→**Purpose:** Geospatial visualization of active attacks. The "cinematic" centerpiece.
+   537→
+   538→```
+   539→┌──────────────────────────────────────────────────────────────────┐
+   540→│  [Pause] [Speed: 1x ▼] [Filter: All Types ▼] [Time: Live]      │
+   541→├──────────────────────────────────────────┬───────────────────────┤
+   542→│                                          │  SELECTED ATTACK      │
+   543→│                                          │  ─────────────────    │
+   544→│                                          │  Source: 185.220.101.3│
+   545→│                                          │  Location: Moscow, RU │
+   546→│                                          │  Target: 10.0.1.42    │
+   547→│                                          │  Location: HQ, NYC    │
+   548→│            🌍 GLOBE                      │  Type: C2 Beaconing   │
+   549→│                                          │  Adversary: APT-PS    │
+   550→│        (arcs animate between             │  Severity: Critical   │
+   551→│         source → target)                 │                       │
+   552→│                                          │  [View Alert] [Block] │
+   553→│                                          │  ─────────────────    │
+   554→│                                          │  RELATED IOCs         │
+   555→│                                          │  • 185.220.101.0/24   │
+   556→│                                          │  • c2.phantom[.]xyz   │
+   557→│                                          │  • a3f2...sha256      │
+   558→│                                          │                       │
+   559→│                                          │  ACTIVE CONNECTIONS   │
+   560→│                                          │  from this source: 14 │
+   561→├──────────────────────────────────────────┴───────────────────────┤
+   562→│  Legend: 🔴 C2  🟠 Exploit  🟡 Scan  🟢 Recon  ⚪ Other         │
+   563→└──────────────────────────────────────────────────────────────────┘
+   564→```
+   565→
+   566→**Globe implementation — specific tech decision:**
+   567→
+   568→**Recommendation: `deck.gl` + `@deck.gl/core`**, NOT raw Three.js.
+   569→
+   570→Reasoning:
+   571→- `deck.gl` has a native `Globe` layer with built-in geo-projection
+   572→- `ArcLayer` renders animated arcs between lat/lng pairs out of the box
+   573→- `ScatterplotLayer` for source/target dots with configurable radius by severity
+   574→- Performs well with 500+ simultaneous arcs
+   575→- Integrates with React cleanly (declarative props)
+   576→- If you need more control later, you can add custom GLSL shaders
+   577→
+   578→```tsx
+   579→// Pseudocode for the globe
+   580→<DeckGL
+   581→  initialViewState={{ longitude: 0, latitude: 20, zoom: 1.5 }}
+   582→  controller={true}
+   583→  layers={[
+   584→    new GlobeLayer({ ... }),          // Dark globe with country outlines
+   585→    new ArcLayer({                     // Attack arcs
+   586→      data: attackConnections,
+   587→      getSourcePosition: d => d.sourceCoords,
+   588→      getTargetPosition: d => d.targetCoords,
+   589→      getSourceColor: d => SEVERITY_COLORS[d.severity],
+   590→      getTargetColor: [255, 255, 255, 80],
+   591→      getStrokeWidth: d => d.critical ? 3 : 1.5,
+   592→      animate: true,
+   593→      animationSpeed: 2,
+   594→    }),
+   595→    new ScatterplotLayer({             // Source/target dots
+   596→      data: [...attackSources, ...attackTargets],
+   597→      getPosition: d => d.coords,
+   598→      getRadius: d => d.isSource ? 30000 : 15000,
+   599→      getFillColor: d => d.color,
+   600→    }),
+   601→  ]}
+   602→/>
+   603→```
+   604→
+   605→**Arc animation behavior:**
+   606→- Arcs appear and animate (draw from source to target) over ~1.5 seconds
+   607→- After fully drawn, they fade out over 3 seconds
+   608→- New arcs constantly spawning (tied to WebSocket feed)
+   609→- Pausing freezes the feed, shows all current arcs statically
+   610→- Speed control: 0.5x, 1x, 2x, 4x affects animation speed AND event ingestion rate
+   611→
+   612→### 5.4 Asset Inventory
+   613→
+   614→**Purpose:** Track what's on the network, its health, and its vulnerabilities.
+   615→
+   616→```
+   617→┌──────────────────────────────────────────────────────────────────┐
+   618→│ [Search assets...] [Status ▼] [Type ▼] [Risk ▼]    [+ Add Asset]│
+   619→├────────────────────────────────────┬─────────────────────────────┤
+   620→│                                    │                             │
+   621→│  ASSET TABLE                       │   NETWORK TOPOLOGY          │
+   622→│  ┌──────┬────────┬─────┬────────┐  │                             │
+   623→│  │ Name │ IP     │Type │ Risk   │  │      [Server Rack]         │
+   624→│  │──────│────────│─────│────────│  │         │                  │
+   625→│  │ WEB-01│10.0.1.│HTTP │ 🔴 High│  │    ┌────┴────┐            │
+   626→│  │ DB-01 │10.0.2.│PGSQL│ 🟠 Med │  │    │ Firewall │            │
+   627→│  │ FW-01 │10.0.0.│FW   │ 🟢 Low │  │    └────┬────┘            │
+   628→│  │ API-02│10.0.3.│REST │ 🟠 Med │  │    ┌────┼────┐            │
+   629→│  │      │        │     │        │  │  [DB] [Web] [API]         │
+   630→│  │      │        │     │        │  │    │    │     │            │
+   631→│  └──────┴────────┴─────┴────────┘  │  [Cache] [Queue]          │
+   632→│                                    │                             │
+   633→│  Click row → highlights node in    │  (D3 force-directed graph) │
+   634→│  topology. Click node → selects    │  Nodes colored by risk.    │
+   635→│  row in table. Bidirectional.      │  Edges = network links.    │
+   636→│                                    │  Click = show asset detail │
+   637→└────────────────────────────────────┴─────────────────────────────┘
+   638→```
+   639→
+   640→**Topology graph — D3 force simulation:**
+   641→
+   642→```tsx
+   643→// Key implementation notes:
+   644→// - Use D3's forceSimulation but render with React (not D3 DOM manipulation)
+   645→// - d3.forceLink() for connections, d3.forceManyBody() for repulsion
+   646→// - d3.forceCenter() to keep centered in container
+   647→// - Nodes: circles with radius proportional to asset importance
+   648→// - Node color: risk level (red/orange/yellow/green)
+   649→// - Edges: lines, colored gray normally, RED when an active attack flows through them
+   650→// - Hover node: highlight all connected edges, dim everything else
+   651→// - Click node: dispatch to asset store, highlight corresponding table row
+   652→// - Drag nodes to rearrange (d3.drag)
+   653→// - When attack event comes in via WS, briefly pulse the source→target edge red
+   654→```
+   655→
+   656→### 5.5 Settings
+   657→
+   658→**Pages (tabbed):**
+   659→
+   660→| Tab | Content | Access |
+   661→|-----|---------|--------|
+   662→| **Display** | Theme fine-tuning (glow intensity, animation speed, font size), density toggle (comfortable vs compact) | All roles (view) |
+   663→| **Data Sources** | Toggle between Mock/Real mode, configure API keys for VirusTotal/Shodan/Splunk, test connection button | Admin only (edit) |
+   664→| **Users** | User table, add/edit/deactivate users, reset passwords | Admin only |
+   665→| **Alert Rules** | Configure severity thresholds, auto-assign rules, notification preferences | Admin (edit), Analyst (view) |
+   666→
+   667→---
+   668→
+   669→## 6. Design System & Visual Language
+   670→
+   671→### 6.1 Color Palette
+   672→
+   673→```
+   674→┌─────────────────────────────────────────────────────────┐
+   675→│  BASE                                                   │
+   676→│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
+   677→│  │ BG DEEP  │  │ BG PANEL │  │ BG CARD  │              │
+   678→│  │ #0a0e17  │  │ #111827  │  │ #1a2332  │              │
+   679→│  └──────────┘  └──────────┘  └──────────┘              │
+   680→│                                                         │
+   681→│  ACCENT (primary interactive color)                      │
+   682→│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
+   683→│  │ CYAN     │  │ CYAN DIM │  │ CYAN GLOW│              │
+   684→│  │ #00f0ff  │  │ #0891b2  │  │ 0,240,255 │ (box-shadow)│
+   685→│  └──────────┘  └──────────┘  └──────────┘              │
+   686→│                                                         │
+   687→│  SEMANTIC                                               │
+   688→│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────┐  │
+   689→│  │ CRITICAL │  │ HIGH     │  │ MEDIUM   │  │ LOW    │  │
+   690→│  │ #ff2d55  │  │ #ff9500  │  │ #ffd60a  │  │ #30d158│  │
+   691→│  └──────────┘  └──────────┘  └──────────┘  └────────┘  │
+   692→│                                                         │
+   693→│  TEXT                                                   │
+   694→│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
+   695→│  │ PRIMARY  │  │ SECONDARY│  │ MUTED    │              │
+   696→│  │ #e2e8f0  │  │ #94a3b8  │  │ #475569  │              │
+   697→│  └──────────┘  └──────────┘  └──────────┘              │
+   698→│                                                         │
+   699→│  BORDERS                                                │
+   700→│  ┌──────────┐  ┌──────────┐                             │
+   701→│  │ DEFAULT  │  │ ACCENT   │                             │
+   702→│  │ #1e293b  │  │ #00f0ff33│ (cyan at 20% opacity)      │
+   703→│  └──────────┘  └──────────┘                             │
+   704→└─────────────────────────────────────────────────────────┘
+   705→```
+   706→
+   707→### 6.2 Typography
+   708→
+   709→| Role | Font | Size | Weight |
+   710→|------|------|------|--------|
+   711→| Display/Brand | Space Grotesk | 20px | 700 |
+   712→| Heading | Space Grotesk | 14-16px | 600 |
+   713→| Body | Space Grotesk | 13px | 400 |
+   714→| Data/Table | JetBrains Mono | 12-13px | 400 |
+   715→| Log Stream | JetBrains Mono | 11px | 400 |
+   716→| KPI Number | JetBrains Mono | 28-36px | 700 |
+   717→
+   718→### 6.3 The "Subtle Glow" System
+   719→
+   720→This is what makes it feel cinematic without being cheesy:
+   721→
+   722→```css
+   723→/* Not neon outlines — controlled, purposeful glows */
+   724→
+   725→/* 1. Active/selected card border */
+   726→.card-active {
+   727→  border: 1px solid rgba(0, 240, 255, 0.3);
+   728→  box-shadow: 0 0 20px rgba(0, 240, 255, 0.05),
+   729→              inset 0 0 20px rgba(0, 240, 255, 0.02);
+   730→}
+   731→
+   732→/* 2. KPI card on value change (brief pulse) */
+   733→.kpi-pulse {
+   734→  animation: kpi-glow 1s ease-out;
+   735→}
+   736→@keyframes kpi-glow {
+   737→  0% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.15); }
+   738→  100% { box-shadow: none; }
+   739→}
+   740→
+   741→/* 3. Critical alert row */
+   742→.row-critical {
+   743→  border-left: 2px solid #ff2d55;
+   744→  background: rgba(255, 45, 85, 0.03);
+   745→}
+   746→
+   747→/* 4. Sidebar active nav item */
+   748→.nav-active {
+   749→  background: linear-gradient(90deg, rgba(0, 240, 255, 0.08), transparent);
+   750→  border-left: 2px solid #00f0ff;
+   751→}
+   752→
+   753→/* 5. Globe — ambient light bleed into surrounding area */
+   754→.globe-container::after {
+   755→  content: '';
+   756→  position: absolute;
+   757→  inset: -40px;
+   758→  background: radial-gradient(circle, rgba(0, 240, 255, 0.04) 0%, transparent 70%);
+   759→  pointer-events: none;
+   760→}
+   761→```
+   762→
+   763→**Rule: No glow on more than 3 elements simultaneously.** Glow is a notification mechanism, not decoration.
+   764→
+   765→### 6.4 Component Styling Pattern (Tailwind)
+   766→
+   767→```tsx
+   768→// Example: A card component
+   769→function Card({ children, active, critical, className }) {
+   770→  return (
+   771→    <div className={cn(
+   772→      "bg-[#1a2332] border border-[#1e293b] rounded-lg p-4",
+   773→      "transition-all duration-300",
+   774→      active && "border-cyan-500/30 shadow-[0_0_20px_rgba(0,240,255,0.05)]",
+   775→      critical && "border-red-500/30 bg-red-500/[0.03]",
+   776→      className
+   777→    )}>
+   778→      {children}
+   779→    </div>
+   780→  );
+   781→}
+   782→```
+   783→
+   784→---
+   785→
+   786→## 7. Real-Time Data Strategy
+   787→
+   788→### 7.1 WebSocket Protocol
+   789→
+   790→```typescript
+   791→// Client subscribes to event types on connection
+   792→// Server pushes only what's requested
+   793→
+   794→// Client → Server
+   795→{ "type": "subscribe", "channels": ["alerts", "attacks", "logs", "stats"] }
+   796→{ "type": "unsubscribe", "channels": ["logs"] }
+   797→{ "type": "ping" }
+   798→
+   799→// Server → Client
+   800→{ "type": "alert:new", "data": Alert }
+   801→{ "type": "alert:updated", "data": Alert }      // After triage
+   802→{ "type": "attack:new", "data": AttackConnection }
+   803→{ "type": "log:line", "data": LogLine }
+   804→{ "type": "stats:update", "data": DashboardStats }
+   805→{ "type": "pong" }
+   806→```
+   807→
+   808→### 7.2 Server Broadcast Loop
+   809→
+   810→```python
+   811→# server/app/tasks/broadcast_loop.py
+   812→import asyncio
+   813→import random
+   814→
+   815→async def broadcast_loop(ws_manager, adapter):
+   816→    """Runs forever. Every 1-2 seconds, generates events and pushes."""
+   817→    while True:
+   818→        # Generate 1-3 new attacks
+   819→        for _ in range(random.randint(1, 3)):
+   820→            attack = await adapter.generate_attack()
+   821→            await ws_manager.broadcast("attack:new", attack)
+   822→
+   823→        # Maybe generate an alert (60% chance per tick)
+   824→        if random.random() < 0.6:
+   825→            alert = await adapter.generate_alert()
+   826→            await ws_manager.broadcast("alert:new", alert)
+   827→
+   828→        # Always push a log line
+   829→        log = await adapter.generate_log_line()
+   830→        await ws_manager.broadcast("log:line", log)
+   831→
+   832→        # Push stats update every 5 ticks (~7 seconds)
+   833→        if random.random() < 0.2:
+   834→            stats = await adapter.get_dashboard_stats()
+   835→            await ws_manager.broadcast("stats:update", stats)
+   836→
+   837→        await asyncio.sleep(random.uniform(1.0, 2.0))
+   838→```
+   839→
+   840→### 7.3 Client-Side WS Hook
+   841→
+   842→```typescript
+   843→// client/src/hooks/use-websocket.ts
+   844→export function useWebSocket() {
+   845→  const [connected, setConnected] = useState(false);
+   846→  const alertStore = useAlertStore();
+   847→  const uiStore = useUIStore();
+   848→
+   849→  useEffect(() => {
+   850→    const ws = new WebSocket(WS_URL);
+   851→
+   852→    ws.onopen = () => {
+   853→      setConnected(true);
+   854→      ws.send(JSON.stringify({
+   855→        type: "subscribe",
+   856→        channels: ["alerts", "attacks", "logs", "stats"]
+   857→      }));
+   858→    };
+   859→
+   860→    ws.onmessage = (event) => {
+   861→      const msg = JSON.parse(event.data);
+   862→      switch (msg.type) {
+   863→        case "alert:new":
+   864→          alertStore.addAlert(msg.data);
+   865→          uiStore.incrementUnread();
+   866→          // Show toast if critical
+   867→          if (msg.data.severity === "critical") {
+   868→            toast.critical(`New critical alert: ${msg.data.title}`);
+   869→          }
+   870→          break;
+   871→        case "attack:new":
+   872→          // Handled by globe component via its own subscription
+   873→          attackEventBus.emit(msg.data);
+   874→          break;
+   875→        case "log:line":
+   876→          logStreamStore.appendLine(msg.data);
+   877→          break;
+   878→        case "stats:update":
+   879→          dashboardStore.updateStats(msg.data);
+   880→          break;
+   881→      }
+   882→    };
+   883→
+   884→    ws.onclose = () => {
+   885→      setConnected(false);
+   886→      // Auto-reconnect with exponential backoff
+   887→      setTimeout(connect, 2000);
+   888→    };
+   889→
+   890→    return () => ws.close();
+   891→  }, []);
+   892→}
+   893→```
+   894→
+   895→### 7.4 Performance Safeguards
+   896→
+   897→| Concern | Solution |
+   898→|---------|----------|
+   899→| Log stream memory leak | Cap at 1000 lines, shift oldest out |
+   900→| Attack arcs accumulation | Globe only renders last 200 arcs, older ones are removed from array |
+   901→| Alert table growing unbounded | Virtual scroll, server-side pagination for real mode |
+   902→| Stats update too frequent | Debounce on client, only re-render if values actually changed |
+   903→| WebSocket reconnect storm | Exponential backoff: 2s, 4s, 8s, max 30s |
+   904→| Tab backgrounded | `document.visibilitychange` → pause WS processing, resume on focus |
+   905→
+   906→---
+   907→
+   908→## 8. Export & Reporting
+   909→
+   910→### 8.1 CSV Export
+   911→
+   912→```typescript
+   913→// client/src/lib/exporters.ts
+   914→export function exportToCSV(data: Record<string, any>[], filename: string) {
+   915→  if (data.length === 0) return;
+   916→  const headers = Object.keys(data[0]);
+   917→  const csv = [
+   918→    headers.join(','),
+   919→    ...data.map(row => headers.map(h => {
+   920→      const val = String(row[h] ?? '');
+   921→      return val.includes(',') ? `"${val}"` : val;
+   922→    }).join(','))
+   923→  ].join('\n');
+   924→
+   925→  const blob = new Blob([csv], { type: 'text/csv' });
+   926→  const url = URL.createObjectURL(blob);
+   927→  const a = document.createElement('a');
+   928→  a.href = url;
+   929→  a.download = `${filename}_${formatDate(new Date())}.csv`;
+   930→  a.click();
+   931→  URL.revokeObjectURL(url);
+   932→}
+   933→```
+   934→
+   935→### 8.2 PDF Export
+   936→
+   937→**Library: `@react-pdf/renderer`** for programmatic PDFs (not html2canvas screenshots — those look bad at different resolutions).
+   938→
+   939→However, for a quick MVP, **html2canvas + jsPDF** is acceptable:
+   940→- Capture the specific view container
+   941→- Convert to canvas → image → PDF page
+   942→- Add header/footer with timestamp, classification marking
+   943→
+   944→```typescript
+   945→export async function exportViewToPDF(elementId: string, title: string) {
+   946→  const element = document.getElementById(elementId);
+   947→  if (!element) return;
+   948→
+   949→  const canvas = await html2canvas(element, {
+   950→    backgroundColor: '#0a0e17',
+   951→    scale: 2, // High-res
+   952→    useCORS: true,
+   953→  });
+   954→
+   955→  const imgData = canvas.toDataURL('image/png');
+   956→  const pdf = new jsPDF('landscape', 'mm', 'a4');
+   957→  const pdfWidth = pdf.internal.pageSize.getWidth();
+   958→  const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+   959→
+   960→  pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
+   961→  pdf.setFontSize(8);
+   962→  pdf.setTextColor(100);
+   963→  pdf.text(
+   964→    `APEX SOC — ${title} — Generated ${new Date().toISOString()} — CLASSIFICATION: INTERNAL`,
+   965→    10, pdf.internal.pageSize.getHeight() - 5
+   966→  );
+   967→  pdf.save(`apex-soc-${title.toLowerCase().replace(/\s/g, '-')}.pdf`);
+   968→}
+   969→```
+   970→
+   971→### 8.3 Export Button Placement
+   972→
+   973→- **Topbar:** Global export button, exports current view
+   974→- **Alert table toolbar:** Export filtered alerts as CSV
+   975→- **Asset table toolbar:** Export filtered assets as CSV
+   976→- **Intel map:** Export current attack list as CSV
+   977→
+   978→---
+   979→
+   980→## 9. Deployment Strategy
+   981→
+   982→### 9.1 Docker Compose (Full Stack)
+   983→
+   984→```yaml
+   985→# docker-compose.yml
+   986→version: '3.8'
+   987→
+   988→services:
+   989→  frontend:
+   990→    build:
+   991→      context: ./client
+   992→      dockerfile: Dockerfile
+   993→    ports:
+   994→      - "3000:80"
+   995→    environment:
+   996→      - VITE_WS_URL=ws://backend:8000/ws
+   997→      - VITE_API_URL=http://backend:8000/api
+   998→    depends_on:
+   999→      - backend
+  1000→
+  1001→  backend:
+  1002→    build:
+  1003→      context: ./server
+  1004→      dockerfile: Dockerfile
+  1005→    ports:
+  1006→      - "8000:8000"
+  1007→    environment:
+  1008→      - ADAPTER_MODE=mock  # or 'real'
+  1009→      - JWT_SECRET=${JWT_SECRET}
+  1010→      - VIRUSTOTAL_API_KEY=${VIRUSTOTAL_API_KEY:-}
+  1011→      - SHODAN_API_KEY=${SHODAN_API_KEY:-}
+  1012→    healthcheck:
+  1013→      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+  1014→      interval: 30s
+  1015→      timeout: 5s
+  1016→      retries: 3
+  1017→```
+  1018→
+  1019→### 9.2 Client Dockerfile
+  1020→
+  1021→```dockerfile
+  1022→# client/Dockerfile
+  1023→FROM node:20-alpine AS build
+  1024→WORKDIR /app
+  1025→COPY package*.json ./
+  1026→RUN npm ci
+  1027→COPY . .
+  1028→RUN npm run build
+  1029→
+  1030→FROM nginx:alpine
+  1031→COPY --from=build /app/dist /usr/share/nginx/html
+  1032→COPY nginx.conf /etc/nginx/conf.d/default.conf
+  1033→EXPOSE 80
+  1034→```
+  1035→
+  1036→### 9.3 Production Path
+  1037→
+  1038→| Stage | Frontend | Backend |
+  1039→|-------|----------|---------|
+  1040→| **Local dev** | `npm run dev` (Vite) | `uvicorn app.main:app --reload` |
+  1041→| **Docker demo** | nginx container | FastAPI container |
+  1042→| **Vercel + AWS** | Vercel (auto-deploy from `main`) | ECS Fargate or Lambda + API Gateway |
+  1043→| **Full cloud** | CloudFront + S3 (static) | ECS Fargate + ALB + RDS (if needed) |
+  1044→
+  1045→---
+  1046→
+  1047→## 10. Phased Build Plan
+  1048→
+  1049→### Phase 1: Foundation (Days 1-3)
+  1050→**Goal: Skeleton app you can run and navigate.**
+  1051→
+  1052→| Task | Deliverable |
+  1053→|------|-------------|
+  1054→| Scaffold React project (Vite + TS + Tailwind) | Compiles, dev server runs |
+  1055→| Scaffold FastAPI project | Health endpoint responds |
+  1056→| Design token system | `theme.ts` + `globals.css` with all colors, fonts, spacing |
+  1057→| Base UI components | Button, Card, Badge, Table, Input, Modal, Drawer, Skeleton |
+  1058→| Layout shell | Sidebar + Topbar + Router outlet, responsive |
+  1059→| Auth context + login page | Can log in with default users, routes protected |
+  1060→| RoleRoute guard | Viewer can't access Settings edit, Analyst can't access User management |
+  1061→| Docker Compose | Both containers build and run, can access at localhost:3000 |
+  1062→
+  1063→**Checkpoint:** You can log in, see the sidebar, navigate between empty pages, and get kicked to login if not authenticated.
+  1064→
+  1065→### Phase 2: Data Layer + Dashboard (Days 4-7)
+  1066→**Goal: Dashboard looks alive with real numbers.**
+  1067→
+  1068→| Task | Deliverable |
+  1069→|------|-------------|
+  1070→| Pydantic models | All data types defined (Alert, Asset, Attack, etc.) |
+  1071→| Abstract DataAdapter | Interface defined in both Python and TypeScript |
+  1072→| Mock adapter (Python) | Alert gen, attack gen, asset gen, stats gen — all realistic |
+  1073→| Mock adapter (TypeScript) | Standalone version for frontend-only dev |
+  1074→| REST endpoints | `/api/dashboard/stats`, `/api/dashboard/trends`, `/api/alerts` |
+  1075→| KPI stats row | 5 cards with count-up animation and sparklines |
+  1076→| Severity donut chart | Recharts PieChart with custom label |
+  1077→| Trend area chart | 24-hour alert trend |
+  1078→| Recent critical alerts table | Last 5, sorted by time |
+  1079→| Mini attack map placeholder | Static image or simple canvas, "Full Map" link |
+  1080→
+  1081→**Checkpoint:** Dashboard shows updating numbers. Refresh page, numbers change. Feels like a real dashboard.
+  1082→
+  1083→### Phase 3: Live System (Days 8-11)
+  1084→**Goal: Real-time updates flowing through the whole app.**
+  1085→
+  1086→| Task | Deliverable |
+  1087→|------|-------------|
+  1088→| WebSocket manager (Python) | Connection handling, channel subscriptions, broadcast |
+  1089→| Broadcast loop | Asyncio task pushing events every 1-2s |
+  1090→| WebSocket client hook | Connect, subscribe, parse, dispatch to stores |
+  1091→| Zustand stores | alert-store, log-store, dashboard-store with WS integration |
+  1092→| Log stream component | Terminal-style, auto-scroll, colored by level, smart lock |
+  1093→| Alert table (full) | Sortable, filterable, paginated, live new-row animation |
+  1094→| Alert detail drawer | Slide-in panel with full alert info |
+  1095→| Triage actions | Acknowledge/Escalate/False Positive buttons (Analyst+) |
+  1096→| Bulk actions | Select multiple alerts, apply action |
+  1097→| Connection status indicator | Topbar shows green dot when WS connected, red when not |
+  1098→| Toast notifications | Critical alerts trigger toast |
+  1099→| Auto-reconnect | Exponential backoff on disconnect |
+  1100→
+  1101→**Checkpoint:** You're watching alerts stream in, logs scrolling, you can triage them, and the connection survives a server restart.
+  1102→
+  1103→### Phase 4: Globe + Topology (Days 12-16)
+  1104→**Goal: The cinematic visualizations.**
+  1105→
+  1106→| Task | Deliverable |
+  1107→|------|-------------|
+  1108→| deck.gl integration | Globe renders with dark texture |
+  1109→| Arc layer | Animated arcs from attack events |
+  1110→| Scatterplot layer | Source/target dots |
+  1111→| Attack event bus | Decoupled pub/sub so globe subscribes without coupling to WS |
+  1112→| Intel sidebar | Click arc → show attack details, IOCs, related alerts |
+  1113→| Globe controls | Pause/play, speed, filter by attack type |
+  1114→| D3 force topology | Force-directed graph of assets |
+  1115→| Topology interactivity | Drag nodes, hover highlights, click selects |
+  1116→| Table-topology sync | Click table row → highlight node, click node → select row |
+  1117→| Attack pulse on topology | When attack flows through an edge, it briefly glows red |
+  1118→
+  1119→**Checkpoint:** The globe is showing live attack arcs, the topology is interactive, and the whole thing looks like a movie prop.
+  1120→
+  1121→### Phase 5: Polish + Export + Settings (Days 17-20)
+  1122→**Goal: Production-ready.**
+  1123→
+  1124→| Task | Deliverable |
+  1125→|------|-------------|
+  1126→| CSV export | Alert table, asset table |
+  1127→| PDF export | Current view screenshot |
+  1128→| Settings > Display | Animation speed, glow intensity, density toggle |
+  1129→| Settings > Data Sources | Mock/Real toggle, API key fields, connection test |
+  1130→| Settings > Users | User CRUD (Admin only) |
+  1131→| Notification drawer | Topbar bell icon, shows last 20 notifications |
+  1132→| Loading skeletons | Every data-dependent section shows skeleton before data |
+  1133→| Error boundaries | Graceful fallback if a component crashes |
+  1134→| Empty states | "No alerts matching filters" with illustration |
+  1135→| Responsive adjustments | Sidebar collapses to icons on <1280px |
+  1136→| Keyboard shortcuts | `Esc` close drawer, `/` focus search, `1-5` switch views |
+  1137→| Final visual polish | Glow consistency, spacing audit, transition timing |
+  1138→
+  1139→**Checkpoint:** You can demo this to anyone and it looks finished.
+  1140→
+  1141→### Phase 6: Real Adapter Stubs (Days 21-23)
+  1142→**Goal: The swap path exists.**
+  1143→
+  1144→| Task | Deliverable |
+  1145→|------|-------------|
+  1146→| RealAdapter (Python) | Implements DataAdapter, calls VirusTotal/Shodan/Splunk |
+  1147→| VirusTotal integration | IP lookup, domain lookup → mapped to Alert model |
+  1148→| Shodan integration | Device search → mapped to Asset model |
+  1149→| Splunk integration | SPL queries → mapped to Log/Alert models |
+  1150→| Environment variable config | API keys via .env, not hardcoded |
+  1151→| Adapter factory | Settings page toggle actually swaps the adapter class |
+  1152→| Fallback logic | If real API fails, log error, return empty (not crash) |
+  1153→
+  1154→**Checkpoint:** Flip a toggle in Settings, enter your API key, and real data flows in.
+  1155→
+  1156→---
+  1157→
+  1158→## 11. Risk Register
+  1159→
+  1160→| Risk | Impact | Mitigation |
+  1161→|------|--------|------------|
+  1162→| deck.gl bundle size too large | Slow initial load | Tree-shake unused layers, lazy-load globe view with `React.lazy` |
+  1163→| WebSocket memory leak on long sessions | Browser tab crashes | Strict buffer limits, periodic cleanup of old events |
+  1164→| Mock data looks fake | Demo credibility destroyed | Invest in adversary profiles, use real IP ranges, match log formats to real syslog |
+  1165→| D3 topology performance with 100+ nodes | Janky dragging | Use `requestAnimationFrame`, limit force iterations, consider `webworker` for simulation |
+  1166→| PDF export looks bad on dark theme | Unprofessional reports | Custom dark-theme PDF template, not just screenshot |
+  1167→| Role check only on frontend | Security bypass via API | Server-side RBAC on EVERY endpoint, frontend checks are UX only |
+  1168→
+  1169→---
+  1170→
+  1171→## 12. Dependency List
+  1172→
+  1173→### Frontend
+  1174→```
+  1175→react, react-dom, react-router-dom
+  1176→tailwindcss, postcss, autoprefixer
+  1177→@tanstack/react-query          # Server state caching
+  1178→zustand                         # Client state
+  1179→deck.gl, @deck.gl/core, @deck.gl/layers, @deck.gl/geo-layers  # Globe
+  1180→d3, @types/d3                  # Topology
+  1181→recharts                       # Donut, trend, bar charts
+  1182→html2canvas, jspdf             # PDF export
+  1183→@tanstack/react-virtual        # Virtual scroll for log stream
+  1184→clsx or class-variance-authority # Conditional classes
+  1185→lucide-react or phosphor-react  # Icons (NOT FontAwesome — too common)
+  1186→framer-motion                   # Page transitions, drawer animations (optional)
+  1187→```
+  1188→
+  1189→### Backend
+  1190→```
+  1191→fastapi
+  1192→uvicorn[standard]
+  1193→websockets
+  1194→pydantic, pydantic-settings
+  1195→python-jose[cryptography]      # JWT
+  1196→passlib[bcrypt]                # Password hashing
+  1197→faker                          # Realistic fake data
+  1198→httpx                          # Async HTTP client for real adapters
+  1199→```
+  1200→
+  1201→---
+  1202→
+  1203→This plan gives you a clear path from empty directory to a demoable, cinematic SOC dashboard in ~23 working days with a single developer. The adapter pattern means the mock data phase isn't throwaway — it's the permanent architecture, and real APIs just plug into it.
+  1204→
+  1205→**What I'd build next if you say go:** Phase 1, delivered as a single runnable scaffold you can `docker-compose up` and start navigating immediately. Want me to start coding?

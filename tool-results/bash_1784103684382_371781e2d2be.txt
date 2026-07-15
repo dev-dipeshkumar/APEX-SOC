@@ -1,0 +1,2985 @@
+- main
+  - combobox [expanded=false, ref=e7]: All Severity
+    - MenuListPopup
+      - option "All Severity" [selected, ref=e19]
+      - option "Critical" [ref=e20]
+      - option "High" [ref=e21]
+      - option "Medium" [ref=e22]
+      - option "Low" [ref=e23]
+  - combobox [expanded=false, ref=e8]: All Status
+    - MenuListPopup
+      - option "All Status" [selected, ref=e24]
+      - option "New" [ref=e25]
+      - option "Acknowledged" [ref=e26]
+      - option "Escalated" [ref=e27]
+      - option "False Positive" [ref=e28]
+      - option "Dismissed" [ref=e29]
+  - combobox [expanded=false, ref=e9]: All Types
+    - MenuListPopup
+      - option "All Types" [selected, ref=e30]
+      - option "C2 Beaconing" [ref=e31]
+      - option "Spear Phishing" [ref=e32]
+      - option "Brute Force" [ref=e33]
+      - option "DDoS" [ref=e34]
+      - option "Exploit" [ref=e35]
+      - option "Port Scan" [ref=e36]
+      - option "Lateral Movement" [ref=e37]
+      - option "Data Exfiltration" [ref=e38]
+      - option "Reconnaissance" [ref=e39]
+      - option "Zero-Day Exploit" [ref=e40]
+  - textbox "Search IPs, titles, adversaries..." [ref=e16]
+  - generic
+    - table
+      - rowgroup
+        - row
+          - columnheader
+            - checkbox [checked=false, ref=e270]
+          - columnheader "TIME" [ref=e242]
+          - columnheader "SEVERITY" [ref=e243]
+          - columnheader "SOURCE" [ref=e244]
+          - columnheader "TARGET" [ref=e245]
+          - columnheader "TITLE" [ref=e246]
+          - columnheader "TYPE" [ref=e247]
+          - columnheader "STATUS" [ref=e248]
+          - columnheader "ADVERSARY" [ref=e249]
+      - row [ref=e41] clickable [cursor:pointer, onclick]
+        - cell [ref=e62] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e250]
+        - cell "08:21:16" [ref=e63]
+        - cell "Low" [ref=e64]
+          - StaticText "Low"
+        - cell "198.51.100.65" [ref=e65]
+        - cell "10.0.5.166" [ref=e66]
+        - cell "SYN Flood In Progress" [ref=e67]
+        - cell "DDoS" [ref=e68]
+        - cell "new" [ref=e69]
+        - cell "Script Kiddie Collective" [ref=e70]
+      - row [ref=e42] clickable [cursor:pointer, onclick]
+        - cell [ref=e71] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e251]
+        - cell "08:21:15" [ref=e72]
+        - cell "Medium" [ref=e73]
+          - StaticText "Medium"
+        - cell "45.33.32.251" [ref=e74]
+        - cell "10.0.3.240" [ref=e75]
+        - cell "DNS Tunneling Activity" [ref=e76]
+        - cell "Data Exfiltration" [ref=e77]
+        - cell "escalated" [ref=e78]
+        - cell "APT-DARK HELIX" [ref=e79]
+      - row [ref=e43] clickable [cursor:pointer, onclick]
+        - cell [ref=e80] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e252]
+        - cell "08:21:13" [ref=e81]
+        - cell "Medium" [ref=e82]
+          - StaticText "Medium"
+        - cell "198.51.100.162" [ref=e83]
+        - cell "10.0.1.162" [ref=e84]
+        - cell "Volumetric Flood" [ref=e85]
+        - cell "DDoS" [ref=e86]
+        - cell "new" [ref=e87]
+        - cell "Script Kiddie Collective" [ref=e88]
+      - row [ref=e44] clickable [cursor:pointer, onclick]
+        - cell [ref=e89] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e253]
+        - cell "08:21:12" [ref=e90]
+        - cell "High" [ref=e91]
+          - StaticText "High"
+        - cell "175.45.176.230" [ref=e92]
+        - cell "10.0.6.195" [ref=e93]
+        - cell "Unknown Vulnerability Exploit" [ref=e94]
+        - cell "Zero-Day Exploit" [ref=e95]
+        - cell "new" [ref=e96]
+        - cell "APT-VOID SERPENT" [ref=e97]
+      - row [ref=e45] clickable [cursor:pointer, onclick]
+        - cell [ref=e98] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e254]
+        - cell "08:21:10" [ref=e99]
+        - cell "Critical" [ref=e100]
+          - StaticText "Critical"
+        - cell "210.52.109.219" [ref=e101]
+        - cell "10.0.2.58" [ref=e102]
+        - cell "Credential Harvest Link" [ref=e103]
+        - cell "Spear Phishing" [ref=e104]
+        - cell "new" [ref=e105]
+        - cell "APT-VOID SERPENT" [ref=e106]
+      - row [ref=e46] clickable [cursor:pointer, onclick]
+        - cell [ref=e107] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e255]
+        - cell "08:21:03" [ref=e108]
+        - cell "Medium" [ref=e109]
+          - StaticText "Medium"
+        - cell "175.45.176.81" [ref=e110]
+        - cell "10.0.6.93" [ref=e111]
+        - cell "Suspicious Outbound C2" [ref=e112]
+        - cell "C2 Beaconing" [ref=e113]
+        - cell "new" [ref=e114]
+        - cell "APT-VOID SERPENT" [ref=e115]
+      - row [ref=e47] clickable [cursor:pointer, onclick]
+        - cell [ref=e116] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e256]
+        - cell "08:21:01" [ref=e117]
+        - cell "Low" [ref=e118]
+          - StaticText "Low"
+        - cell "91.189.88.102" [ref=e119]
+        - cell "10.0.3.177" [ref=e120]
+        - cell "SQL Injection Attack" [ref=e121]
+        - cell "Exploit" [ref=e122]
+        - cell "acknowledged" [ref=e123]
+        - cell "APT-DARK HELIX" [ref=e124]
+      - row [ref=e48] clickable [cursor:pointer, onclick]
+        - cell [ref=e125] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e257]
+        - cell "08:20:57" [ref=e126]
+        - cell "Medium" [ref=e127]
+          - StaticText "Medium"
+        - cell "91.189.88.69" [ref=e128]
+        - cell "10.0.4.102" [ref=e129]
+        - cell "DNS Tunneling Activity" [ref=e130]
+        - cell "Data Exfiltration" [ref=e131]
+        - cell "new" [ref=e132]
+        - cell "APT-DARK HELIX" [ref=e133]
+      - row [ref=e49] clickable [cursor:pointer, onclick]
+        - cell [ref=e134] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e258]
+        - cell "08:20:55" [ref=e135]
+        - cell "Medium" [ref=e136]
+          - StaticText "Medium"
+        - cell "203.0.113.146" [ref=e137]
+        - cell "10.0.1.186" [ref=e138]
+        - cell "DDoS Attack Detected" [ref=e139]
+        - cell "DDoS" [ref=e140]
+        - cell "new" [ref=e141]
+        - cell "Script Kiddie Collective" [ref=e142]
+      - row [ref=e50] clickable [cursor:pointer, onclick]
+        - cell [ref=e143] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e259]
+        - cell "08:20:54" [ref=e144]
+        - cell "High" [ref=e145]
+          - StaticText "High"
+        - cell "91.92.128.125" [ref=e146]
+        - cell "10.0.7.230" [ref=e147]
+        - cell "Volumetric Flood" [ref=e148]
+        - cell "DDoS" [ref=e149]
+        - cell "escalated" [ref=e150]
+        - cell "Hacktivist-ECHO" [ref=e151]
+      - row [ref=e51] clickable [cursor:pointer, onclick]
+        - cell [ref=e152] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e260]
+        - cell "08:20:49" [ref=e153]
+        - cell "Low" [ref=e154]
+          - StaticText "Low"
+        - cell "45.33.32.183" [ref=e155]
+        - cell "10.0.4.9" [ref=e156]
+        - cell "SQL Injection Attack" [ref=e157]
+        - cell "Exploit" [ref=e158]
+        - cell "escalated" [ref=e159]
+        - cell "APT-DARK HELIX" [ref=e160]
+      - row [ref=e52] clickable [cursor:pointer, onclick]
+        - cell [ref=e161] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e261]
+        - cell "08:20:48" [ref=e162]
+        - cell "Low" [ref=e163]
+          - StaticText "Low"
+        - cell "203.0.113.147" [ref=e164]
+        - cell "10.0.1.147" [ref=e165]
+        - cell "DDoS Attack Detected" [ref=e166]
+        - cell "DDoS" [ref=e167]
+        - cell "escalated" [ref=e168]
+        - cell "Script Kiddie Collective" [ref=e169]
+      - row [ref=e53] clickable [cursor:pointer, onclick]
+        - cell [ref=e170] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e262]
+        - cell "08:20:46" [ref=e171]
+        - cell "Low" [ref=e172]
+          - StaticText "Low"
+        - cell "198.51.100.178" [ref=e173]
+        - cell "10.0.1.51" [ref=e174]
+        - cell "Amplification Attack" [ref=e175]
+        - cell "DDoS" [ref=e176]
+        - cell "acknowledged" [ref=e177]
+        - cell "Script Kiddie Collective" [ref=e178]
+      - row [ref=e54] clickable [cursor:pointer, onclick]
+        - cell [ref=e179] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e263]
+        - cell "08:20:43" [ref=e180]
+        - cell "Low" [ref=e181]
+          - StaticText "Low"
+        - cell "203.0.113.246" [ref=e182]
+        - cell "10.0.5.221" [ref=e183]
+        - cell "Brute Force SSH Attempt" [ref=e184]
+        - cell "Brute Force" [ref=e185]
+        - cell "escalated" [ref=e186]
+        - cell "Script Kiddie Collective" [ref=e187]
+      - row [ref=e55] clickable [cursor:pointer, onclick]
+        - cell [ref=e188] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e264]
+        - cell "08:20:40" [ref=e189]
+        - cell "High" [ref=e190]
+          - StaticText "High"
+        - cell "198.51.100.200" [ref=e191]
+        - cell "10.0.1.210" [ref=e192]
+        - cell "Brute Force RDP" [ref=e193]
+        - cell "Brute Force" [ref=e194]
+        - cell "new" [ref=e195]
+        - cell "Script Kiddie Collective" [ref=e196]
+      - row [ref=e56] clickable [cursor:pointer, onclick]
+        - cell [ref=e197] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e265]
+        - cell "08:20:36" [ref=e198]
+        - cell "Low" [ref=e199]
+          - StaticText "Low"
+        - cell "45.33.32.193" [ref=e200]
+        - cell "10.0.3.141" [ref=e201]
+        - cell "Brute Force RDP" [ref=e202]
+        - cell "Brute Force" [ref=e203]
+        - cell "escalated" [ref=e204]
+        - cell "APT-DARK HELIX" [ref=e205]
+      - row [ref=e57] clickable [cursor:pointer, onclick]
+        - cell [ref=e206] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e266]
+        - cell "08:20:34" [ref=e207]
+        - cell "Low" [ref=e208]
+          - StaticText "Low"
+        - cell "91.189.88.112" [ref=e209]
+        - cell "10.0.4.58" [ref=e210]
+        - cell "Buffer Overflow Attempt" [ref=e211]
+        - cell "Exploit" [ref=e212]
+        - cell "new" [ref=e213]
+        - cell "APT-DARK HELIX" [ref=e214]
+      - row [ref=e58] clickable [cursor:pointer, onclick]
+        - cell [ref=e215] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e267]
+        - cell "08:20:31" [ref=e216]
+        - cell "High" [ref=e217]
+          - StaticText "High"
+        - cell "103.224.182.109" [ref=e218]
+        - cell "10.0.1.221" [ref=e219]
+        - cell "Suspicious Outbound C2" [ref=e220]
+        - cell "C2 Beaconing" [ref=e221]
+        - cell "new" [ref=e222]
+        - cell "APT-PHANTOM SPIDER" [ref=e223]
+      - row [ref=e59] clickable [cursor:pointer, onclick]
+        - cell [ref=e224] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e268]
+        - cell "08:20:28" [ref=e225]
+        - cell "Low" [ref=e226]
+          - StaticText "Low"
+        - cell "103.224.182.142" [ref=e227]
+        - cell "10.0.1.23" [ref=e228]
+        - cell "Lateral Movement Detected" [ref=e229]
+        - cell "Lateral Movement" [ref=e230]
+        - cell "new" [ref=e231]
+        - cell "APT-PHANTOM SPIDER" [ref=e232]
+      - row [ref=e60] clickable [cursor:pointer, onclick]
+        - cell [ref=e233] clickable [cursor:pointer, onclick]
+          - checkbox [checked=false, ref=e269]
+        - cell "08:20:27" [ref=e234]
+        - cell "Medium" [ref=e235]
+          - StaticText "Medium"
+        - cell "91.92.128.184" [ref=e236]
+        - cell "10.0.3.45" [ref=e237]
+        - cell "Buffer Overflow Attempt" [ref=e238]
+        - cell "Exploit" [ref=e239]
+        - cell "new" [ref=e240]
+        - cell "Hacktivist-ECHO" [ref=e241]
+    - StaticText "79"
+    - StaticText " alerts (showing "
+    - StaticText "1"
+    - StaticText "–"
+    - StaticText "20"
+    - StaticText ")"
+    - button [disabled, ref=e17]
+    - StaticText "1"
+    - StaticText " / "
+    - StaticText "4"
+    - button [ref=e18]
+  - heading "LOG STREAM" [level=3, ref=e10]
+  - StaticText "LIVE"
+  - generic
+    - StaticText "08:20:04"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "windows-dc"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=83.191.110.83"
+    - StaticText " dst"
+    - StaticText "=10.0.4.160"
+    - StaticText " rule"
+    - StaticText "=\"Suspicious"
+    - StaticText " Outbound\""
+    - StaticText "08:20:06"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "suricata"
+    - StaticText ":"
+    - StaticText "Unusual traffic pattern detected from 150.75.199.103"
+    - StaticText "08:20:06"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "windows-dc"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=175.175.139.33"
+    - StaticText " dst"
+    - StaticText "=10.0.3.16"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:20:07"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "ids"
+    - StaticText ":"
+    - StaticText "Rate limit exceeded from 117.130.210.177"
+    - StaticText "08:20:09"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "redis"
+    - StaticText ":"
+    - StaticText "Session timeout for 177.200.233.133"
+    - StaticText "08:20:10"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "nginx"
+    - StaticText ":"
+    - StaticText "Critical: Unauthorized access attempt from 97.179.244.36"
+    - StaticText "08:20:10"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "SSL certificate mismatch for 10.0.2.177"
+    - StaticText "08:20:12"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "redis"
+    - StaticText ":"
+    - StaticText "Critical: Unauthorized access attempt from 237.24.46.2"
+    - StaticText "08:20:12"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "snort"
+    - StaticText ":"
+    - StaticText "ALERT: 66.30.179.115 -> 10.0.3.65 - known malicious IP"
+    - StaticText "08:20:13"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "nginx"
+    - StaticText ":"
+    - StaticText "Unusual traffic pattern detected from 161.215.80.108"
+    - StaticText "08:20:15"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "nginx"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=39.53.211.110"
+    - StaticText " dst"
+    - StaticText "=10.0.3.95"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:20:15"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "windows-dc"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=132.159.86.241"
+    - StaticText " dst"
+    - StaticText "=10.0.4.107"
+    - StaticText " rule"
+    - StaticText "=\"Suspicious"
+    - StaticText " Outbound\""
+    - StaticText "08:20:16"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "snort"
+    - StaticText ":"
+    - StaticText "SSL certificate mismatch for 10.0.1.57"
+    - StaticText "08:20:16"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "Connection established 122.217.31.180 -> 10.0.5.222:6379"
+    - StaticText "08:20:18"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "ids"
+    - StaticText ":"
+    - StaticText "Session timeout for 83.232.50.100"
+    - StaticText "08:20:19"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "Unusual traffic pattern detected from 170.95.241.214"
+    - StaticText "08:20:19"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "ids"
+    - StaticText ":"
+    - StaticText "DNS query from 124.100.120.30 for cdn.evil-corp.org"
+    - StaticText "08:20:21"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "ALERT: 58.250.100.22 -> 10.0.7.230 - known malicious IP"
+    - StaticText "08:20:21"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "snort"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=237.114.89.44"
+    - StaticText " dst"
+    - StaticText "=10.0.5.119"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:20:22"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "postgres"
+    - StaticText ":"
+    - StaticText "SSL certificate mismatch for 10.0.1.23"
+    - StaticText "08:20:22"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "postgres"
+    - StaticText ":"
+    - StaticText "Cache hit for 10.0.3.143"
+    - StaticText "08:20:24"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "SSL certificate mismatch for 10.0.4.177"
+    - StaticText "08:20:25"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "snort"
+    - StaticText ":"
+    - StaticText "SSL certificate mismatch for 10.0.2.194"
+    - StaticText "08:20:25"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=159.176.88.22"
+    - StaticText " dst"
+    - StaticText "=10.0.4.109"
+    - StaticText " rule"
+    - StaticText "=\"Suspicious"
+    - StaticText " Outbound\""
+    - StaticText "08:20:27"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "postgres"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=250.201.50.224"
+    - StaticText " dst"
+    - StaticText "=10.0.6.71"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:20:28"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "Keepalive from 192.235.181.183"
+    - StaticText "08:20:28"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "DNS query from 228.171.70.182 for api.darkhelix.io"
+    - StaticText "08:20:30"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "DNS query from 30.69.190.196 for api.darkhelix.io"
+    - StaticText "08:20:31"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=14.185.187.123"
+    - StaticText " dst"
+    - StaticText "=10.0.1.212"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:20:31"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "suricata"
+    - StaticText ":"
+    - StaticText "DNS query from 52.215.115.120 for update.svc-check.com"
+    - StaticText "08:20:33"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "snort"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=20.235.158.175"
+    - StaticText " dst"
+    - StaticText "=10.0.7.95"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:20:34"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "Packet received from 162.239.169.150"
+    - StaticText "08:20:34"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "Session timeout for 192.165.152.175"
+    - StaticText "08:20:36"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "suricata"
+    - StaticText ":"
+    - StaticText "Rate limit exceeded from 16.140.145.1"
+    - StaticText "08:20:37"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "Health check passed for 10.0.1.68"
+    - StaticText "08:20:39"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=95.237.119.51"
+    - StaticText " dst"
+    - StaticText "=10.0.7.21"
+    - StaticText " rule"
+    - StaticText "=\"Suspicious"
+    - StaticText " Outbound\""
+    - StaticText "08:20:39"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "postgres"
+    - StaticText ":"
+    - StaticText "Rate limit exceeded from 81.144.218.22"
+    - StaticText "08:20:40"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "suricata"
+    - StaticText ":"
+    - StaticText "Session timeout for 237.43.205.115"
+    - StaticText "08:20:40"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "redis"
+    - StaticText ":"
+    - StaticText "Health check passed for 10.0.1.56"
+    - StaticText "08:20:42"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "Health check passed for 10.0.3.134"
+    - StaticText "08:20:42"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "sshd"
+    - StaticText ":"
+    - StaticText "Cache hit for 10.0.7.55"
+    - StaticText "08:20:43"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=138.146.196.18"
+    - StaticText " dst"
+    - StaticText "=10.0.3.250"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:20:45"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "sshd"
+    - StaticText ":"
+    - StaticText "Health check passed for 10.0.1.235"
+    - StaticText "08:20:45"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "nginx"
+    - StaticText ":"
+    - StaticText "DNS query from 97.19.18.196 for c2.phantom.xyz"
+    - StaticText "08:20:46"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "postgres"
+    - StaticText ":"
+    - StaticText "Rate limit exceeded from 21.156.95.201"
+    - StaticText "08:20:48"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "redis"
+    - StaticText ":"
+    - StaticText "Keepalive from 104.199.135.133"
+    - StaticText "08:20:48"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "windows-dc"
+    - StaticText ":"
+    - StaticText "DNS query from 92.81.9.92 for api.darkhelix.io"
+    - StaticText "08:20:49"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=17.178.71.187"
+    - StaticText " dst"
+    - StaticText "=10.0.3.81"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:20:51"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "Session timeout for 172.167.238.30"
+    - StaticText "08:20:51"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "sshd"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=228.64.90.102"
+    - StaticText " dst"
+    - StaticText "=10.0.1.233"
+    - StaticText " rule"
+    - StaticText "=\"Suspicious"
+    - StaticText " Outbound\""
+    - StaticText "08:20:52"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "windows-dc"
+    - StaticText ":"
+    - StaticText "ALERT: 16.7.179.243 -> 10.0.1.60 - known malicious IP"
+    - StaticText "08:20:54"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "sshd"
+    - StaticText ":"
+    - StaticText "Session timeout for 60.89.146.183"
+    - StaticText "08:20:54"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "Connection established 33.202.76.246 -> 10.0.1.15:443"
+    - StaticText "08:20:55"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "Health check passed for 10.0.5.37"
+    - StaticText "08:20:55"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "sshd"
+    - StaticText ":"
+    - StaticText "DNS query from 54.100.76.103 for update.svc-check.com"
+    - StaticText "08:20:57"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "ids"
+    - StaticText ":"
+    - StaticText "Critical: Unauthorized access attempt from 120.210.96.189"
+    - StaticText "08:20:57"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "redis"
+    - StaticText ":"
+    - StaticText "Keepalive from 147.25.11.55"
+    - StaticText "08:20:58"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "snort"
+    - StaticText ":"
+    - StaticText "Connection established 74.77.233.141 -> 10.0.4.81:8080"
+    - StaticText "08:21:00"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "redis"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=40.121.115.37"
+    - StaticText " dst"
+    - StaticText "=10.0.6.251"
+    - StaticText " rule"
+    - StaticText "=\"Suspicious"
+    - StaticText " Outbound\""
+    - StaticText "08:21:00"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "snort"
+    - StaticText ":"
+    - StaticText "Keepalive from 58.53.226.40"
+    - StaticText "08:21:01"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "Critical: Unauthorized access attempt from 178.190.121.51"
+    - StaticText "08:21:03"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "nginx"
+    - StaticText ":"
+    - StaticText "Connection established 68.223.20.117 -> 10.0.5.214:6379"
+    - StaticText "08:21:03"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "nginx"
+    - StaticText ":"
+    - StaticText "Packet received from 250.135.76.153"
+    - StaticText "08:21:04"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "sshd"
+    - StaticText ":"
+    - StaticText "DNS query from 126.109.231.115 for cdn.evil-corp.org"
+    - StaticText "08:21:04"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "snort"
+    - StaticText ":"
+    - StaticText "Packet received from 41.176.106.144"
+    - StaticText "08:21:06"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "postgres"
+    - StaticText ":"
+    - StaticText "Connection established 50.129.154.91 -> 10.0.3.27:3389"
+    - StaticText "08:21:07"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "windows-dc"
+    - StaticText ":"
+    - StaticText "Packet received from 16.69.10.198"
+    - StaticText "08:21:07"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "ids"
+    - StaticText ":"
+    - StaticText "Health check passed for 10.0.6.44"
+    - StaticText "08:21:09"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "sshd"
+    - StaticText ":"
+    - StaticText "ALERT: 174.206.222.49 -> 10.0.7.180 - known malicious IP"
+    - StaticText "08:21:09"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "windows-dc"
+    - StaticText ":"
+    - StaticText "Session timeout for 7.244.253.220"
+    - StaticText "08:21:10"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "nginx"
+    - StaticText ":"
+    - StaticText "Packet received from 78.7.19.64"
+    - StaticText "08:21:10"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "Health check passed for 10.0.5.231"
+    - StaticText "08:21:12"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "redis"
+    - StaticText ":"
+    - StaticText "SSL certificate mismatch for 10.0.7.140"
+    - StaticText "08:21:13"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "suricata"
+    - StaticText ":"
+    - StaticText "Session timeout for 209.60.80.237"
+    - StaticText "08:21:15"
+    - StaticText "["
+    - StaticText "DEBUG"
+    - StaticText "]"
+    - StaticText "ids"
+    - StaticText ":"
+    - StaticText "Packet received from 33.36.171.1"
+    - StaticText "08:21:16"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "redis"
+    - StaticText ":"
+    - StaticText "DNS query from 160.142.237.135 for c2.phantom.xyz"
+    - StaticText "08:21:16"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "ids"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=89.13.200.35"
+    - StaticText " dst"
+    - StaticText "=10.0.4.48"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:21:18"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "sshd"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=49.202.165.35"
+    - StaticText " dst"
+    - StaticText "=10.0.6.238"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:21:18"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "postgres"
+    - StaticText ":"
+    - StaticText "Rate limit exceeded from 120.6.133.132"
+    - StaticText "08:21:19"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "suricata"
+    - StaticText ":"
+    - StaticText "Session timeout for 78.223.219.193"
+    - StaticText "08:21:19"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "suricata"
+    - StaticText ":"
+    - StaticText "Health check passed for 10.0.1.81"
+    - StaticText "08:21:21"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "redis"
+    - StaticText ":"
+    - StaticText "DENY src"
+    - StaticText "=247.133.181.241"
+    - StaticText " dst"
+    - StaticText "=10.0.2.147"
+    - StaticText " rule"
+    - StaticText "=\"C2"
+    - StaticText " Outbound\""
+    - StaticText "08:21:21"
+    - StaticText "["
+    - StaticText "CRIT"
+    - StaticText "]"
+    - StaticText "firewall"
+    - StaticText ":"
+    - StaticText "IPS alert on 10.0.2.45 port 3389 action"
+    - StaticText "=block"
+    - StaticText "08:21:22"
+    - StaticText "["
+    - StaticText "INFO"
+    - StaticText "]"
+    - StaticText "apache"
+    - StaticText ":"
+    - StaticText "DNS query from 109.195.239.196 for c2.phantom.xyz"
+    - StaticText "08:21:22"
+    - StaticText "["
+    - StaticText "WARN"
+    - StaticText "]"
+    - StaticText "snort"
+    - StaticText ":"
+    - StaticText "Rate limit exceeded from 68.125.76.137"
+    - StaticText "_"
+- combobox [expanded=false, ref=e7]: All Severity
+  - MenuListPopup
+    - option "All Severity" [selected, ref=e19]
+    - option "Critical" [ref=e20]
+    - option "High" [ref=e21]
+    - option "Medium" [ref=e22]
+    - option "Low" [ref=e23]
+- combobox [expanded=false, ref=e8]: All Status
+  - MenuListPopup
+    - option "All Status" [selected, ref=e24]
+    - option "New" [ref=e25]
+    - option "Acknowledged" [ref=e26]
+    - option "Escalated" [ref=e27]
+    - option "False Positive" [ref=e28]
+    - option "Dismissed" [ref=e29]
+- combobox [expanded=false, ref=e9]: All Types
+  - MenuListPopup
+    - option "All Types" [selected, ref=e30]
+    - option "C2 Beaconing" [ref=e31]
+    - option "Spear Phishing" [ref=e32]
+    - option "Brute Force" [ref=e33]
+    - option "DDoS" [ref=e34]
+    - option "Exploit" [ref=e35]
+    - option "Port Scan" [ref=e36]
+    - option "Lateral Movement" [ref=e37]
+    - option "Data Exfiltration" [ref=e38]
+    - option "Reconnaissance" [ref=e39]
+    - option "Zero-Day Exploit" [ref=e40]
+- textbox "Search IPs, titles, adversaries..." [ref=e16]
+- generic
+  - table
+    - rowgroup
+      - row
+        - columnheader
+          - checkbox [checked=false, ref=e270]
+        - columnheader "TIME" [ref=e242]
+        - columnheader "SEVERITY" [ref=e243]
+        - columnheader "SOURCE" [ref=e244]
+        - columnheader "TARGET" [ref=e245]
+        - columnheader "TITLE" [ref=e246]
+        - columnheader "TYPE" [ref=e247]
+        - columnheader "STATUS" [ref=e248]
+        - columnheader "ADVERSARY" [ref=e249]
+    - row [ref=e41] clickable [cursor:pointer, onclick]
+      - cell [ref=e62] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e250]
+      - cell "08:21:16" [ref=e63]
+      - cell "Low" [ref=e64]
+        - StaticText "Low"
+      - cell "198.51.100.65" [ref=e65]
+      - cell "10.0.5.166" [ref=e66]
+      - cell "SYN Flood In Progress" [ref=e67]
+      - cell "DDoS" [ref=e68]
+      - cell "new" [ref=e69]
+      - cell "Script Kiddie Collective" [ref=e70]
+    - row [ref=e42] clickable [cursor:pointer, onclick]
+      - cell [ref=e71] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e251]
+      - cell "08:21:15" [ref=e72]
+      - cell "Medium" [ref=e73]
+        - StaticText "Medium"
+      - cell "45.33.32.251" [ref=e74]
+      - cell "10.0.3.240" [ref=e75]
+      - cell "DNS Tunneling Activity" [ref=e76]
+      - cell "Data Exfiltration" [ref=e77]
+      - cell "escalated" [ref=e78]
+      - cell "APT-DARK HELIX" [ref=e79]
+    - row [ref=e43] clickable [cursor:pointer, onclick]
+      - cell [ref=e80] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e252]
+      - cell "08:21:13" [ref=e81]
+      - cell "Medium" [ref=e82]
+        - StaticText "Medium"
+      - cell "198.51.100.162" [ref=e83]
+      - cell "10.0.1.162" [ref=e84]
+      - cell "Volumetric Flood" [ref=e85]
+      - cell "DDoS" [ref=e86]
+      - cell "new" [ref=e87]
+      - cell "Script Kiddie Collective" [ref=e88]
+    - row [ref=e44] clickable [cursor:pointer, onclick]
+      - cell [ref=e89] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e253]
+      - cell "08:21:12" [ref=e90]
+      - cell "High" [ref=e91]
+        - StaticText "High"
+      - cell "175.45.176.230" [ref=e92]
+      - cell "10.0.6.195" [ref=e93]
+      - cell "Unknown Vulnerability Exploit" [ref=e94]
+      - cell "Zero-Day Exploit" [ref=e95]
+      - cell "new" [ref=e96]
+      - cell "APT-VOID SERPENT" [ref=e97]
+    - row [ref=e45] clickable [cursor:pointer, onclick]
+      - cell [ref=e98] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e254]
+      - cell "08:21:10" [ref=e99]
+      - cell "Critical" [ref=e100]
+        - StaticText "Critical"
+      - cell "210.52.109.219" [ref=e101]
+      - cell "10.0.2.58" [ref=e102]
+      - cell "Credential Harvest Link" [ref=e103]
+      - cell "Spear Phishing" [ref=e104]
+      - cell "new" [ref=e105]
+      - cell "APT-VOID SERPENT" [ref=e106]
+    - row [ref=e46] clickable [cursor:pointer, onclick]
+      - cell [ref=e107] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e255]
+      - cell "08:21:03" [ref=e108]
+      - cell "Medium" [ref=e109]
+        - StaticText "Medium"
+      - cell "175.45.176.81" [ref=e110]
+      - cell "10.0.6.93" [ref=e111]
+      - cell "Suspicious Outbound C2" [ref=e112]
+      - cell "C2 Beaconing" [ref=e113]
+      - cell "new" [ref=e114]
+      - cell "APT-VOID SERPENT" [ref=e115]
+    - row [ref=e47] clickable [cursor:pointer, onclick]
+      - cell [ref=e116] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e256]
+      - cell "08:21:01" [ref=e117]
+      - cell "Low" [ref=e118]
+        - StaticText "Low"
+      - cell "91.189.88.102" [ref=e119]
+      - cell "10.0.3.177" [ref=e120]
+      - cell "SQL Injection Attack" [ref=e121]
+      - cell "Exploit" [ref=e122]
+      - cell "acknowledged" [ref=e123]
+      - cell "APT-DARK HELIX" [ref=e124]
+    - row [ref=e48] clickable [cursor:pointer, onclick]
+      - cell [ref=e125] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e257]
+      - cell "08:20:57" [ref=e126]
+      - cell "Medium" [ref=e127]
+        - StaticText "Medium"
+      - cell "91.189.88.69" [ref=e128]
+      - cell "10.0.4.102" [ref=e129]
+      - cell "DNS Tunneling Activity" [ref=e130]
+      - cell "Data Exfiltration" [ref=e131]
+      - cell "new" [ref=e132]
+      - cell "APT-DARK HELIX" [ref=e133]
+    - row [ref=e49] clickable [cursor:pointer, onclick]
+      - cell [ref=e134] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e258]
+      - cell "08:20:55" [ref=e135]
+      - cell "Medium" [ref=e136]
+        - StaticText "Medium"
+      - cell "203.0.113.146" [ref=e137]
+      - cell "10.0.1.186" [ref=e138]
+      - cell "DDoS Attack Detected" [ref=e139]
+      - cell "DDoS" [ref=e140]
+      - cell "new" [ref=e141]
+      - cell "Script Kiddie Collective" [ref=e142]
+    - row [ref=e50] clickable [cursor:pointer, onclick]
+      - cell [ref=e143] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e259]
+      - cell "08:20:54" [ref=e144]
+      - cell "High" [ref=e145]
+        - StaticText "High"
+      - cell "91.92.128.125" [ref=e146]
+      - cell "10.0.7.230" [ref=e147]
+      - cell "Volumetric Flood" [ref=e148]
+      - cell "DDoS" [ref=e149]
+      - cell "escalated" [ref=e150]
+      - cell "Hacktivist-ECHO" [ref=e151]
+    - row [ref=e51] clickable [cursor:pointer, onclick]
+      - cell [ref=e152] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e260]
+      - cell "08:20:49" [ref=e153]
+      - cell "Low" [ref=e154]
+        - StaticText "Low"
+      - cell "45.33.32.183" [ref=e155]
+      - cell "10.0.4.9" [ref=e156]
+      - cell "SQL Injection Attack" [ref=e157]
+      - cell "Exploit" [ref=e158]
+      - cell "escalated" [ref=e159]
+      - cell "APT-DARK HELIX" [ref=e160]
+    - row [ref=e52] clickable [cursor:pointer, onclick]
+      - cell [ref=e161] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e261]
+      - cell "08:20:48" [ref=e162]
+      - cell "Low" [ref=e163]
+        - StaticText "Low"
+      - cell "203.0.113.147" [ref=e164]
+      - cell "10.0.1.147" [ref=e165]
+      - cell "DDoS Attack Detected" [ref=e166]
+      - cell "DDoS" [ref=e167]
+      - cell "escalated" [ref=e168]
+      - cell "Script Kiddie Collective" [ref=e169]
+    - row [ref=e53] clickable [cursor:pointer, onclick]
+      - cell [ref=e170] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e262]
+      - cell "08:20:46" [ref=e171]
+      - cell "Low" [ref=e172]
+        - StaticText "Low"
+      - cell "198.51.100.178" [ref=e173]
+      - cell "10.0.1.51" [ref=e174]
+      - cell "Amplification Attack" [ref=e175]
+      - cell "DDoS" [ref=e176]
+      - cell "acknowledged" [ref=e177]
+      - cell "Script Kiddie Collective" [ref=e178]
+    - row [ref=e54] clickable [cursor:pointer, onclick]
+      - cell [ref=e179] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e263]
+      - cell "08:20:43" [ref=e180]
+      - cell "Low" [ref=e181]
+        - StaticText "Low"
+      - cell "203.0.113.246" [ref=e182]
+      - cell "10.0.5.221" [ref=e183]
+      - cell "Brute Force SSH Attempt" [ref=e184]
+      - cell "Brute Force" [ref=e185]
+      - cell "escalated" [ref=e186]
+      - cell "Script Kiddie Collective" [ref=e187]
+    - row [ref=e55] clickable [cursor:pointer, onclick]
+      - cell [ref=e188] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e264]
+      - cell "08:20:40" [ref=e189]
+      - cell "High" [ref=e190]
+        - StaticText "High"
+      - cell "198.51.100.200" [ref=e191]
+      - cell "10.0.1.210" [ref=e192]
+      - cell "Brute Force RDP" [ref=e193]
+      - cell "Brute Force" [ref=e194]
+      - cell "new" [ref=e195]
+      - cell "Script Kiddie Collective" [ref=e196]
+    - row [ref=e56] clickable [cursor:pointer, onclick]
+      - cell [ref=e197] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e265]
+      - cell "08:20:36" [ref=e198]
+      - cell "Low" [ref=e199]
+        - StaticText "Low"
+      - cell "45.33.32.193" [ref=e200]
+      - cell "10.0.3.141" [ref=e201]
+      - cell "Brute Force RDP" [ref=e202]
+      - cell "Brute Force" [ref=e203]
+      - cell "escalated" [ref=e204]
+      - cell "APT-DARK HELIX" [ref=e205]
+    - row [ref=e57] clickable [cursor:pointer, onclick]
+      - cell [ref=e206] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e266]
+      - cell "08:20:34" [ref=e207]
+      - cell "Low" [ref=e208]
+        - StaticText "Low"
+      - cell "91.189.88.112" [ref=e209]
+      - cell "10.0.4.58" [ref=e210]
+      - cell "Buffer Overflow Attempt" [ref=e211]
+      - cell "Exploit" [ref=e212]
+      - cell "new" [ref=e213]
+      - cell "APT-DARK HELIX" [ref=e214]
+    - row [ref=e58] clickable [cursor:pointer, onclick]
+      - cell [ref=e215] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e267]
+      - cell "08:20:31" [ref=e216]
+      - cell "High" [ref=e217]
+        - StaticText "High"
+      - cell "103.224.182.109" [ref=e218]
+      - cell "10.0.1.221" [ref=e219]
+      - cell "Suspicious Outbound C2" [ref=e220]
+      - cell "C2 Beaconing" [ref=e221]
+      - cell "new" [ref=e222]
+      - cell "APT-PHANTOM SPIDER" [ref=e223]
+    - row [ref=e59] clickable [cursor:pointer, onclick]
+      - cell [ref=e224] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e268]
+      - cell "08:20:28" [ref=e225]
+      - cell "Low" [ref=e226]
+        - StaticText "Low"
+      - cell "103.224.182.142" [ref=e227]
+      - cell "10.0.1.23" [ref=e228]
+      - cell "Lateral Movement Detected" [ref=e229]
+      - cell "Lateral Movement" [ref=e230]
+      - cell "new" [ref=e231]
+      - cell "APT-PHANTOM SPIDER" [ref=e232]
+    - row [ref=e60] clickable [cursor:pointer, onclick]
+      - cell [ref=e233] clickable [cursor:pointer, onclick]
+        - checkbox [checked=false, ref=e269]
+      - cell "08:20:27" [ref=e234]
+      - cell "Medium" [ref=e235]
+        - StaticText "Medium"
+      - cell "91.92.128.184" [ref=e236]
+      - cell "10.0.3.45" [ref=e237]
+      - cell "Buffer Overflow Attempt" [ref=e238]
+      - cell "Exploit" [ref=e239]
+      - cell "new" [ref=e240]
+      - cell "Hacktivist-ECHO" [ref=e241]
+  - StaticText "79"
+  - StaticText " alerts (showing "
+  - StaticText "1"
+  - StaticText "–"
+  - StaticText "20"
+  - StaticText ")"
+  - button [disabled, ref=e17]
+  - StaticText "1"
+  - StaticText " / "
+  - StaticText "4"
+  - button [ref=e18]
+- heading "LOG STREAM" [level=3, ref=e10]
+- StaticText "LIVE"
+- generic
+  - StaticText "08:20:04"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "windows-dc"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=83.191.110.83"
+  - StaticText " dst"
+  - StaticText "=10.0.4.160"
+  - StaticText " rule"
+  - StaticText "=\"Suspicious"
+  - StaticText " Outbound\""
+  - StaticText "08:20:06"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "suricata"
+  - StaticText ":"
+  - StaticText "Unusual traffic pattern detected from 150.75.199.103"
+  - StaticText "08:20:06"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "windows-dc"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=175.175.139.33"
+  - StaticText " dst"
+  - StaticText "=10.0.3.16"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:20:07"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "ids"
+  - StaticText ":"
+  - StaticText "Rate limit exceeded from 117.130.210.177"
+  - StaticText "08:20:09"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "redis"
+  - StaticText ":"
+  - StaticText "Session timeout for 177.200.233.133"
+  - StaticText "08:20:10"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "nginx"
+  - StaticText ":"
+  - StaticText "Critical: Unauthorized access attempt from 97.179.244.36"
+  - StaticText "08:20:10"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "SSL certificate mismatch for 10.0.2.177"
+  - StaticText "08:20:12"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "redis"
+  - StaticText ":"
+  - StaticText "Critical: Unauthorized access attempt from 237.24.46.2"
+  - StaticText "08:20:12"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "snort"
+  - StaticText ":"
+  - StaticText "ALERT: 66.30.179.115 -> 10.0.3.65 - known malicious IP"
+  - StaticText "08:20:13"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "nginx"
+  - StaticText ":"
+  - StaticText "Unusual traffic pattern detected from 161.215.80.108"
+  - StaticText "08:20:15"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "nginx"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=39.53.211.110"
+  - StaticText " dst"
+  - StaticText "=10.0.3.95"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:20:15"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "windows-dc"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=132.159.86.241"
+  - StaticText " dst"
+  - StaticText "=10.0.4.107"
+  - StaticText " rule"
+  - StaticText "=\"Suspicious"
+  - StaticText " Outbound\""
+  - StaticText "08:20:16"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "snort"
+  - StaticText ":"
+  - StaticText "SSL certificate mismatch for 10.0.1.57"
+  - StaticText "08:20:16"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "Connection established 122.217.31.180 -> 10.0.5.222:6379"
+  - StaticText "08:20:18"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "ids"
+  - StaticText ":"
+  - StaticText "Session timeout for 83.232.50.100"
+  - StaticText "08:20:19"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "Unusual traffic pattern detected from 170.95.241.214"
+  - StaticText "08:20:19"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "ids"
+  - StaticText ":"
+  - StaticText "DNS query from 124.100.120.30 for cdn.evil-corp.org"
+  - StaticText "08:20:21"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "ALERT: 58.250.100.22 -> 10.0.7.230 - known malicious IP"
+  - StaticText "08:20:21"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "snort"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=237.114.89.44"
+  - StaticText " dst"
+  - StaticText "=10.0.5.119"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:20:22"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "postgres"
+  - StaticText ":"
+  - StaticText "SSL certificate mismatch for 10.0.1.23"
+  - StaticText "08:20:22"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "postgres"
+  - StaticText ":"
+  - StaticText "Cache hit for 10.0.3.143"
+  - StaticText "08:20:24"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "SSL certificate mismatch for 10.0.4.177"
+  - StaticText "08:20:25"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "snort"
+  - StaticText ":"
+  - StaticText "SSL certificate mismatch for 10.0.2.194"
+  - StaticText "08:20:25"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=159.176.88.22"
+  - StaticText " dst"
+  - StaticText "=10.0.4.109"
+  - StaticText " rule"
+  - StaticText "=\"Suspicious"
+  - StaticText " Outbound\""
+  - StaticText "08:20:27"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "postgres"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=250.201.50.224"
+  - StaticText " dst"
+  - StaticText "=10.0.6.71"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:20:28"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "Keepalive from 192.235.181.183"
+  - StaticText "08:20:28"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "DNS query from 228.171.70.182 for api.darkhelix.io"
+  - StaticText "08:20:30"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "DNS query from 30.69.190.196 for api.darkhelix.io"
+  - StaticText "08:20:31"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=14.185.187.123"
+  - StaticText " dst"
+  - StaticText "=10.0.1.212"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:20:31"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "suricata"
+  - StaticText ":"
+  - StaticText "DNS query from 52.215.115.120 for update.svc-check.com"
+  - StaticText "08:20:33"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "snort"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=20.235.158.175"
+  - StaticText " dst"
+  - StaticText "=10.0.7.95"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:20:34"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "Packet received from 162.239.169.150"
+  - StaticText "08:20:34"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "Session timeout for 192.165.152.175"
+  - StaticText "08:20:36"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "suricata"
+  - StaticText ":"
+  - StaticText "Rate limit exceeded from 16.140.145.1"
+  - StaticText "08:20:37"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "Health check passed for 10.0.1.68"
+  - StaticText "08:20:39"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=95.237.119.51"
+  - StaticText " dst"
+  - StaticText "=10.0.7.21"
+  - StaticText " rule"
+  - StaticText "=\"Suspicious"
+  - StaticText " Outbound\""
+  - StaticText "08:20:39"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "postgres"
+  - StaticText ":"
+  - StaticText "Rate limit exceeded from 81.144.218.22"
+  - StaticText "08:20:40"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "suricata"
+  - StaticText ":"
+  - StaticText "Session timeout for 237.43.205.115"
+  - StaticText "08:20:40"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "redis"
+  - StaticText ":"
+  - StaticText "Health check passed for 10.0.1.56"
+  - StaticText "08:20:42"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "Health check passed for 10.0.3.134"
+  - StaticText "08:20:42"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "sshd"
+  - StaticText ":"
+  - StaticText "Cache hit for 10.0.7.55"
+  - StaticText "08:20:43"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=138.146.196.18"
+  - StaticText " dst"
+  - StaticText "=10.0.3.250"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:20:45"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "sshd"
+  - StaticText ":"
+  - StaticText "Health check passed for 10.0.1.235"
+  - StaticText "08:20:45"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "nginx"
+  - StaticText ":"
+  - StaticText "DNS query from 97.19.18.196 for c2.phantom.xyz"
+  - StaticText "08:20:46"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "postgres"
+  - StaticText ":"
+  - StaticText "Rate limit exceeded from 21.156.95.201"
+  - StaticText "08:20:48"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "redis"
+  - StaticText ":"
+  - StaticText "Keepalive from 104.199.135.133"
+  - StaticText "08:20:48"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "windows-dc"
+  - StaticText ":"
+  - StaticText "DNS query from 92.81.9.92 for api.darkhelix.io"
+  - StaticText "08:20:49"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=17.178.71.187"
+  - StaticText " dst"
+  - StaticText "=10.0.3.81"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:20:51"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "Session timeout for 172.167.238.30"
+  - StaticText "08:20:51"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "sshd"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=228.64.90.102"
+  - StaticText " dst"
+  - StaticText "=10.0.1.233"
+  - StaticText " rule"
+  - StaticText "=\"Suspicious"
+  - StaticText " Outbound\""
+  - StaticText "08:20:52"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "windows-dc"
+  - StaticText ":"
+  - StaticText "ALERT: 16.7.179.243 -> 10.0.1.60 - known malicious IP"
+  - StaticText "08:20:54"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "sshd"
+  - StaticText ":"
+  - StaticText "Session timeout for 60.89.146.183"
+  - StaticText "08:20:54"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "Connection established 33.202.76.246 -> 10.0.1.15:443"
+  - StaticText "08:20:55"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "Health check passed for 10.0.5.37"
+  - StaticText "08:20:55"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "sshd"
+  - StaticText ":"
+  - StaticText "DNS query from 54.100.76.103 for update.svc-check.com"
+  - StaticText "08:20:57"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "ids"
+  - StaticText ":"
+  - StaticText "Critical: Unauthorized access attempt from 120.210.96.189"
+  - StaticText "08:20:57"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "redis"
+  - StaticText ":"
+  - StaticText "Keepalive from 147.25.11.55"
+  - StaticText "08:20:58"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "snort"
+  - StaticText ":"
+  - StaticText "Connection established 74.77.233.141 -> 10.0.4.81:8080"
+  - StaticText "08:21:00"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "redis"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=40.121.115.37"
+  - StaticText " dst"
+  - StaticText "=10.0.6.251"
+  - StaticText " rule"
+  - StaticText "=\"Suspicious"
+  - StaticText " Outbound\""
+  - StaticText "08:21:00"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "snort"
+  - StaticText ":"
+  - StaticText "Keepalive from 58.53.226.40"
+  - StaticText "08:21:01"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "Critical: Unauthorized access attempt from 178.190.121.51"
+  - StaticText "08:21:03"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "nginx"
+  - StaticText ":"
+  - StaticText "Connection established 68.223.20.117 -> 10.0.5.214:6379"
+  - StaticText "08:21:03"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "nginx"
+  - StaticText ":"
+  - StaticText "Packet received from 250.135.76.153"
+  - StaticText "08:21:04"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "sshd"
+  - StaticText ":"
+  - StaticText "DNS query from 126.109.231.115 for cdn.evil-corp.org"
+  - StaticText "08:21:04"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "snort"
+  - StaticText ":"
+  - StaticText "Packet received from 41.176.106.144"
+  - StaticText "08:21:06"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "postgres"
+  - StaticText ":"
+  - StaticText "Connection established 50.129.154.91 -> 10.0.3.27:3389"
+  - StaticText "08:21:07"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "windows-dc"
+  - StaticText ":"
+  - StaticText "Packet received from 16.69.10.198"
+  - StaticText "08:21:07"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "ids"
+  - StaticText ":"
+  - StaticText "Health check passed for 10.0.6.44"
+  - StaticText "08:21:09"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "sshd"
+  - StaticText ":"
+  - StaticText "ALERT: 174.206.222.49 -> 10.0.7.180 - known malicious IP"
+  - StaticText "08:21:09"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "windows-dc"
+  - StaticText ":"
+  - StaticText "Session timeout for 7.244.253.220"
+  - StaticText "08:21:10"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "nginx"
+  - StaticText ":"
+  - StaticText "Packet received from 78.7.19.64"
+  - StaticText "08:21:10"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "Health check passed for 10.0.5.231"
+  - StaticText "08:21:12"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "redis"
+  - StaticText ":"
+  - StaticText "SSL certificate mismatch for 10.0.7.140"
+  - StaticText "08:21:13"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "suricata"
+  - StaticText ":"
+  - StaticText "Session timeout for 209.60.80.237"
+  - StaticText "08:21:15"
+  - StaticText "["
+  - StaticText "DEBUG"
+  - StaticText "]"
+  - StaticText "ids"
+  - StaticText ":"
+  - StaticText "Packet received from 33.36.171.1"
+  - StaticText "08:21:16"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "redis"
+  - StaticText ":"
+  - StaticText "DNS query from 160.142.237.135 for c2.phantom.xyz"
+  - StaticText "08:21:16"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "ids"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=89.13.200.35"
+  - StaticText " dst"
+  - StaticText "=10.0.4.48"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:21:18"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "sshd"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=49.202.165.35"
+  - StaticText " dst"
+  - StaticText "=10.0.6.238"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:21:18"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "postgres"
+  - StaticText ":"
+  - StaticText "Rate limit exceeded from 120.6.133.132"
+  - StaticText "08:21:19"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "suricata"
+  - StaticText ":"
+  - StaticText "Session timeout for 78.223.219.193"
+  - StaticText "08:21:19"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "suricata"
+  - StaticText ":"
+  - StaticText "Health check passed for 10.0.1.81"
+  - StaticText "08:21:21"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "redis"
+  - StaticText ":"
+  - StaticText "DENY src"
+  - StaticText "=247.133.181.241"
+  - StaticText " dst"
+  - StaticText "=10.0.2.147"
+  - StaticText " rule"
+  - StaticText "=\"C2"
+  - StaticText " Outbound\""
+  - StaticText "08:21:21"
+  - StaticText "["
+  - StaticText "CRIT"
+  - StaticText "]"
+  - StaticText "firewall"
+  - StaticText ":"
+  - StaticText "IPS alert on 10.0.2.45 port 3389 action"
+  - StaticText "=block"
+  - StaticText "08:21:22"
+  - StaticText "["
+  - StaticText "INFO"
+  - StaticText "]"
+  - StaticText "apache"
+  - StaticText ":"
+  - StaticText "DNS query from 109.195.239.196 for c2.phantom.xyz"
+  - StaticText "08:21:22"
+  - StaticText "["
+  - StaticText "WARN"
+  - StaticText "]"
+  - StaticText "snort"
+  - StaticText ":"
+  - StaticText "Rate limit exceeded from 68.125.76.137"
+  - StaticText "_"
+- StaticText "79"
+- StaticText " alerts (showing "
+- StaticText "1"
+- StaticText "–"
+- StaticText "20"
+- StaticText ")"
+- button [disabled, ref=e17]
+- StaticText "1"
+- StaticText " / "
+- StaticText "4"
+- button [ref=e18]
+- StaticText "08:20:04"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "windows-dc"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=83.191.110.83"
+- StaticText " dst"
+- StaticText "=10.0.4.160"
+- StaticText " rule"
+- StaticText "=\"Suspicious"
+- StaticText " Outbound\""
+- StaticText "08:20:06"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "suricata"
+- StaticText ":"
+- StaticText "Unusual traffic pattern detected from 150.75.199.103"
+- StaticText "08:20:06"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "windows-dc"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=175.175.139.33"
+- StaticText " dst"
+- StaticText "=10.0.3.16"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:20:07"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "ids"
+- StaticText ":"
+- StaticText "Rate limit exceeded from 117.130.210.177"
+- StaticText "08:20:09"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "redis"
+- StaticText ":"
+- StaticText "Session timeout for 177.200.233.133"
+- StaticText "08:20:10"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "nginx"
+- StaticText ":"
+- StaticText "Critical: Unauthorized access attempt from 97.179.244.36"
+- StaticText "08:20:10"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "SSL certificate mismatch for 10.0.2.177"
+- StaticText "08:20:12"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "redis"
+- StaticText ":"
+- StaticText "Critical: Unauthorized access attempt from 237.24.46.2"
+- StaticText "08:20:12"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "snort"
+- StaticText ":"
+- StaticText "ALERT: 66.30.179.115 -> 10.0.3.65 - known malicious IP"
+- StaticText "08:20:13"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "nginx"
+- StaticText ":"
+- StaticText "Unusual traffic pattern detected from 161.215.80.108"
+- StaticText "08:20:15"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "nginx"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=39.53.211.110"
+- StaticText " dst"
+- StaticText "=10.0.3.95"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:20:15"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "windows-dc"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=132.159.86.241"
+- StaticText " dst"
+- StaticText "=10.0.4.107"
+- StaticText " rule"
+- StaticText "=\"Suspicious"
+- StaticText " Outbound\""
+- StaticText "08:20:16"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "snort"
+- StaticText ":"
+- StaticText "SSL certificate mismatch for 10.0.1.57"
+- StaticText "08:20:16"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "Connection established 122.217.31.180 -> 10.0.5.222:6379"
+- StaticText "08:20:18"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "ids"
+- StaticText ":"
+- StaticText "Session timeout for 83.232.50.100"
+- StaticText "08:20:19"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "Unusual traffic pattern detected from 170.95.241.214"
+- StaticText "08:20:19"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "ids"
+- StaticText ":"
+- StaticText "DNS query from 124.100.120.30 for cdn.evil-corp.org"
+- StaticText "08:20:21"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "ALERT: 58.250.100.22 -> 10.0.7.230 - known malicious IP"
+- StaticText "08:20:21"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "snort"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=237.114.89.44"
+- StaticText " dst"
+- StaticText "=10.0.5.119"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:20:22"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "postgres"
+- StaticText ":"
+- StaticText "SSL certificate mismatch for 10.0.1.23"
+- StaticText "08:20:22"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "postgres"
+- StaticText ":"
+- StaticText "Cache hit for 10.0.3.143"
+- StaticText "08:20:24"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "SSL certificate mismatch for 10.0.4.177"
+- StaticText "08:20:25"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "snort"
+- StaticText ":"
+- StaticText "SSL certificate mismatch for 10.0.2.194"
+- StaticText "08:20:25"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=159.176.88.22"
+- StaticText " dst"
+- StaticText "=10.0.4.109"
+- StaticText " rule"
+- StaticText "=\"Suspicious"
+- StaticText " Outbound\""
+- StaticText "08:20:27"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "postgres"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=250.201.50.224"
+- StaticText " dst"
+- StaticText "=10.0.6.71"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:20:28"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "Keepalive from 192.235.181.183"
+- StaticText "08:20:28"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "DNS query from 228.171.70.182 for api.darkhelix.io"
+- StaticText "08:20:30"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "DNS query from 30.69.190.196 for api.darkhelix.io"
+- StaticText "08:20:31"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=14.185.187.123"
+- StaticText " dst"
+- StaticText "=10.0.1.212"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:20:31"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "suricata"
+- StaticText ":"
+- StaticText "DNS query from 52.215.115.120 for update.svc-check.com"
+- StaticText "08:20:33"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "snort"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=20.235.158.175"
+- StaticText " dst"
+- StaticText "=10.0.7.95"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:20:34"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "Packet received from 162.239.169.150"
+- StaticText "08:20:34"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "Session timeout for 192.165.152.175"
+- StaticText "08:20:36"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "suricata"
+- StaticText ":"
+- StaticText "Rate limit exceeded from 16.140.145.1"
+- StaticText "08:20:37"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "Health check passed for 10.0.1.68"
+- StaticText "08:20:39"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=95.237.119.51"
+- StaticText " dst"
+- StaticText "=10.0.7.21"
+- StaticText " rule"
+- StaticText "=\"Suspicious"
+- StaticText " Outbound\""
+- StaticText "08:20:39"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "postgres"
+- StaticText ":"
+- StaticText "Rate limit exceeded from 81.144.218.22"
+- StaticText "08:20:40"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "suricata"
+- StaticText ":"
+- StaticText "Session timeout for 237.43.205.115"
+- StaticText "08:20:40"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "redis"
+- StaticText ":"
+- StaticText "Health check passed for 10.0.1.56"
+- StaticText "08:20:42"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "Health check passed for 10.0.3.134"
+- StaticText "08:20:42"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "sshd"
+- StaticText ":"
+- StaticText "Cache hit for 10.0.7.55"
+- StaticText "08:20:43"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=138.146.196.18"
+- StaticText " dst"
+- StaticText "=10.0.3.250"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:20:45"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "sshd"
+- StaticText ":"
+- StaticText "Health check passed for 10.0.1.235"
+- StaticText "08:20:45"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "nginx"
+- StaticText ":"
+- StaticText "DNS query from 97.19.18.196 for c2.phantom.xyz"
+- StaticText "08:20:46"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "postgres"
+- StaticText ":"
+- StaticText "Rate limit exceeded from 21.156.95.201"
+- StaticText "08:20:48"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "redis"
+- StaticText ":"
+- StaticText "Keepalive from 104.199.135.133"
+- StaticText "08:20:48"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "windows-dc"
+- StaticText ":"
+- StaticText "DNS query from 92.81.9.92 for api.darkhelix.io"
+- StaticText "08:20:49"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=17.178.71.187"
+- StaticText " dst"
+- StaticText "=10.0.3.81"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:20:51"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "Session timeout for 172.167.238.30"
+- StaticText "08:20:51"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "sshd"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=228.64.90.102"
+- StaticText " dst"
+- StaticText "=10.0.1.233"
+- StaticText " rule"
+- StaticText "=\"Suspicious"
+- StaticText " Outbound\""
+- StaticText "08:20:52"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "windows-dc"
+- StaticText ":"
+- StaticText "ALERT: 16.7.179.243 -> 10.0.1.60 - known malicious IP"
+- StaticText "08:20:54"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "sshd"
+- StaticText ":"
+- StaticText "Session timeout for 60.89.146.183"
+- StaticText "08:20:54"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "Connection established 33.202.76.246 -> 10.0.1.15:443"
+- StaticText "08:20:55"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "Health check passed for 10.0.5.37"
+- StaticText "08:20:55"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "sshd"
+- StaticText ":"
+- StaticText "DNS query from 54.100.76.103 for update.svc-check.com"
+- StaticText "08:20:57"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "ids"
+- StaticText ":"
+- StaticText "Critical: Unauthorized access attempt from 120.210.96.189"
+- StaticText "08:20:57"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "redis"
+- StaticText ":"
+- StaticText "Keepalive from 147.25.11.55"
+- StaticText "08:20:58"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "snort"
+- StaticText ":"
+- StaticText "Connection established 74.77.233.141 -> 10.0.4.81:8080"
+- StaticText "08:21:00"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "redis"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=40.121.115.37"
+- StaticText " dst"
+- StaticText "=10.0.6.251"
+- StaticText " rule"
+- StaticText "=\"Suspicious"
+- StaticText " Outbound\""
+- StaticText "08:21:00"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "snort"
+- StaticText ":"
+- StaticText "Keepalive from 58.53.226.40"
+- StaticText "08:21:01"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "Critical: Unauthorized access attempt from 178.190.121.51"
+- StaticText "08:21:03"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "nginx"
+- StaticText ":"
+- StaticText "Connection established 68.223.20.117 -> 10.0.5.214:6379"
+- StaticText "08:21:03"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "nginx"
+- StaticText ":"
+- StaticText "Packet received from 250.135.76.153"
+- StaticText "08:21:04"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "sshd"
+- StaticText ":"
+- StaticText "DNS query from 126.109.231.115 for cdn.evil-corp.org"
+- StaticText "08:21:04"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "snort"
+- StaticText ":"
+- StaticText "Packet received from 41.176.106.144"
+- StaticText "08:21:06"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "postgres"
+- StaticText ":"
+- StaticText "Connection established 50.129.154.91 -> 10.0.3.27:3389"
+- StaticText "08:21:07"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "windows-dc"
+- StaticText ":"
+- StaticText "Packet received from 16.69.10.198"
+- StaticText "08:21:07"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "ids"
+- StaticText ":"
+- StaticText "Health check passed for 10.0.6.44"
+- StaticText "08:21:09"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "sshd"
+- StaticText ":"
+- StaticText "ALERT: 174.206.222.49 -> 10.0.7.180 - known malicious IP"
+- StaticText "08:21:09"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "windows-dc"
+- StaticText ":"
+- StaticText "Session timeout for 7.244.253.220"
+- StaticText "08:21:10"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "nginx"
+- StaticText ":"
+- StaticText "Packet received from 78.7.19.64"
+- StaticText "08:21:10"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "Health check passed for 10.0.5.231"
+- StaticText "08:21:12"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "redis"
+- StaticText ":"
+- StaticText "SSL certificate mismatch for 10.0.7.140"
+- StaticText "08:21:13"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "suricata"
+- StaticText ":"
+- StaticText "Session timeout for 209.60.80.237"
+- StaticText "08:21:15"
+- StaticText "["
+- StaticText "DEBUG"
+- StaticText "]"
+- StaticText "ids"
+- StaticText ":"
+- StaticText "Packet received from 33.36.171.1"
+- StaticText "08:21:16"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "redis"
+- StaticText ":"
+- StaticText "DNS query from 160.142.237.135 for c2.phantom.xyz"
+- StaticText "08:21:16"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "ids"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=89.13.200.35"
+- StaticText " dst"
+- StaticText "=10.0.4.48"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:21:18"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "sshd"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=49.202.165.35"
+- StaticText " dst"
+- StaticText "=10.0.6.238"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:21:18"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "postgres"
+- StaticText ":"
+- StaticText "Rate limit exceeded from 120.6.133.132"
+- StaticText "08:21:19"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "suricata"
+- StaticText ":"
+- StaticText "Session timeout for 78.223.219.193"
+- StaticText "08:21:19"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "suricata"
+- StaticText ":"
+- StaticText "Health check passed for 10.0.1.81"
+- StaticText "08:21:21"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "redis"
+- StaticText ":"
+- StaticText "DENY src"
+- StaticText "=247.133.181.241"
+- StaticText " dst"
+- StaticText "=10.0.2.147"
+- StaticText " rule"
+- StaticText "=\"C2"
+- StaticText " Outbound\""
+- StaticText "08:21:21"
+- StaticText "["
+- StaticText "CRIT"
+- StaticText "]"
+- StaticText "firewall"
+- StaticText ":"
+- StaticText "IPS alert on 10.0.2.45 port 3389 action"
+- StaticText "=block"
+- StaticText "08:21:22"
+- StaticText "["
+- StaticText "INFO"
+- StaticText "]"
+- StaticText "apache"
+- StaticText ":"
+- StaticText "DNS query from 109.195.239.196 for c2.phantom.xyz"
+- StaticText "08:21:22"
+- StaticText "["
+- StaticText "WARN"
+- StaticText "]"
+- StaticText "snort"
+- StaticText ":"
+- StaticText "Rate limit exceeded from 68.125.76.137"
+- StaticText "_"
+- option "All Severity" [selected, ref=e19]
+- option "Critical" [ref=e20]
+- option "High" [ref=e21]
+- option "Medium" [ref=e22]
+- option "Low" [ref=e23]
+- option "All Status" [selected, ref=e24]
+- option "New" [ref=e25]
+- option "Acknowledged" [ref=e26]
+- option "Escalated" [ref=e27]
+- option "False Positive" [ref=e28]
+- option "Dismissed" [ref=e29]
+- option "All Types" [selected, ref=e30]
+- option "C2 Beaconing" [ref=e31]
+- option "Spear Phishing" [ref=e32]
+- option "Brute Force" [ref=e33]
+- option "DDoS" [ref=e34]
+- option "Exploit" [ref=e35]
+- option "Port Scan" [ref=e36]
+- option "Lateral Movement" [ref=e37]
+- option "Data Exfiltration" [ref=e38]
+- option "Reconnaissance" [ref=e39]
+- option "Zero-Day Exploit" [ref=e40]
+- row [ref=e41] clickable [cursor:pointer, onclick]
+  - cell [ref=e62] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e250]
+  - cell "08:21:16" [ref=e63]
+  - cell "Low" [ref=e64]
+    - StaticText "Low"
+  - cell "198.51.100.65" [ref=e65]
+  - cell "10.0.5.166" [ref=e66]
+  - cell "SYN Flood In Progress" [ref=e67]
+  - cell "DDoS" [ref=e68]
+  - cell "new" [ref=e69]
+  - cell "Script Kiddie Collective" [ref=e70]
+- row [ref=e42] clickable [cursor:pointer, onclick]
+  - cell [ref=e71] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e251]
+  - cell "08:21:15" [ref=e72]
+  - cell "Medium" [ref=e73]
+    - StaticText "Medium"
+  - cell "45.33.32.251" [ref=e74]
+  - cell "10.0.3.240" [ref=e75]
+  - cell "DNS Tunneling Activity" [ref=e76]
+  - cell "Data Exfiltration" [ref=e77]
+  - cell "escalated" [ref=e78]
+  - cell "APT-DARK HELIX" [ref=e79]
+- row [ref=e43] clickable [cursor:pointer, onclick]
+  - cell [ref=e80] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e252]
+  - cell "08:21:13" [ref=e81]
+  - cell "Medium" [ref=e82]
+    - StaticText "Medium"
+  - cell "198.51.100.162" [ref=e83]
+  - cell "10.0.1.162" [ref=e84]
+  - cell "Volumetric Flood" [ref=e85]
+  - cell "DDoS" [ref=e86]
+  - cell "new" [ref=e87]
+  - cell "Script Kiddie Collective" [ref=e88]
+- row [ref=e44] clickable [cursor:pointer, onclick]
+  - cell [ref=e89] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e253]
+  - cell "08:21:12" [ref=e90]
+  - cell "High" [ref=e91]
+    - StaticText "High"
+  - cell "175.45.176.230" [ref=e92]
+  - cell "10.0.6.195" [ref=e93]
+  - cell "Unknown Vulnerability Exploit" [ref=e94]
+  - cell "Zero-Day Exploit" [ref=e95]
+  - cell "new" [ref=e96]
+  - cell "APT-VOID SERPENT" [ref=e97]
+- row [ref=e45] clickable [cursor:pointer, onclick]
+  - cell [ref=e98] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e254]
+  - cell "08:21:10" [ref=e99]
+  - cell "Critical" [ref=e100]
+    - StaticText "Critical"
+  - cell "210.52.109.219" [ref=e101]
+  - cell "10.0.2.58" [ref=e102]
+  - cell "Credential Harvest Link" [ref=e103]
+  - cell "Spear Phishing" [ref=e104]
+  - cell "new" [ref=e105]
+  - cell "APT-VOID SERPENT" [ref=e106]
+- row [ref=e46] clickable [cursor:pointer, onclick]
+  - cell [ref=e107] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e255]
+  - cell "08:21:03" [ref=e108]
+  - cell "Medium" [ref=e109]
+    - StaticText "Medium"
+  - cell "175.45.176.81" [ref=e110]
+  - cell "10.0.6.93" [ref=e111]
+  - cell "Suspicious Outbound C2" [ref=e112]
+  - cell "C2 Beaconing" [ref=e113]
+  - cell "new" [ref=e114]
+  - cell "APT-VOID SERPENT" [ref=e115]
+- row [ref=e47] clickable [cursor:pointer, onclick]
+  - cell [ref=e116] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e256]
+  - cell "08:21:01" [ref=e117]
+  - cell "Low" [ref=e118]
+    - StaticText "Low"
+  - cell "91.189.88.102" [ref=e119]
+  - cell "10.0.3.177" [ref=e120]
+  - cell "SQL Injection Attack" [ref=e121]
+  - cell "Exploit" [ref=e122]
+  - cell "acknowledged" [ref=e123]
+  - cell "APT-DARK HELIX" [ref=e124]
+- row [ref=e48] clickable [cursor:pointer, onclick]
+  - cell [ref=e125] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e257]
+  - cell "08:20:57" [ref=e126]
+  - cell "Medium" [ref=e127]
+    - StaticText "Medium"
+  - cell "91.189.88.69" [ref=e128]
+  - cell "10.0.4.102" [ref=e129]
+  - cell "DNS Tunneling Activity" [ref=e130]
+  - cell "Data Exfiltration" [ref=e131]
+  - cell "new" [ref=e132]
+  - cell "APT-DARK HELIX" [ref=e133]
+- row [ref=e49] clickable [cursor:pointer, onclick]
+  - cell [ref=e134] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e258]
+  - cell "08:20:55" [ref=e135]
+  - cell "Medium" [ref=e136]
+    - StaticText "Medium"
+  - cell "203.0.113.146" [ref=e137]
+  - cell "10.0.1.186" [ref=e138]
+  - cell "DDoS Attack Detected" [ref=e139]
+  - cell "DDoS" [ref=e140]
+  - cell "new" [ref=e141]
+  - cell "Script Kiddie Collective" [ref=e142]
+- row [ref=e50] clickable [cursor:pointer, onclick]
+  - cell [ref=e143] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e259]
+  - cell "08:20:54" [ref=e144]
+  - cell "High" [ref=e145]
+    - StaticText "High"
+  - cell "91.92.128.125" [ref=e146]
+  - cell "10.0.7.230" [ref=e147]
+  - cell "Volumetric Flood" [ref=e148]
+  - cell "DDoS" [ref=e149]
+  - cell "escalated" [ref=e150]
+  - cell "Hacktivist-ECHO" [ref=e151]
+- row [ref=e51] clickable [cursor:pointer, onclick]
+  - cell [ref=e152] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e260]
+  - cell "08:20:49" [ref=e153]
+  - cell "Low" [ref=e154]
+    - StaticText "Low"
+  - cell "45.33.32.183" [ref=e155]
+  - cell "10.0.4.9" [ref=e156]
+  - cell "SQL Injection Attack" [ref=e157]
+  - cell "Exploit" [ref=e158]
+  - cell "escalated" [ref=e159]
+  - cell "APT-DARK HELIX" [ref=e160]
+- row [ref=e52] clickable [cursor:pointer, onclick]
+  - cell [ref=e161] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e261]
+  - cell "08:20:48" [ref=e162]
+  - cell "Low" [ref=e163]
+    - StaticText "Low"
+  - cell "203.0.113.147" [ref=e164]
+  - cell "10.0.1.147" [ref=e165]
+  - cell "DDoS Attack Detected" [ref=e166]
+  - cell "DDoS" [ref=e167]
+  - cell "escalated" [ref=e168]
+  - cell "Script Kiddie Collective" [ref=e169]
+- row [ref=e53] clickable [cursor:pointer, onclick]
+  - cell [ref=e170] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e262]
+  - cell "08:20:46" [ref=e171]
+  - cell "Low" [ref=e172]
+    - StaticText "Low"
+  - cell "198.51.100.178" [ref=e173]
+  - cell "10.0.1.51" [ref=e174]
+  - cell "Amplification Attack" [ref=e175]
+  - cell "DDoS" [ref=e176]
+  - cell "acknowledged" [ref=e177]
+  - cell "Script Kiddie Collective" [ref=e178]
+- row [ref=e54] clickable [cursor:pointer, onclick]
+  - cell [ref=e179] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e263]
+  - cell "08:20:43" [ref=e180]
+  - cell "Low" [ref=e181]
+    - StaticText "Low"
+  - cell "203.0.113.246" [ref=e182]
+  - cell "10.0.5.221" [ref=e183]
+  - cell "Brute Force SSH Attempt" [ref=e184]
+  - cell "Brute Force" [ref=e185]
+  - cell "escalated" [ref=e186]
+  - cell "Script Kiddie Collective" [ref=e187]
+- row [ref=e55] clickable [cursor:pointer, onclick]
+  - cell [ref=e188] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e264]
+  - cell "08:20:40" [ref=e189]
+  - cell "High" [ref=e190]
+    - StaticText "High"
+  - cell "198.51.100.200" [ref=e191]
+  - cell "10.0.1.210" [ref=e192]
+  - cell "Brute Force RDP" [ref=e193]
+  - cell "Brute Force" [ref=e194]
+  - cell "new" [ref=e195]
+  - cell "Script Kiddie Collective" [ref=e196]
+- row [ref=e56] clickable [cursor:pointer, onclick]
+  - cell [ref=e197] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e265]
+  - cell "08:20:36" [ref=e198]
+  - cell "Low" [ref=e199]
+    - StaticText "Low"
+  - cell "45.33.32.193" [ref=e200]
+  - cell "10.0.3.141" [ref=e201]
+  - cell "Brute Force RDP" [ref=e202]
+  - cell "Brute Force" [ref=e203]
+  - cell "escalated" [ref=e204]
+  - cell "APT-DARK HELIX" [ref=e205]
+- row [ref=e57] clickable [cursor:pointer, onclick]
+  - cell [ref=e206] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e266]
+  - cell "08:20:34" [ref=e207]
+  - cell "Low" [ref=e208]
+    - StaticText "Low"
+  - cell "91.189.88.112" [ref=e209]
+  - cell "10.0.4.58" [ref=e210]
+  - cell "Buffer Overflow Attempt" [ref=e211]
+  - cell "Exploit" [ref=e212]
+  - cell "new" [ref=e213]
+  - cell "APT-DARK HELIX" [ref=e214]
+- row [ref=e58] clickable [cursor:pointer, onclick]
+  - cell [ref=e215] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e267]
+  - cell "08:20:31" [ref=e216]
+  - cell "High" [ref=e217]
+    - StaticText "High"
+  - cell "103.224.182.109" [ref=e218]
+  - cell "10.0.1.221" [ref=e219]
+  - cell "Suspicious Outbound C2" [ref=e220]
+  - cell "C2 Beaconing" [ref=e221]
+  - cell "new" [ref=e222]
+  - cell "APT-PHANTOM SPIDER" [ref=e223]
+- row [ref=e59] clickable [cursor:pointer, onclick]
+  - cell [ref=e224] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e268]
+  - cell "08:20:28" [ref=e225]
+  - cell "Low" [ref=e226]
+    - StaticText "Low"
+  - cell "103.224.182.142" [ref=e227]
+  - cell "10.0.1.23" [ref=e228]
+  - cell "Lateral Movement Detected" [ref=e229]
+  - cell "Lateral Movement" [ref=e230]
+  - cell "new" [ref=e231]
+  - cell "APT-PHANTOM SPIDER" [ref=e232]
+- row [ref=e60] clickable [cursor:pointer, onclick]
+  - cell [ref=e233] clickable [cursor:pointer, onclick]
+    - checkbox [checked=false, ref=e269]
+  - cell "08:20:27" [ref=e234]
+  - cell "Medium" [ref=e235]
+    - StaticText "Medium"
+  - cell "91.92.128.184" [ref=e236]
+  - cell "10.0.3.45" [ref=e237]
+  - cell "Buffer Overflow Attempt" [ref=e238]
+  - cell "Exploit" [ref=e239]
+  - cell "new" [ref=e240]
+  - cell "Hacktivist-ECHO" [ref=e241]
+- StaticText "Low"
+- StaticText "Medium"
+- StaticText "Medium"
+- StaticText "High"
+- StaticText "Critical"
+- StaticText "Medium"
+- StaticText "Low"
+- StaticText "Medium"
+- StaticText "Medium"
+- StaticText "High"
+- StaticText "Low"
+- StaticText "Low"
+- StaticText "Low"
+- StaticText "Low"
+- StaticText "High"
+- StaticText "Low"
+- StaticText "Low"
+- StaticText "High"
+- StaticText "Low"
+- StaticText "Medium"
