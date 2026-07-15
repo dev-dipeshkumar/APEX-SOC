@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useUIStore } from '@/stores/ui-store';
 import { useAlertStore } from '@/stores/alert-store';
 import { useAssetStore } from '@/stores/asset-store';
 import { generateAlert, generateAttackConnection, generateLogLine, generateDashboardStats, generateTrendData } from '@/lib/mock-data';
-import { ROLE_PERMISSIONS, Permission, DEFAULT_USERS, type ViewType } from '@/lib/constants';
+import { DEFAULT_USERS, type ViewType } from '@/lib/constants';
 import { Sidebar } from '@/components/soc/sidebar';
 import { Topbar } from '@/components/soc/topbar';
 import { LoginPage } from '@/components/soc/login-page';
@@ -15,6 +15,8 @@ import { IntelMapView } from '@/components/soc/intel-map-view';
 import { AssetsView } from '@/components/soc/assets-view';
 import { SettingsView } from '@/components/soc/settings-view';
 import { NotificationDrawer } from '@/components/soc/notification-drawer';
+import { CyberBackground } from '@/components/soc/cyber-background';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Home() {
   const {
@@ -48,26 +50,22 @@ export default function Home() {
     const simulate = () => {
       tick++;
 
-      // Generate attack connections
       if (Math.random() < 0.8) {
         const attack = generateAttackConnection();
         addAttackConnection(attack);
       }
 
-      // Generate alerts
       if (Math.random() < 0.5) {
         const alert = generateAlert();
         addAlert(alert);
       }
 
-      // Generate log lines
       const log = generateLogLine();
       addLogLine(log);
       if (Math.random() < 0.5) {
         addLogLine(generateLogLine());
       }
 
-      // Update stats every ~5 ticks
       if (tick % 5 === 0) {
         updateDashboardStats(generateDashboardStats());
       }
@@ -96,10 +94,6 @@ export default function Home() {
       if (viewMap[e.key]) {
         setActiveView(viewMap[e.key]);
       }
-      if (e.key === '/') {
-        e.preventDefault();
-        // Focus search - handled by individual views
-      }
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -121,15 +115,33 @@ export default function Home() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#0a0e17]">
-      <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <Topbar />
-        <main className="flex-1 overflow-auto p-4 lg:p-6">
-          {renderView()}
-        </main>
+    <div className="flex h-screen overflow-hidden bg-[#050810] relative">
+      {/* Animated cyber background */}
+      <CyberBackground />
+      
+      {/* Main layout */}
+      <div className="relative z-10 flex h-full w-full">
+        <Sidebar />
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <Topbar />
+          <main className="flex-1 overflow-auto p-4 lg:p-6">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeView}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -8 }}
+                transition={{ duration: 0.2, ease: 'easeInOut' }}
+              >
+                {renderView()}
+              </motion.div>
+            </AnimatePresence>
+          </main>
+        </div>
       </div>
-      {notificationDrawerOpen && <NotificationDrawer />}
+
+      {/* Notification drawer */}
+      <NotificationDrawer />
     </div>
   );
 }

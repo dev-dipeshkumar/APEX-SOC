@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { DEFAULT_USERS } from '@/lib/constants';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Shield, Eye, EyeOff, Loader2, Fingerprint } from 'lucide-react';
 
 interface LoginPageProps {
   onLogin: (username: string, role: string, name: string) => void;
@@ -12,6 +14,7 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,109 +29,161 @@ export function LoginPage({ onLogin }: LoginPageProps) {
         setError('Invalid credentials. Try: admin / apex-admin-2024');
       }
       setLoading(false);
-    }, 600);
+    }, 800);
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0a0e17] p-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#050810] p-4 relative overflow-hidden">
       {/* Background grid effect */}
-      <div className="pointer-events-none fixed inset-0 opacity-[0.03]" style={{
-        backgroundImage: 'linear-gradient(rgba(0,240,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,240,255,0.3) 1px, transparent 1px)',
-        backgroundSize: '60px 60px',
-      }} />
+      <div className="pointer-events-none fixed inset-0 hex-grid opacity-50" />
+      
+      {/* Floating geometric shapes */}
+      <div className="pointer-events-none fixed inset-0">
+        <div className="absolute top-[15%] left-[10%] w-32 h-32 border border-cyan-500/5 rounded-full animate-float" />
+        <div className="absolute bottom-[20%] right-[15%] w-24 h-24 border border-purple-500/5 rotate-45 animate-float" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-[60%] left-[70%] w-16 h-16 border border-cyan-500/3 rounded-lg animate-float" style={{ animationDelay: '2s' }} />
+      </div>
 
-      <div className="relative w-full max-w-md">
+      {/* Radial glow */}
+      <div className="pointer-events-none fixed inset-0">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-gradient-to-r from-cyan-500/3 via-transparent to-purple-500/2 blur-3xl" />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="relative w-full max-w-md"
+      >
         {/* Glow behind card */}
-        <div className="absolute -inset-4 rounded-2xl bg-gradient-to-r from-cyan-500/5 via-cyan-500/10 to-cyan-500/5 blur-xl" />
+        <div className="absolute -inset-6 rounded-2xl bg-gradient-to-r from-cyan-500/5 via-cyan-500/8 to-purple-500/5 blur-2xl" />
 
-        <div className="relative rounded-xl border border-[#1e293b] bg-[#111827] p-8 shadow-2xl">
+        <div className="relative rounded-xl glass-heavy p-8 shadow-2xl animate-border-glow">
           {/* Logo / Brand */}
-          <div className="mb-8 text-center">
-            <div className="mb-3 inline-flex items-center gap-2">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-cyan-400">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8 text-center"
+          >
+            <div className="mb-4 inline-flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-500/15 to-cyan-500/5 border border-cyan-500/20 neon-glow">
+                <Shield className="h-6 w-6 text-cyan-400" />
               </div>
-              <div>
+              <div className="text-left">
                 <h1 className="text-xl font-bold tracking-wider text-[#e2e8f0]">APEX SOC</h1>
-                <p className="text-[10px] tracking-[0.3em] text-cyan-400/60 uppercase">Threat Intelligence</p>
+                <p className="text-[9px] tracking-[0.3em] text-cyan-400/60 uppercase">Threat Intelligence Platform</p>
               </div>
             </div>
             <p className="text-sm text-[#475569]">Enterprise Security Operations Center</p>
-          </div>
+          </motion.div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <motion.form
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            onSubmit={handleSubmit}
+            className="space-y-4"
+          >
             <div>
               <label className="mb-1.5 block text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
                 Username
               </label>
-              <input
-                type="text"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                className="w-full rounded-lg border border-[#1e293b] bg-[#0a0e17] px-4 py-2.5 text-sm text-[#e2e8f0] placeholder-[#475569] focus:border-cyan-500/30 focus:outline-none focus:ring-1 focus:ring-cyan-500/20 transition-all"
-                placeholder="Enter username"
-                autoComplete="username"
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
+                  className="w-full rounded-lg border border-[rgba(0,240,255,0.08)] bg-[#050810]/60 px-4 py-2.5 text-sm text-[#e2e8f0] placeholder-[#475569] focus:border-cyan-500/30 focus:outline-none focus:ring-1 focus:ring-cyan-500/20 focus:shadow-[0_0_15px_rgba(0,240,255,0.05)] transition-all backdrop-blur-sm"
+                  placeholder="Enter username"
+                  autoComplete="username"
+                />
+              </div>
             </div>
 
             <div>
               <label className="mb-1.5 block text-xs font-medium text-[#94a3b8] uppercase tracking-wider">
                 Password
               </label>
-              <input
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-[#1e293b] bg-[#0a0e17] px-4 py-2.5 text-sm text-[#e2e8f0] placeholder-[#475569] focus:border-cyan-500/30 focus:outline-none focus:ring-1 focus:ring-cyan-500/20 transition-all"
-                placeholder="Enter password"
-                autoComplete="current-password"
-              />
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="w-full rounded-lg border border-[rgba(0,240,255,0.08)] bg-[#050810]/60 px-4 py-2.5 pr-10 text-sm text-[#e2e8f0] placeholder-[#475569] focus:border-cyan-500/30 focus:outline-none focus:ring-1 focus:ring-cyan-500/20 focus:shadow-[0_0_15px_rgba(0,240,255,0.05)] transition-all backdrop-blur-sm"
+                  placeholder="Enter password"
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#475569] hover:text-[#94a3b8] transition-colors"
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
 
-            {error && (
-              <div className="rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-2.5 text-xs text-red-400">
-                {error}
-              </div>
-            )}
+            <AnimatePresence>
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-2.5 text-xs text-red-400"
+                >
+                  {error}
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.01, boxShadow: '0 0 20px rgba(0, 240, 255, 0.15)' }}
+              whileTap={{ scale: 0.99 }}
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-cyan-500/10 border border-cyan-500/20 py-2.5 text-sm font-medium text-cyan-400 hover:bg-cyan-500/20 hover:border-cyan-500/30 transition-all disabled:opacity-50"
+              className="w-full rounded-lg bg-gradient-to-r from-cyan-500/10 to-cyan-500/5 border border-cyan-500/20 py-2.5 text-sm font-medium text-cyan-400 hover:from-cyan-500/15 hover:to-cyan-500/10 hover:border-cyan-500/30 transition-all disabled:opacity-50 magnetic-btn"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
-                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                  <Loader2 className="h-4 w-4 animate-spin" />
                   Authenticating...
                 </span>
               ) : (
-                'Sign In'
+                <span className="flex items-center justify-center gap-2">
+                  <Fingerprint className="h-4 w-4" />
+                  Sign In
+                </span>
               )}
-            </button>
-          </form>
+            </motion.button>
+          </motion.form>
 
           {/* Demo accounts */}
-          <div className="mt-6 border-t border-[#1e293b] pt-4">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="mt-6 border-t border-[rgba(0,240,255,0.06)] pt-4"
+          >
             <p className="mb-2 text-[10px] uppercase tracking-wider text-[#475569]">Demo Accounts</p>
             <div className="space-y-1.5">
               {DEFAULT_USERS.map(u => (
-                <button
+                <motion.button
                   key={u.username}
+                  whileHover={{ x: 4 }}
                   onClick={() => { setUsername(u.username); setPassword(u.password); }}
-                  className="flex w-full items-center justify-between rounded px-2 py-1.5 text-xs hover:bg-[#1a2332] transition-colors"
+                  className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs hover:bg-[rgba(0,240,255,0.02)] transition-all group"
                 >
-                  <span className="text-[#94a3b8]">{u.username} / {u.password}</span>
-                  <span className="rounded-full bg-cyan-500/10 px-2 py-0.5 text-[10px] font-medium text-cyan-400 border border-cyan-500/20">
+                  <span className="text-[#94a3b8] font-mono">{u.username} <span className="text-[#475569]">/ {u.password}</span></span>
+                  <span className="rounded-full glass-light px-2 py-0.5 text-[10px] font-medium text-cyan-400 capitalize">
                     {u.role}
                   </span>
-                </button>
+                </motion.button>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

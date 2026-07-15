@@ -45,17 +45,17 @@
 
 :root {
   --radius: 0.625rem;
-  --background: #0a0e17;
+  --background: #050810;
   --foreground: #e2e8f0;
-  --card: #1a2332;
+  --card: #0c1220;
   --card-foreground: #e2e8f0;
-  --popover: #111827;
+  --popover: #0a0f1c;
   --popover-foreground: #e2e8f0;
   --primary: #00f0ff;
-  --primary-foreground: #0a0e17;
-  --secondary: #1e293b;
+  --primary-foreground: #050810;
+  --secondary: #111827;
   --secondary-foreground: #94a3b8;
-  --muted: #1e293b;
+  --muted: #111827;
   --muted-foreground: #475569;
   --accent: #0891b2;
   --accent-foreground: #e2e8f0;
@@ -68,28 +68,36 @@
   --chart-3: #ffd60a;
   --chart-4: #30d158;
   --chart-5: #ff2d55;
-  --sidebar: #111827;
+  --sidebar: #080d18;
   --sidebar-foreground: #94a3b8;
   --sidebar-primary: #00f0ff;
-  --sidebar-primary-foreground: #0a0e17;
-  --sidebar-accent: #1a2332;
+  --sidebar-primary-foreground: #050810;
+  --sidebar-accent: #0c1220;
   --sidebar-accent-foreground: #e2e8f0;
   --sidebar-border: #1e293b;
   --sidebar-ring: #00f0ff;
+  --neon-cyan: #00f0ff;
+  --neon-purple: #a855f7;
+  --neon-pink: #ff2d55;
+  --neon-amber: #ff9500;
+  --neon-green: #30d158;
+  --glass-bg: rgba(12, 18, 32, 0.6);
+  --glass-border: rgba(0, 240, 255, 0.08);
+  --glass-blur: 16px;
 }
 
 .dark {
-  --background: #0a0e17;
+  --background: #050810;
   --foreground: #e2e8f0;
-  --card: #1a2332;
+  --card: #0c1220;
   --card-foreground: #e2e8f0;
-  --popover: #111827;
+  --popover: #0a0f1c;
   --popover-foreground: #e2e8f0;
   --primary: #00f0ff;
-  --primary-foreground: #0a0e17;
-  --secondary: #1e293b;
+  --primary-foreground: #050810;
+  --secondary: #111827;
   --secondary-foreground: #94a3b8;
-  --muted: #1e293b;
+  --muted: #111827;
   --muted-foreground: #475569;
   --accent: #0891b2;
   --accent-foreground: #e2e8f0;
@@ -102,11 +110,11 @@
   --chart-3: #ffd60a;
   --chart-4: #30d158;
   --chart-5: #ff2d55;
-  --sidebar: #111827;
+  --sidebar: #080d18;
   --sidebar-foreground: #94a3b8;
   --sidebar-primary: #00f0ff;
-  --sidebar-primary-foreground: #0a0e17;
-  --sidebar-accent: #1a2332;
+  --sidebar-primary-foreground: #050810;
+  --sidebar-accent: #0c1220;
   --sidebar-accent-foreground: #e2e8f0;
   --sidebar-border: #1e293b;
   --sidebar-ring: #00f0ff;
@@ -121,23 +129,80 @@
   }
 }
 
-/* Custom scrollbar for dark theme */
+/* === Custom Scrollbar === */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0a0e17;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
-  border-radius: 3px;
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #334155;
 }
 
-/* KPI pulse animation */
+/* === Glassmorphism === */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+}
+
+.glass-heavy {
+  background: rgba(12, 18, 32, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+.glass-light {
+  background: rgba(12, 18, 32, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.06);
+}
+
+/* === Neon Glow Effects === */
+.neon-glow {
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), 0 0 30px rgba(0, 240, 255, 0.05), inset 0 0 15px rgba(0, 240, 255, 0.02);
+}
+
+.neon-glow-strong {
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.25), 0 0 40px rgba(0, 240, 255, 0.1), inset 0 0 20px rgba(0, 240, 255, 0.03);
+}
+
+.neon-text {
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.2);
+}
+
+/* === Animated Border === */
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(0, 240, 255, 0.1); }
+  50% { border-color: rgba(0, 240, 255, 0.25); }
+}
+
+.animate-border-glow {
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+/* === Animated Gradient Border === */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+}
+
+/* === KPI Pulse Animation === */
 @keyframes kpi-glow {
   0% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.15); }
   100% { box-shadow: none; }
@@ -146,7 +211,7 @@
   animation: kpi-glow 1s ease-out;
 }
 
-/* Count-up animation helper */
+/* === Count-Up Animation === */
 @keyframes countUp {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -155,7 +220,7 @@
   animation: countUp 0.4s ease-out;
 }
 
-/* Critical alert row flash */
+/* === Critical Alert Row Flash === */
 @keyframes rowFlash {
   0% { background: rgba(255, 45, 85, 0.08); }
   100% { background: transparent; }
@@ -164,7 +229,7 @@
   animation: rowFlash 2s ease-out;
 }
 
-/* Globe ambient glow */
+/* === Globe Ambient Glow === */
 .globe-container::after {
   content: '';
   position: absolute;
@@ -174,7 +239,7 @@
   z-index: 0;
 }
 
-/* Terminal cursor blink */
+/* === Terminal Cursor Blink === */
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
@@ -183,15 +248,153 @@
   animation: blink 1s step-end infinite;
 }
 
-/* Arc animation */
+/* === Pulse Ring === */
+@keyframes pulseRing {
+  0% { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+.pulse-ring {
+  animation: pulseRing 1.5s ease-out infinite;
+}
+
+/* === Floating Animation === */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* === Ripple Effect === */
+@keyframes ripple {
+  0% { transform: scale(0); opacity: 0.5; }
+  100% { transform: scale(4); opacity: 0; }
+}
+
+/* === Scan Line === */
+@keyframes scanLine {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+.scan-line::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.15), transparent);
+  animation: scanLine 8s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* === Card Hover Effect === */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 240, 255, 0.08);
+}
+
+/* === Magnetic Button === */
+.magnetic-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.magnetic-btn:hover {
+  transform: scale(1.02);
+}
+.magnetic-btn:active {
+  transform: scale(0.98);
+}
+
+/* === Status Dot Pulse === */
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.status-pulse {
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+/* === Matrix Rain (CSS-only fallback) === */
+@keyframes matrixFall {
+  0% { transform: translateY(-100%); opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* === Hex Grid Pattern === */
+.hex-grid {
+  background-image: 
+    linear-gradient(30deg, rgba(0, 240, 255, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(0, 240, 255, 0.02) 87.5%, rgba(0, 240, 255, 0.02)),
+    linear-gradient(150deg, rgba(0, 240, 255, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(0, 240, 255, 0.02) 87.5%, rgba(0, 240, 255, 0.02)),
+    linear-gradient(30deg, rgba(0, 240, 255, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(0, 240, 255, 0.02) 87.5%, rgba(0, 240, 255, 0.02)),
+    linear-gradient(150deg, rgba(0, 240, 255, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(0, 240, 255, 0.02) 87.5%, rgba(0, 240, 255, 0.02)),
+    linear-gradient(60deg, rgba(0, 240, 255, 0.03) 25%, transparent 25.5%, transparent 75%, rgba(0, 240, 255, 0.03) 75%, rgba(0, 240, 255, 0.03)),
+    linear-gradient(60deg, rgba(0, 240, 255, 0.03) 25%, transparent 25.5%, transparent 75%, rgba(0, 240, 255, 0.03) 75%, rgba(0, 240, 255, 0.03));
+  background-size: 80px 140px;
+  background-position: 0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px;
+}
+
+/* === Ambient Light === */
+.ambient-light {
+  position: relative;
+}
+.ambient-light::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(0, 240, 255, 0.02) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(168, 85, 247, 0.01) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* === Reduced Motion === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* === Arc animation === */
 @keyframes arcDraw {
   from { stroke-dashoffset: 1000; }
   to { stroke-dashoffset: 0; }
 }
 
-/* Topology node pulse */
+/* === Topology node pulse === */
 @keyframes nodePulse {
   0% { r: 8; opacity: 1; }
   50% { r: 14; opacity: 0.4; }
   100% { r: 8; opacity: 1; }
+}
+
+/* === Notification slide === */
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOutRight {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+/* === Fade In === */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* === Scale In === */
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
 }

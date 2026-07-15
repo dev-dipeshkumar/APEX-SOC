@@ -96,6 +96,17 @@ export const useAlertStore = create<AlertStore>((set, get) => ({
     filters: { severity: null, status: null, search: '', attackType: null },
   }),
 
+  markNotificationRead: (id: string) => {
+    set(state => ({
+      notifications: state.notifications.map(n =>
+        n.id === id ? { ...n, read: true } : n
+      ),
+      unreadCount: state.notifications.filter(n => !n.read && n.id !== id).length,
+    }));
+  },
+
+  clearNotifications: () => set({ notifications: [], unreadCount: 0 }),
+
   getFilteredAlerts: () => {
     const { alerts, filters } = get();
     return alerts.filter(a => {

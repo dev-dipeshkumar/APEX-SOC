@@ -4,8 +4,9 @@ import { useCallback, useRef, useState } from 'react';
 import { useAssetStore } from '@/stores/asset-store';
 import { SEVERITY_COLORS, type Severity, type AssetType } from '@/lib/constants';
 import { Search, Plus, Network, Server, Monitor, Shield, Database, Cloud, Radio, Box } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const TYPE_ICONS: Record<string, React.ElementType> = {
+const TYPE_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   server: Server,
   workstation: Monitor,
   firewall: Shield,
@@ -24,15 +25,13 @@ const RISK_COLORS: Record<string, string> = {
 
 // --- Topology Graph ---
 function TopologyGraph() {
-  const { topologyNodes, topologyEdges, selectAsset, assets, pulseEdge } = useAssetStore();
+  const { topologyNodes, topologyEdges, selectAsset, assets } = useAssetStore();
   const svgRef = useRef<SVGSVGElement>(null);
   const [dragNode, setDragNode] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [nodePositions, setNodePositions] = useState<Map<string, { x: number; y: number }>>(new Map());
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
-  const { updateNodePositions } = useAssetStore();
 
-  // Initialize positions from topologyNodes (using useMemo-like pattern)
   const initialPositions = (() => {
     const map = new Map<string, { x: number; y: number }>();
     topologyNodes.forEach(n => map.set(n.id, { x: n.x, y: n.y }));
@@ -87,8 +86,15 @@ function TopologyGraph() {
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {/* Background */}
-      <rect width="800" height="600" fill="#0a0e17" rx="8" />
+      <rect width="800" height="600" fill="#050810" rx="8" />
+
+      {/* Grid pattern */}
+      <defs>
+        <pattern id="topo-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(0,240,255,0.02)" strokeWidth="0.5" />
+        </pattern>
+      </defs>
+      <rect width="800" height="600" fill="url(#topo-grid)" />
 
       {/* Edges */}
       {topologyEdges.map((edge, i) => {
@@ -105,7 +111,7 @@ function TopologyGraph() {
             y1={source.y}
             x2={target.x}
             y2={target.y}
-            stroke={edge.active ? '#ff2d55' : isHighlighted ? '#00f0ff40' : '#1e293b'}
+            stroke={edge.active ? '#ff2d55' : isHighlighted ? 'rgba(0,240,255,0.25)' : 'rgba(0,240,255,0.06)'}
             strokeWidth={edge.active ? 2.5 : isHighlighted ? 1.5 : 0.8}
             className="transition-all duration-300"
           />
@@ -128,26 +134,22 @@ function TopologyGraph() {
             onClick={() => handleNodeClick(node.id)}
             className="cursor-pointer"
           >
-            {/* Glow */}
             {isHovered && (
-              <circle cx={pos.x} cy={pos.y} r="20" fill={`${color}15`} />
+              <circle cx={pos.x} cy={pos.y} r="22" fill={`${color}08`} />
             )}
 
-            {/* Node circle */}
             <circle
               cx={pos.x}
               cy={pos.y}
               r={isHovered ? 12 : 10}
-              fill={`${color}15`}
+              fill={`${color}10`}
               stroke={color}
               strokeWidth={isHovered ? 2 : 1}
               className="transition-all duration-200"
             />
 
-            {/* Icon center dot */}
             <circle cx={pos.x} cy={pos.y} r="3" fill={color} />
 
-            {/* Label */}
             <text
               x={pos.x}
               y={pos.y + 22}
@@ -160,7 +162,6 @@ function TopologyGraph() {
               {node.label}
             </text>
 
-            {/* Risk indicator */}
             <circle cx={pos.x + 8} cy={pos.y - 8} r="3" fill={color} opacity={0.8} />
           </g>
         );
@@ -179,22 +180,22 @@ export function AssetsView() {
   return (
     <div className="flex h-full flex-col gap-3">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 rounded-lg border border-[#1e293b] bg-[#1a2332] px-3 py-2">
+      <div className="flex items-center gap-3 rounded-xl glass px-3 py-2 flex-wrap">
         <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-[#475569]" />
+          <Search className="absolute left-2.5 top-1/2 h-3 w-3 -translate-y-1/2 text-[#475569]" />
           <input
             type="text"
             placeholder="Search assets..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full rounded border border-[#1e293b] bg-[#0a0e17] py-1 pl-7 pr-2 text-[11px] text-[#94a3b8] placeholder-[#475569] focus:border-cyan-500/30 focus:outline-none"
+            className="w-full rounded-lg border border-[rgba(0,240,255,0.08)] bg-[#050810]/60 py-1.5 pl-7 pr-2 text-[11px] text-[#94a3b8] placeholder-[#475569] focus:border-cyan-500/20 focus:outline-none backdrop-blur-sm"
           />
         </div>
 
         <select
           value={statusFilter || ''}
           onChange={e => setStatusFilter(e.target.value || null)}
-          className="rounded border border-[#1e293b] bg-[#0a0e17] px-2 py-1 text-[11px] text-[#94a3b8] focus:outline-none"
+          className="rounded-lg border border-[rgba(0,240,255,0.08)] bg-[#050810]/60 px-2.5 py-1.5 text-[11px] text-[#94a3b8] focus:outline-none backdrop-blur-sm"
         >
           <option value="">All Status</option>
           <option value="online">Online</option>
@@ -205,7 +206,7 @@ export function AssetsView() {
         <select
           value={typeFilter || ''}
           onChange={e => setTypeFilter(e.target.value || null)}
-          className="rounded border border-[#1e293b] bg-[#0a0e17] px-2 py-1 text-[11px] text-[#94a3b8] focus:outline-none"
+          className="rounded-lg border border-[rgba(0,240,255,0.08)] bg-[#050810]/60 px-2.5 py-1.5 text-[11px] text-[#94a3b8] focus:outline-none backdrop-blur-sm"
         >
           <option value="">All Types</option>
           <option value="server">Server</option>
@@ -216,13 +217,13 @@ export function AssetsView() {
           <option value="api">API</option>
         </select>
 
-        <div className="flex items-center gap-1 rounded border border-[#1e293b] bg-[#0a0e17] p-0.5">
+        <div className="flex items-center gap-1 rounded-lg glass-light p-0.5">
           {(['table', 'split', 'topology'] as const).map(v => (
             <button
               key={v}
               onClick={() => setView(v)}
-              className={`rounded px-2 py-1 text-[10px] capitalize transition-colors ${
-                view === v ? 'bg-[#1a2332] text-cyan-400' : 'text-[#475569] hover:text-[#94a3b8]'
+              className={`rounded-md px-2.5 py-1 text-[10px] capitalize transition-all ${
+                view === v ? 'bg-[rgba(0,240,255,0.08)] text-cyan-400' : 'text-[#475569] hover:text-[#94a3b8]'
               }`}
             >
               {v}
@@ -233,31 +234,33 @@ export function AssetsView() {
 
       {/* Content */}
       <div className="flex flex-1 gap-4 min-h-0">
-        {/* Table */}
         {(view === 'table' || view === 'split') && (
-          <div className={`${view === 'split' ? 'w-1/2' : 'w-full'} overflow-hidden rounded-lg border border-[#1e293b] bg-[#1a2332]`}>
+          <div className={`${view === 'split' ? 'w-1/2' : 'w-full'} overflow-hidden rounded-xl glass`}>
             <div className="overflow-x-auto max-h-[calc(100vh-220px)]">
               <table className="w-full text-xs">
                 <thead className="sticky top-0">
-                  <tr className="border-b border-[#1e293b] bg-[#111827]">
-                    <th className="px-3 py-2 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Name</th>
-                    <th className="px-3 py-2 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">IP</th>
-                    <th className="px-3 py-2 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Type</th>
-                    <th className="px-3 py-2 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Status</th>
-                    <th className="px-3 py-2 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Risk</th>
-                    <th className="px-3 py-2 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">OS</th>
-                    <th className="px-3 py-2 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Vulns</th>
+                  <tr className="border-b border-[rgba(0,240,255,0.04)] bg-[#050810]/40">
+                    <th className="px-3 py-2.5 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Name</th>
+                    <th className="px-3 py-2.5 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">IP</th>
+                    <th className="px-3 py-2.5 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Type</th>
+                    <th className="px-3 py-2.5 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Status</th>
+                    <th className="px-3 py-2.5 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Risk</th>
+                    <th className="px-3 py-2.5 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">OS</th>
+                    <th className="px-3 py-2.5 text-left text-[10px] uppercase tracking-wider text-[#475569] font-medium">Vulns</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {filtered.map(asset => {
+                  {filtered.map((asset, i) => {
                     const Icon = TYPE_ICONS[asset.type] || Server;
                     return (
-                      <tr
+                      <motion.tr
                         key={asset.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: i * 0.02 }}
                         onClick={() => selectAsset(asset)}
-                        className={`border-b border-[#1e293b]/50 cursor-pointer hover:bg-[#1a2332] transition-colors ${
-                          selectedAsset?.id === asset.id ? 'bg-cyan-500/5 border-l-2 border-l-cyan-500' : ''
+                        className={`border-b border-[rgba(0,240,255,0.02)] cursor-pointer hover:bg-[rgba(0,240,255,0.02)] transition-all ${
+                          selectedAsset?.id === asset.id ? 'bg-[rgba(0,240,255,0.03)] border-l-2 border-l-cyan-500' : ''
                         }`}
                       >
                         <td className="px-3 py-2">
@@ -268,9 +271,7 @@ export function AssetsView() {
                         </td>
                         <td className="px-3 py-2 font-mono text-[#94a3b8]">{asset.ip}</td>
                         <td className="px-3 py-2 text-[#94a3b8] capitalize">{asset.type.replace('_', ' ')}</td>
-                        <td className="px-3 py-2">
-                          <StatusBadge status={asset.status} />
-                        </td>
+                        <td className="px-3 py-2"><StatusBadge status={asset.status} /></td>
                         <td className="px-3 py-2">
                           <div className="flex items-center gap-1.5">
                             <div className="h-2 w-2 rounded-full" style={{ backgroundColor: RISK_COLORS[asset.risk] }} />
@@ -280,14 +281,12 @@ export function AssetsView() {
                         <td className="px-3 py-2 text-[#475569] max-w-[100px] truncate">{asset.os}</td>
                         <td className="px-3 py-2">
                           {asset.vulnerabilities.length > 0 ? (
-                            <span className="rounded-full bg-red-500/10 px-1.5 py-0.5 text-[9px] text-red-400 border border-red-500/20">
-                              {asset.vulnerabilities.length}
-                            </span>
+                            <span className="rounded-full glass-light px-1.5 py-0.5 text-[9px] text-red-400">{asset.vulnerabilities.length}</span>
                           ) : (
                             <span className="text-[10px] text-[#475569]">None</span>
                           )}
                         </td>
-                      </tr>
+                      </motion.tr>
                     );
                   })}
                 </tbody>
@@ -296,10 +295,9 @@ export function AssetsView() {
           </div>
         )}
 
-        {/* Topology */}
         {(view === 'topology' || view === 'split') && (
-          <div className={`${view === 'split' ? 'w-1/2' : 'w-full'} overflow-hidden rounded-lg border border-[#1e293b] bg-[#1a2332]`}>
-            <div className="flex items-center justify-between border-b border-[#1e293b] px-3 py-2">
+          <div className={`${view === 'split' ? 'w-1/2' : 'w-full'} overflow-hidden rounded-xl glass`}>
+            <div className="flex items-center justify-between border-b border-[rgba(0,240,255,0.04)] px-3 py-2">
               <span className="text-[10px] uppercase tracking-wider text-[#475569]">Network Topology</span>
               <span className="text-[9px] text-[#475569]">Drag nodes to rearrange</span>
             </div>
@@ -309,38 +307,50 @@ export function AssetsView() {
       </div>
 
       {/* Selected asset detail */}
-      {selectedAsset && (
-        <div className="rounded-lg border border-cyan-500/20 bg-[#1a2332] p-4">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: RISK_COLORS[selectedAsset.risk] }} />
-              <h3 className="text-sm font-semibold text-[#e2e8f0]">{selectedAsset.name}</h3>
-              <span className="font-mono text-xs text-[#94a3b8]">{selectedAsset.ip}</span>
+      <AnimatePresence>
+        {selectedAsset && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="rounded-xl glass p-4"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: RISK_COLORS[selectedAsset.risk] }} />
+                <h3 className="text-sm font-semibold text-[#e2e8f0]">{selectedAsset.name}</h3>
+                <span className="font-mono text-xs text-[#94a3b8]">{selectedAsset.ip}</span>
+              </div>
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => selectAsset(null)}
+                className="text-[#475569] hover:text-[#94a3b8] transition-colors rounded p-1 hover:bg-white/5"
+              >
+                <span className="text-sm">x</span>
+              </motion.button>
             </div>
-            <button onClick={() => selectAsset(null)} className="text-[#475569] hover:text-[#94a3b8]">
-              x
-            </button>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
-            <div>
-              <span className="text-[10px] uppercase tracking-wider text-[#475569]">Type</span>
-              <p className="text-[#e2e8f0] capitalize">{selectedAsset.type.replace('_', ' ')}</p>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+              <div>
+                <span className="text-[10px] uppercase tracking-wider text-[#475569]">Type</span>
+                <p className="text-[#e2e8f0] capitalize">{selectedAsset.type.replace('_', ' ')}</p>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-wider text-[#475569]">OS</span>
+                <p className="text-[#e2e8f0]">{selectedAsset.os}</p>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-wider text-[#475569]">Open Ports</span>
+                <p className="font-mono text-[#94a3b8]">{selectedAsset.openPorts.join(', ')}</p>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-wider text-[#475569]">Vulnerabilities</span>
+                <p className="text-red-400">{selectedAsset.vulnerabilities.join(', ') || 'None'}</p>
+              </div>
             </div>
-            <div>
-              <span className="text-[10px] uppercase tracking-wider text-[#475569]">OS</span>
-              <p className="text-[#e2e8f0]">{selectedAsset.os}</p>
-            </div>
-            <div>
-              <span className="text-[10px] uppercase tracking-wider text-[#475569]">Open Ports</span>
-              <p className="font-mono text-[#94a3b8]">{selectedAsset.openPorts.join(', ')}</p>
-            </div>
-            <div>
-              <span className="text-[10px] uppercase tracking-wider text-[#475569]">Vulnerabilities</span>
-              <p className="text-red-400">{selectedAsset.vulnerabilities.join(', ') || 'None'}</p>
-            </div>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
