@@ -241,9 +241,9 @@ export function LoginPage({ onLogin }: LoginPageProps) {
             transition={{ delay: 0.6 }}
             className="mt-6 border-t border-[#1a2744] pt-4"
           >
-            <p className="mb-2.5 text-[9px] uppercase tracking-[0.2em] text-[#546380] font-semibold">Demo Accounts</p>
+            <p className="mb-2.5 text-[9px] uppercase tracking-[0.2em] text-[#546380] font-semibold">Guest Access</p>
             <div className="space-y-1">
-              {DEFAULT_USERS.map(u => (
+              {DEFAULT_USERS.filter(u => u.role === 'viewer').map(u => (
                 <motion.button
                   key={u.username}
                   whileHover={{ x: 4, backgroundColor: 'rgba(59, 130, 246, 0.04)' }}
