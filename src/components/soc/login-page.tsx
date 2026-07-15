@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { DEFAULT_USERS } from '@/lib/constants';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Shield, Eye, EyeOff, Loader2, Fingerprint, Lock, Cpu } from 'lucide-react';
@@ -17,6 +17,23 @@ export function LoginPage({ onLogin }: LoginPageProps) {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [focused, setFocused] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  // Generate particles only on client to avoid hydration mismatch
+  const particles = useMemo(() => {
+    if (!mounted) return [];
+    return Array.from({ length: 20 }, (_, i) => ({
+      width: 2 + Math.random() * 3,
+      height: 2 + Math.random() * 3,
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      bgColor: i % 3 === 0 ? 'rgba(59,130,246,0.15)' : i % 3 === 1 ? 'rgba(6,182,212,0.12)' : 'rgba(139,92,246,0.1)',
+      duration: 3 + Math.random() * 4,
+      delay: Math.random() * 3,
+    }));
+  }, [mounted]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,18 +59,18 @@ export function LoginPage({ onLogin }: LoginPageProps) {
 
       {/* Animated background particles (CSS-only) */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {particles.map((p, i) => (
           <div
             key={i}
             className="absolute rounded-full animate-float"
             style={{
-              width: `${2 + Math.random() * 3}px`,
-              height: `${2 + Math.random() * 3}px`,
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              backgroundColor: i % 3 === 0 ? 'rgba(59,130,246,0.15)' : i % 3 === 1 ? 'rgba(6,182,212,0.12)' : 'rgba(139,92,246,0.1)',
-              animationDuration: `${3 + Math.random() * 4}s`,
-              animationDelay: `${Math.random() * 3}s`,
+              width: `${p.width}px`,
+              height: `${p.height}px`,
+              top: `${p.top}%`,
+              left: `${p.left}%`,
+              backgroundColor: p.bgColor,
+              animationDuration: `${p.duration}s`,
+              animationDelay: `${p.delay}s`,
             }}
           />
         ))}
