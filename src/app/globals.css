@@ -639,7 +639,7 @@
 }
 
 /* ═══════════════════════════════════════
-   CYBER CURSOR — Advanced Hacker Cursor
+   CYBER CURSOR — Tactical Reticle System
    ═══════════════════════════════════════ */
 
 /* Hide default cursor everywhere */
@@ -647,7 +647,33 @@
   cursor: none !important;
 }
 
-/* Click ripple animation */
+/* Reticle ring slow rotation */
+@keyframes reticleRotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg); }
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* Click flash */
+@keyframes clickFlash {
+  0% { opacity: 1; stroke-width: 2; }
+  100% { opacity: 0; stroke-width: 0.5; }
+}
+
+/* Hexagonal click ripple */
+@keyframes hexRipple {
+  0% {
+    transform: scale(0.3);
+    opacity: 1;
+    stroke-width: 1.5;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+    stroke-width: 0.3;
+  }
+}
+
+/* Circular click ripple */
 @keyframes cursorRipple {
   0% {
     transform: scale(0);
@@ -656,50 +682,6 @@
   100% {
     transform: scale(2.5);
     opacity: 0;
-  }
-}
-
-/* Scan line on scroll */
-@keyframes scanLine {
-  0% {
-    opacity: 1;
-    transform: scaleX(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scaleX(2.5);
-  }
-}
-
-/* Cursor glow pulse */
-@keyframes cursorGlow {
-  0%, 100% {
-    box-shadow: 0 0 8px rgba(59, 130, 246, 0.4), 0 0 2px rgba(255, 255, 255, 0.6);
-  }
-  50% {
-    box-shadow: 0 0 16px rgba(59, 130, 246, 0.6), 0 0 4px rgba(255, 255, 255, 0.8);
-  }
-}
-
-/* Ring rotation for hover state */
-@keyframes ringRotate {
-  0% {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-  100% {
-    transform: translate(-50%, -50%) rotate(360deg);
-  }
-}
-
-/* Data stream particles on fast movement */
-@keyframes dataStream {
-  0% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-20px) scale(0.3);
   }
 }
 
